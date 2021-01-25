@@ -1,0 +1,48 @@
+#flowchart {
+    height: 800px;
+    padding-left: 0px;
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+p.error{
+            color: red;
+            padding-left: 5px;
+        }
+
+/*#flowchart {
+    display: none;
+}*/
+
+/* svg link attrs display none */
+.link-tools {
+  display: none;
+}
+
+.connection-wrap {
+  display: none;
+}
+
+.marker-vertices {
+  display: none;
+}
+
+.marker-source {
+  display: none;
+}
+
+.marker-target {
+  display: none;
+}
+
+.marker-arrowheads {
+  display: none;
+}
+
+/*.connection {
+    stroke-width: 3;
+}*/
+
+/* svg link attrs end */

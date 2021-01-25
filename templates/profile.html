@@ -1,0 +1,286 @@
+
+{% extends "bootstrap/base.html" %}
+{% include 'layout.html' %}
+
+{% block title %}Profile{% endblock %}
+{% block head %}
+    <script  src="https://code.jquery.com/jquery-3.4.1.slim.min.js"  integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="  crossorigin="anonymous"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
+
+    {{ super() }}
+
+    <script type=text/javascript>
+    $( document ).ready(function() {
+
+        $('#changepw').on('show.bs.modal', function (event) {
+
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var recipient = button.data('whatever') // Extract info from data-* attributes
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            var modal = $(this)
+
+            modal.find('.modal-title').text('Change Password')
+
+        });
+        $('#failModal').on('show.bs.modal', function (event) {
+
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var recipient = button.data('whatever') // Extract info from data-* attributes
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            var modal = $(this)
+
+            modal.find('.modal-title').text(recipient)
+
+        });
+        $('#updatedModal').on('show.bs.modal', function (event) {
+
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var recipient = button.data('whatever') // Extract info from data-* attributes
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            var modal = $(this)
+
+            modal.find('.modal-title').text(recipient)
+
+        });
+
+        if($("#result").text() == "s")
+        {
+            $( "#btnSuccess" ).trigger( "click" );
+        }
+        else if(($("#result").text() == "The password is wrong.") | ($("#result").text() == "New password is not changed."))
+        {
+            $( "#btnFail" ).trigger( "click" );
+        }
+        else if(($("#result").text() == "New password is updated."))
+        {
+            $( "#btnUpdated" ).trigger( "click" );
+        }
+
+    });
+    function validateForm()
+    {
+        console.log("validateForm");
+        var pw1 = document.forms["pwForm"]["newPassword"].value;
+        var pw2 = document.forms["pwForm"]["newPassword2"].value;
+        var valid = true;
+        $("p#pwError").text("")
+        $("p#pwError2").text("")
+        if(pw1.length < 8)
+        {
+            $("p#pwError").text("The length is less than 8 characters.");
+            valid = false;
+        }
+        if(pw2.length == 0)
+        {
+            $("p#pwError2").text("Please enter a password.");
+            valid = false;
+        }
+        else if(pw1 != pw2)
+        {
+            $("p#pwError2").text("The 2 passwords are not same.");
+            valid = false;
+        }
+        return valid;
+    }
+
+    </script>
+    <style>
+    p.error{
+            font-size: 0.7rem;
+            color: red;
+            padding-left: 5px;
+        }
+    </style>
+
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+<div class="py-5 text-center">
+
+        <i class="fa fa-users fa-3x " aria-hidden="true" style="color: #218838;"></i><span><h2>Profile</h2></span>
+        <p class="lead">Your account details are as below.</p>
+    <hr class="mb-4">
+      </div>
+  <main role="main">
+
+
+  <form action="{{ url_for('profile') }}" method="post" class="needs-validation" >
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="firstName">First name</label>
+                <input type="text" class="form-control" id="firstName" placeholder="" value="{{ account['fname'] }}" disabled>
+                <div class="invalid-feedback">
+                  Valid first name is required.
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="lastName">Last name</label>
+                <input type="text" class="form-control" id="lastName" placeholder="" value="{{ account['lname'] }}" disabled>
+                <div class="invalid-feedback">
+                  Valid last name is required.
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="username">Username</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fas fa-user"></i></span>
+                </div>
+                <input type="text" class="form-control" id="username" placeholder="Username" required="" value="{{ account['id'] }}" disabled>
+                <div class="invalid-feedback" style="width: 100%;">
+                  Your username is required.
+                </div>
+              </div>
+            </div>
+
+
+            <div class="input-group mb-3">
+                <label for="btnSuccess">Password</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                    </div>
+                    <input type="password" class="form-control" placeholder="Please enter your password" name="password" aria-label="password" aria-describedby="btnSuccess">
+                    <div class="input-group-append">
+
+                        <button class="btn btn-success" id="button-validate"  type="submit">Click Here to Change Password</button>
+                    </div>
+
+                </div>
+                <button class="btn btn-success" type="button" id="btnSuccess" data-toggle="modal" data-target="#changepw" data-whatever="@mdo" hidden></button>
+                <button class="btn btn-success" type="button" id="btnFail" data-toggle="modal" data-target="#failModal" data-whatever="{{msg}}" hidden></button>
+                <button class="btn btn-success" type="button" id="btnUpdated" data-toggle="modal" data-target="#updatedModal" data-whatever="{{msg}}" hidden></button>
+                <span id="result" value="" hidden>{{msg}}</span>
+            </div>
+
+
+            <div class="mb-3">
+              <label for="email">Email</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                    </div>
+                    <input type="email" class="form-control" id="email" placeholder="you@example.com" value ="{{ account['email'] }}"disabled>
+                     <div class="invalid-feedback">
+                        Please enter a valid email address for shipping updates.
+                      </div>
+                 </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="firstName">Program</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="fas fa-paste"></i></span>
+                    </div>
+                    <input type="text" class="form-control" id="firstName" placeholder="" value="{{ account['name'] }}" disabled>
+                    <div class="invalid-feedback">
+                      Valid first name is required.
+                    </div>
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="lastName">Category</label>
+                  <div class="input-group">
+                  <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="fas fa-folder-open"></i></span>
+                  </div>
+                <input type="text" class="form-control" id="lastName" placeholder="" value="{{ category }}" disabled>
+                <div class="invalid-feedback">
+                  Valid last name is required.
+                </div>
+                  </div>
+              </div>
+            </div>
+            <hr class="mb-4">
+
+{#            <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>#}
+          </form>
+
+<div class="modal fade" id="changepw" tabindex="-1" role="dialog" aria-labelledby="changepwLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="changepwLabel">Change Password</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <form id="pwForm" action="{{ url_for('profile') }}" method="post" class="needs-validation" onsubmit="return validateForm()">
+        <div class="modal-body">
+
+          <div class="form-group">
+            <label for="newPassword" class="col-form-label">New Password</label>
+            <input type="password" class="form-control" id="newPassword" name="newPassword">
+            <p class="error" id="pwError"></p>
+          </div>
+          <div class="form-group">
+            <label for="newPassword2" class="col-form-label">Confirm Password</label>
+            <input type="password"  class="form-control" id="newPassword2" name="newPassword2">
+              <p class="error" id="pwError2"></p>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <input type="submit" class="btn btn-success input-field col-4" value="Change Password">
+        </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+      <div class="modal fade" id="failModal" tabindex="-1" role="dialog" aria-labelledby="failModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="failModalLabel"></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Please try again.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      <div class="modal fade" id="updatedModal" tabindex="-1" role="dialog" aria-labelledby="failModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="failModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                Your new password is set successfully.
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+</main>
+<footer class="container ">
+  <p class="float-right">© Algonquin College 2019-2020</p>
+</footer>
+
+</div>
+{% endblock %}

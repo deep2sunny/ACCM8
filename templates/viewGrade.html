@@ -1,0 +1,549 @@
+
+{% extends "bootstrap/base.html" %}
+{% include 'layout.html' %}
+
+{% block head %}
+    <script  src="https://code.jquery.com/jquery-3.4.1.slim.min.js"  integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="  crossorigin="anonymous"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
+
+    {{ super() }}
+
+    <script type=text/javascript>
+    $( document ).ready(function() {
+        //cascading dropdwon for program and course
+        $(".selectFilter").on("change",function(){
+            var e=$(this).data("target"),i=$(this).find(":selected").data("ref");
+            $("select."+e).val(""),null==i?
+                $("select."+e).find("option").each(function(){
+                    console.log("inside undefined"),$(this).removeAttr("disabled hidden")}):
+                    {#$(this).removeAttr("disabled hidden")}):#}
+                $("select."+e).find("option").each(function(){
+                    var e=$(this).data("belong"),t=$(this).val();
+                    console.log($(this).val());
+                    {#($(this).val() == "allcourse")?($(this).prop("disabled",false),$(this).prop("hidden",false)):(null);#}
+                    i!=e&&null!=t?($(this).prop("disabled",!0),$(this).prop("hidden",!0)):($(this).prop("disabled",!1),$(this).prop("hidden",!1))})
+        });
+
+        $('#editGradeModal').on('show.bs.modal', function (event) {
+
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var recipient = button.data('whatever') // Extract info from data-* attributes
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            var modal = $(this)
+
+            modal.find('.modal-title').text('Grade [Student: ' + recipient.split("$$")[2]+'('+recipient.split("$$")[1]+') Course: '+recipient.split("$$")[7]+']')
+            modal.find('#m_grade').val(recipient.split("$$")[3])
+            comment = recipient.split("$$")[4];
+            if(comment.indexOf("fcomment:")!= -1)
+            {
+                if(comment.indexOf("rcomment:")!= -1)
+                {
+                    fcomment = comment.substring(10, comment.indexOf("rcomment:"))
+                    rcomment = comment.substring(comment.indexOf("rcomment:")+10, )
+                }
+                else
+                {
+                    fcomment = comment.substring(10,)
+                    rcomment=""
+                }
+            }
+            else
+            {
+                fcomment = ""
+                if(comment.indexOf("rcomment:")!= -1)
+                {
+                    rcomment = comment.substring(comment.indexOf("rcomment:")+10, )
+                }
+                else
+                {
+                    rcomment=""
+                }
+            }
+
+            modal.find('#m_fcomment').val(fcomment)
+            modal.find('#m_rcomment').val(rcomment)
+            console.log("recipient", recipient)
+            console.log("modea: "+$("select#program").val());
+            console.log("modea: "+$("select#version").val());
+            console.log("modea: "+$("select#level").val());
+            console.log("modea: "+$("select#course").val());
+            modal.find('.modal-body input#gid').val(recipient.split("$$")[0])
+            modal.find('.modal-body input#program').val($("select#program").val())
+            modal.find('.modal-body input#version').val($("select#version").val())
+            modal.find('.modal-body input#level').val($("select#level").val())
+            modal.find('.modal-body input#course').val($("select#course").val())
+            modal.find('.modal-body input#mapid').val(recipient.split("$$")[5])
+            modal.find('.modal-body input#sid').val(recipient.split("$$")[6])
+            modal.find('.modal-body button#delBtn').attr("data-whatever", recipient.split("$$")[0])
+
+        });
+
+        $('#warningModal').on('show.bs.modal', function (event) {
+
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var recipient = button.data('whatever') // Extract info from data-* attributes
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            var modal = $(this)
+            modal.find('.modal-title').text('Delete grade item')
+            modal.find('#delete_gid').val(recipient)
+            modal.find('#dprogram').val($("select#program").val())
+            modal.find('#dversion').val($("select#version").val())
+            modal.find('#dlevel').val($("select#level").val())
+            modal.find('#dcourse').val($("select#course").val())
+
+
+        });
+    });
+    function validateForm() {
+        console.log("validateForm");
+        var valid = true;
+      var grade = document.forms["editForm"]["m_grade"].value;
+      if (grade == "") {
+        $("p#gradeError").text("This field must be filled out.");
+        valid = false;
+
+      }
+      else if(grade.length > 2)
+      {
+          $("p#gradeError").text("The length  is too long.");
+         valid = false;
+      }
+      else
+      {
+          $("p#gradeError").text("")
+      }
+      var fcomment = document.forms["editForm"]["m_fcomment"].value;
+      if(fcomment.length >300)
+      {
+           $("p#fcommentError").text("The length  is too long.");
+         valid = false;
+      }
+      else
+      {
+          $("p#fcommentError").text("")
+      }
+      var rcomment = document.forms["editForm"]["m_rcomment"].value;
+      if(rcomment.length >300)
+      {
+           $("p#rcommentError").text("The length  is too long.");
+          valid = false;
+      }
+      else
+      {
+          $("p#rcommentError").text("")
+      }
+
+      return valid;
+    }
+
+    </script>
+    <style>
+        div.modal
+        {
+            z-index: 100000 !important;
+        }
+        .emptygrade
+        {
+            width:20px;
+            height: 30px;
+        }
+        .badge-flowchart {
+            color: #20C997;
+            border: 1px solid #20C997;
+            background-color: #A2E6D2;
+            {##A2E6D2#}
+        }
+        .badge-flowchart:hover {
+            color: #fff;
+            {##FAFAD2#}
+            border: 1px solid #25993F;
+            background-color: #28A745;
+        }
+        p.error{
+            font-size: 0.7rem;
+            color: red;
+            padding-left: 5px;
+        }
+        .cyear{
+            margin: 0px;
+            font-size:0.6rem;
+        }
+        .input-icons i {
+            position: absolute;
+        }
+
+        .input-icons {
+            width: 100%;
+        }
+
+        .icon {
+            padding: 12px;
+            color: lightgoldenrodyellow;
+        }
+
+
+        .input-field {
+            width: 100%;
+            text-align: center;
+        }
+        .vertical-text {
+            transform:rotate(-90deg);
+            {#border: 1px dotted gray;#}
+            {#position: relative;#}
+            {##}
+            {#text-align: left;#}
+            margin:30px auto;
+            font-size: 0.8rem;
+        }
+
+        thead th {
+            {#vertical-align: bottom !important;#}
+            {#padding: 1px !important;#}
+            height: 90px;
+        }
+        [data-title] {
+          {#outline: red dotted 1px; /*optional styling*/#}
+          {#font-size: 30px; /*optional styling*/#}
+          {##}
+          position: relative;
+
+          {#cursor: help;#}
+        }
+
+        [data-title]:hover::before {
+          content: attr(data-title);
+          position: absolute;
+          bottom: -26px;
+          left: 20px;
+          display: inline-block;
+          padding: 3px 6px;
+          border-radius: 3px;
+          background: #111;
+          color: #fff;
+          font-size: 11px;
+          font-family: sans-serif;
+          white-space: nowrap;
+          z-index:10000 !important;
+        }
+        [data-title]:hover::after {
+          content: '';
+          position: absolute;
+          bottom: -5px;
+          left: 25px;
+          display: inline-block;
+          color: #fff;
+          border: 4px solid transparent;
+          border-bottom: 4px solid #111;
+          z-index:10000 !important;;
+        }
+
+       .comment:after {
+            content: "";
+            position: absolute;
+            left: calc(100% - 0.5em);
+            top: 0;
+            border-left: 0.5em solid transparent;
+            border-top: 0.5em solid red;
+        }
+    </style>
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="container" >
+
+      <div class="w-100 py-5 text-center">
+        <h2 >Students' Grade Book </h2>
+          <hr class="mb-4">
+
+        <form id="viewForm" action="{{ url_for('viewGrade') }}" method="post" class="needs-validation" >
+        <div class="form-row">
+        <div class="input-group">
+                <div class="col-md-2 mb-3">
+                    <select data-target="programList"  class="custom-select d-block w-100 versionList selectFilter" id="version" name="version" required="">
+                        <option value="">Choose Version...</option>
+
+                    {% for version in vDict %}
+                        {% if version['program_version'] == values['version'] %}
+                            <option data-ref="{{ version['program_version'] }}" value="{{ version['program_version'] }}" selected>{{ version['program_version'] }}</option>
+                        {% else %}
+                            <option data-ref="{{ version['program_version'] }}" value="{{ version['program_version'] }}">{{ version['program_version'] }}</option>
+                        {% endif %}
+                    {% endfor %}
+
+                    </select>
+                    <div class="invalid-feedback">
+                      Please select a valid program version.
+                    </div>
+                </div>
+              <div class="col-md-3 mb-3">
+                <select data-target="lvlList"  class="custom-select d-block w-100 programList selectFilter" id="program" name="program" required="">
+                    <option value="">Choose Program...</option>
+
+                {% for program in pDict %}
+                    {% if program['pid']|string == values['program'] %}
+                        <option data-belong="{{ program['program_version'] }}"  data-ref="{{ program['pid'] }}" value="{{ program['pid'] }}" selected>{{ program['name'] }}</option>
+                    {% else %}
+                        <option data-belong="{{ program['program_version'] }}"  data-ref="{{ program['pid'] }}" value="{{ program['pid'] }}">{{ program['name'] }}</option>
+                    {% endif %}
+                {% endfor %}
+
+                </select>
+                <div class="invalid-feedback">
+                  Please select a valid program name.
+                </div>
+              </div>
+              <div class="col-md-2 mb-3">
+{#                <select class="custom-select d-block w-100" id="level" name="level" required="">#}
+{#                    <option value="">Choose Level...</option>#}
+{#                    {% set level = ['1','2','3','4'] %}#}
+{#                    {% for l in level %}#}
+{#                        {% if l == values['level'] %}#}
+{#                            <option selected>{{ l }}</option>#}
+{#                        {% else %}#}
+{#                            <option>{{ l }}</option>#}
+{#                        {% endif %}#}
+{#                    {% endfor %}#}
+{#                </select>#}
+                  <select data-target="courseList" class="custom-select d-block w-100 lvlList selectFilter" id="level" name="level" required="">#}
+                    <option value="">Choose Level...</option>
+
+                    {% for l in lvlDict %}
+                        {% if l['level'] == values['level'] %}
+                            <option data-belong="{{ l['pid'] }}"  data-ref="{{l['pid']|string+l['level'] }}" value="{{ l['level'] }}" selected>{{ l['level']  }}</option>
+                        {% else %}
+                            <option data-belong="{{ l['pid'] }}"  data-ref="{{ l['pid']|string+l['level'] }}" value="{{ l['level'] }}" >{{ l['level'] }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                <div class="invalid-feedback">
+                  Please provide a valid course level.
+                </div>
+              </div>
+              <div class="col-md-3 mb-3">
+                <select class="custom-select d-block w-100 courseList selectFilter" id="course" name="course">
+                    <option value="">Choose Course...</option>
+                     {% for course in cDict %}
+                         {% if course['cid']|string == values['course'] %}
+                            <option data-belong="{{ course['pid']|string+course['level'] }}"  value="{{ course['cid'] }}" selected>{{ course['title'] }}</option>
+                         {% else %}
+                            <option data-belong="{{ course['pid']|string+course['level'] }}"  value="{{ course['cid'] }}">{{ course['title'] }}</option>
+                         {% endif %}
+
+                    {% endfor %}
+                </select>
+                <div class="invalid-feedback">
+                  Please provide a valid course.
+                </div>
+              </div>
+            <div class="col-md-2 mb-3">
+                 <div class="input-icons">
+                <i class="fa fa-search icon">
+              </i>
+                <input type="submit" class="btn btn-success input-field" value="View Grade" id="viewGrade">
+            </div>
+
+
+            </div>
+            </div>
+            </div>
+        </form>
+
+
+      {% if rDict %}
+          <table class="table table-sm table-bordered table-striped">
+{#          <table class="table table-sm table-bordered table-hover">#}
+          <thead >
+            <tr>
+              <th scope="col" rowspan="2">Student #</th>
+              <th scope="col" rowspan="2">Name</th>
+{#              <th scope="col" rowspan="2">Level</th>#}
+                {% for c in clist %}
+                    {% if c['mandatory'] %}
+                        <th class="h-100" scope="col" data-toggle="tooltip" data-placement="right" style="color: red" data-title='{{c['title'] }}'><p class="vertical-text align-bottom ">{{ c['course_num'] }}</p></th>
+                    {% else %}
+                        <th class="h-100" scope="col" data-toggle="tooltip" data-placement="right" data-title='{{c['title'] }}'><p class="vertical-text align-bottom ">{{ c['course_num'] }}</p></th>
+                    {% endif %}
+
+                {% endfor %}
+            </tr>
+          <tr>
+              {% for c in clist %}
+{#                <td class="h-100 align-bottom" scope="col"><p class="small cyear">{{ c['year'] }}</p></td>#}
+                  <td class="h-100 align-bottom" scope="col"><span class="badge badge-light badge-pill small border border-secondary">{{ c['level'] }}</span></td>
+              {% endfor %}
+          </tr>
+          </thead>
+          <tbody>
+            {% for r in rDict %}
+                <tr>
+                <th scope="row">
+                    {% if values['course'] %}
+                        <a href="{{ url_for('viewFlowchart', sid= r['sid'], sVersion=values['version'], sProgram=values['program'], sLevel=values['level'], sCourse=values['course']) }}" class="badge badge-flowchart" title="Course flowchart" value="{{ r['sid'] }}"><i class="fas fa-project-diagram" ></i></a> {{ r['student_num'] }}</th>
+                    {% else %}
+                        <a href="{{ url_for('viewFlowchart', sid= r['sid'], sVersion=values['version'], sProgram=values['program'], sLevel=values['level'], sCourse='null') }}" class="badge badge-flowchart" title="Course flowchart" value="{{ r['sid'] }}"><i class="fas fa-project-diagram" ></i></a> {{ r['student_num'] }}</th>
+                    {% endif %}
+
+                <td>{{ r['fullname'] }}</td>
+{#                <td>{{ r['level'] }}</td>#}
+
+                 {% for c in clist %}
+
+
+                     {% if r[c['course_num']+"_c"] %}
+                         <td class="comment" data-title="{{ r[c['course_num']+"_c"] }}">
+{#                         <td class="comment" title="{{ c['course_num'] }}">#}
+                             <button type="button" id="{{ r[c['course_num']+"_id"] }}" class="btn btn-light btn-sm"  {{ edit }} data-toggle="modal" data-target="#editGradeModal" data-whatever="{{ r[c['course_num']+"_id"] }}$${{ r['student_num'] }}$${{ r['fullname'] }}$${{ r[c['course_num']] }}$${{ r[c['course_num']+"_c"] }}$${{ c['mapid'] }}$${{ r['sid'] }}$${{ c['course_num'] }}"+>
+                                {{ r[c['course_num']] }}
+                             </button></td>
+                     {% else %}
+                        {% if r[c['course_num']] %}
+                            <td data-title="{{ c['course_num'] }}"><span class="align-bottom small">
+                                <button type="button" id="{{ r[c['course_num']+"_id"] }}" class="btn btn-light btn-sm" {{ edit }}  data-toggle="modal" data-target="#editGradeModal" data-whatever="{{ r[c['course_num']+"_id"] }}$${{ r['student_num'] }}$${{ r['fullname'] }}$${{ r[c['course_num']] }}$${{ r[c['course_num']+"_c"] }}$${{ c['mapid'] }}$${{ r['sid'] }}$${{ c['course_num'] }}">
+                                    {{ r[c['course_num']] }}
+                                </button></span></td>
+                        {% else %}
+                            <td data-title="{{ c['course_num'] }}">
+                                <span class="align-bottom small">
+                                <button type="button" class="btn btn-light btn-lg emptygrade"  data-toggle="modal" {{ edit }} data-target="#editGradeModal" data-whatever="$${{ r['student_num'] }}$${{ r['fullname'] }}$${{ r[c['course_num']] }}$${{ r[c['course_num']+"_c"] }}$${{ c['mapid'] }}$${{ r['sid'] }}$${{ c['course_num'] }}">
+                                    {{ r[c['course_num']] }}
+                                </button>
+                                </span></td>
+                            </td>
+                        {% endif %}
+                     {% endif %}
+
+                 {% endfor %}
+                </tr>
+            {% endfor %}
+
+          </tbody>
+        </table>
+
+      {% endif %}
+
+      {% if noData %}
+          <p>There is no grade data.</p>
+      {% endif %}
+
+      </div>
+    </div>
+
+
+<div class="modal fade" id="editGradeModal" tabindex="-1" role="dialog" aria-labelledby="editGradeLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editGradeLabel">Edit grade</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="editForm" action="{{ url_for('viewGrade') }}" method="post" class="needs-validation" onsubmit="return validateForm()">
+
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label" >Grade</label>
+            <input type="text" class="form-control" id="m_grade" name="m_grade" data-maxlength="2" data-error="maxlength" frequired>
+              <p class="error" id="gradeError"></p>
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">Faculty Comment</label>
+            <textarea class="form-control" id="m_fcomment" name="m_fcomment"></textarea>
+              <p class="error" id="fcommentError"></p>
+          </div>
+
+          <div class="form-group">
+           <label for="message-text" class="col-form-label">Review Comment</label>
+           <textarea class="form-control" id="m_rcomment" name="m_rcomment"></textarea>
+              <p class="error" id="rcommentError"></p>
+          </div>
+
+          <div class="form-group">
+            <input type="text" class="form-control" name="gid" id="gid" value="" hidden></input>
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" name="version" id="version" value="" hidden></input>
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" name="program" id="program" value="" hidden></input>
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" name="level" id="level" value="" hidden></input>
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" name="course" id="course" value="" hidden></input>
+          </div>
+             <div class="form-group">
+            <input type="text" class="form-control" name="mapid" id="mapid" value="" hidden></input>
+          </div>
+             <div class="form-group">
+            <input type="text" class="form-control" name="sid" id="sid" value="" hidden></input>
+          </div>
+
+          <div class="modal-footer">
+
+            <button type="button" id='delBtn' class="btn btn-outline-danger col-3" data-toggle="modal" data-target="#warningModal" data-whatever="">Delete</button>
+              <div class="col-md-2"></div>
+            <button type="button" class="btn btn-secondary col-3" data-dismiss="modal">Cancel</button>
+            <input type="submit" class="btn btn-success input-field col-3" value="Save">
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="warningModal" tabindex="-1" role="dialog" aria-labelledby="warningModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="warningModalLabel">Alert</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Are you sure to delete the grade?
+      </div>
+        <form id="editForm" action="{{ url_for('viewGrade') }}" method="post" >
+            <div class="form-group">
+                <input type="text" class="form-control" name="delete_gid" id="delete_gid" value="" hidden></input>
+            </div>
+          <div class="form-group">
+            <input type="text" class="form-control" name="version" id="dversion" value="" hidden></input>
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" name="program" id="dprogram" value="" hidden></input>
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" name="level" id="dlevel" value="" hidden></input>
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" name="course" id="dcourse" value="" hidden></input>
+          </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <input type="submit" class="btn btn-outline-danger input-field col-3" value="Delete">
+            </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+
+<footer class="container ">
+  <p class="float-right">© Algonquin College 2019-2020</p>
+</footer>
+
+
+{% endblock %}
+
+

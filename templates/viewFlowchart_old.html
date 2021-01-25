@@ -1,0 +1,41 @@
+{% extends "bootstrap/base.html" %}
+{% include 'layout.html' %}
+{% block head %}
+    <script  src="https://code.jquery.com/jquery-3.4.1.slim.min.js"  integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="  crossorigin="anonymous"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
+
+    {{ super() }}
+
+    <script type=text/javascript>
+    $( document ).ready(function() {
+        $(".hBack").on("click", function(e){
+            e.preventDefault();
+            window.history.back();
+        });
+    });
+
+    </script>
+    <style>
+
+    </style>
+
+{% endblock %}
+
+{% block content %}
+ <div class="container" >
+
+<form>
+    <button class="btn btn-secondary hBack" type="button"><i class="fas fa-chevron-left"></i></button>
+</form>
+     </div>
+
+
+
+
+
+<footer class="container ">
+  <p class="float-right">© Algonquin College 2019-2020</p>
+</footer>
+
+
+{% endblock %}

@@ -1,0 +1,36 @@
+
+{% extends "bootstrap/base.html" %}
+{% include 'layout.html' %}
+
+{% block title %}AC{% endblock %}
+
+
+{% block content %}
+
+  <main role="main">
+
+  <section class="jumbotron text-center">
+    <div class="container">
+      <br>
+      <h1 class="display-3">Algonquin College <br>Course Mapping System</h1>
+        <br>
+      <p class="lead text-muted">Welcome to Algonquin College Course Mapping System!
+          This grading system will serve as a focal point for obtaining information on student statuses in any given program, such as their grades and how far along they are in their respective programs.
+          </p>
+      <p>
+          <br>
+        <a href="{{ url_for('viewGrade') }}" class="btn btn-success my-2">View Grade Book</a>
+        <a href="{{ url_for('uploadGrade') }}" class="btn btn-success my-2" {{ bUpload }}>Upload Grade </a>
+      </p>
+    </div>
+  </section>
+
+
+
+</main>
+<footer class="container ">
+  <p class="float-right">© Algonquin College 2019-2020</p>
+</footer>
+
+
+{% endblock %}

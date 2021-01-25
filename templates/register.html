@@ -1,0 +1,185 @@
+{% extends "bootstrap/base.html" %}
+
+{% block head %}
+    <script  src="https://code.jquery.com/jquery-3.4.1.slim.min.js"  integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="  crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    {{ super() }}
+    <script>
+    $( document ).ready(function() {
+        if($("#result").text() == "s")
+        {
+            $( "#btnSuccess" ).trigger( "click" );
+        }
+
+
+    });
+    function validateForm() {
+        console.log("validateForm");
+        var valid = true;
+        var pw1 = document.forms["registerForm"]["password"].value;
+        var pw2 = document.forms["registerForm"]["confirm_password"].value;
+        $("p#pw1Error").text("");
+        $("p#pw2Error").text("");
+
+        if(pw1.length < 8)
+        {
+            $("p#pw1Error").text("The length is less than 8.");
+            valid = false;
+        }
+        else if(pw2.length < 8)
+        {
+            $("p#pw2Error").text("The length is less than 8.");
+            valid = false;
+        }
+        else if (pw1 != pw2) {
+            $("p#pw2Error").text("The 2 passwords are different.");
+            valid = false;
+        }
+
+        return valid;
+    }
+    </script>
+    <style>
+    .signup-form form {
+        margin-bottom: 15px;
+        background: #f7f7f7;
+        box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+        padding: 30px;
+    }
+    p.error{
+        font-size: 0.9rem;
+        color: red;
+        padding-left: 5px;
+        text-align: left;
+    }
+    </style>
+{% endblock %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+
+    <div class="container text-center">
+<div class="py-5 " >
+
+
+            <IMG SRC="/static/LogowithBG.png" class="rounded img-fluid  mx-auto d-block" width="100px" height="100px">
+    <h3 class="display-4">Algonquin College <br>Course Mapping System</h3>
+
+
+    <hr class="col-6">
+      </div>
+
+         <main role="main" >
+
+            <div class="signup-form col-5 " style="margin:  auto;">
+    <form action="{{ url_for('register') }}" method="post" id="registerForm" onsubmit="return validateForm()">
+		<h2>Create Account</h2><br>
+{#		<p class="lead">It's free and hardly takes more than 30 seconds.</p>#}
+        <div class="form-group">
+			<div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-user"></i></span>
+                </div>
+
+				<input type="text" class="form-control" name="username" placeholder="Username" required="required">
+
+			</div>
+            <p class="error" id="idError"></p>
+        </div>
+        <div class="form-group">
+			<div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-paper-plane"></i></span>
+                </div>
+
+				<input type="email" class="form-control" name="email" placeholder="Email Address" required="required">
+			</div>
+        </div>
+		<div class="form-group">
+			<div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                </div>
+
+				<input type="password" class="form-control" name="password" id="password" placeholder="Password" required="required">
+
+			</div>
+            <p class="error" id="pw1Error"></p>
+        </div>
+
+        <div class="form-group">
+			<div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                      <img src="/static/lockwmark.png" width="16px" height="16px">
+                  </span>
+                </div>
+
+				<input type="password" class="form-control " name="confirm_password"  id="confirm_password" placeholder="Confirm Password" required="required">
+
+			</div>
+            <p class="error" id="pw2Error"></p>
+        </div>
+
+        <div class="form-group">
+
+
+            <div class="form-group">
+                <div class="input-group">
+                 <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fas fa-folder-open"></i></span>
+                 </div>
+                 <select class="form-control" id="category" name="category" required="required">
+                    <option selected  hidden  value="" class="grey_color" style="color:gray">Choose...</option>
+                    <option value="coordinator">Coordinator</option>
+                    <option value="professor">Professor</option>
+                    <option value="secretary">Secretary</option>
+                    <option value="student">Student</option>
+                 </select>
+                </div>
+            </div>
+          </div>
+        <p class="error" id="resultMsg">{{ msg }}</p>
+
+		<div class="form-group">
+            <button type="submit" class="btn btn-success btn-block btn-lg">Sign Up</button>
+            <span id="result" value="" hidden>{{success}}</span>
+            <button class="btn btn-success" type="button" id="btnSuccess" data-toggle="modal" data-target="#showResult" data-whatever="@mdo" hidden></button>
+        </div>
+		<p class="small text-center">By clicking the Sign Up button, your request will be sent to the administrator.</p>
+    </form>
+	<div class="text-center">Already have an account? <a href="{{ url_for('login') }}" class="active">Login here</a>.</div>
+</div>
+
+<div class="modal fade" id="showResult" tabindex="-1" role="dialog" aria-labelledby="failModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="failModalLabel">Congratulations!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Your registration will be processed and you will get the confrimation email in 3 days.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+</main>
+<footer class="container ">
+  <br><p class="float-right">© Algonquin College 2019-2020</p>
+</footer>
+
+</div>
+{% endblock %}
+
+
+

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>{% block title %}{% endblock %}</title>
+        <link rel="shortcut icon" href="https://s7494.pcdn.co/acmarketing/wp-content/themes/algonquincollege2018/images/favicons/favicon.ico?v=xQd5vya3e2">
+        <link rel="stylesheet" href="/static/fontawesome-free-5.12.1-web/css/all.css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	</head>
+	<body class="loggedin">
+		<nav class="navtop">
+			<div>
+				<h1><img src="{{ url_for('static', filename='Logo.png') }}"/></h1>
+                <a href="{{ url_for('home') }}"><i class="fas fa-home"></i>Home</a>
+				<a href="{{ url_for('profile') }}"><i class="fas fa-user-circle"></i>Profile</a>
+				<a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i>Logout</a>
+			</div>
+		</nav>
+		<div class="content">
+			{% block content %}{% endblock %}
+		</div>
+	</body>
+</html>
