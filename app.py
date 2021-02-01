@@ -52,6 +52,8 @@ def login():
         category = request.form['category']
         msg=category
 
+        # ronak's changes 
+
         # Check if account exists using MySQL
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         result = 0
