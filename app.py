@@ -37,6 +37,8 @@ emailAccount = '';
 # Intialize MySQL
 mysql = MySQL(app)
 
+# Kelish's changes
+
 # http://localhost:5000/ - this will be the login page, we need to use both GET and POST requests
 @app.route('/', methods=['GET','POST'])
 def login():
