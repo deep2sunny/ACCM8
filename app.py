@@ -4,6 +4,7 @@ import MySQLdb.cursors
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_bootstrap import Bootstrap
 from flask_mysqldb import MySQL
+from flask_mail import Mail, Message
 from passlib.hash import sha256_crypt
 import inputCSV
 
