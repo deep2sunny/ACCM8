@@ -5,13 +5,8 @@ from configparser import ConfigParser
 
 def inputCSV2DB(pVersion, cTerm, sLevel, fileName):
 
-   configFileLocation = os.getcwd() + '/static/config.ini'
-   config = ConfigParser()
-   config.read(configFileLocation)
-   MYSQL_PASSWORD = str(config.get('main', 'MYSQL_PASSWORD').strip())
-
    print("call uploadGrade2DB in inputCSV", pVersion, cTerm, sLevel, fileName)
-   mydb = mysql.connector.connect(host='localhost', user='root', password=MYSQL_PASSWORD, database='accm')
+   mydb = mysql.connector.connect(host='localhost', user='root', password='', database='accm')
    print("database connected")
 
    cursor = mydb.cursor()
