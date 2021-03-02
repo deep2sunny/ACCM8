@@ -12,7 +12,8 @@ app = Flask(__name__)
 Bootstrap(app)
 
 # indicate the folder when loading the input files
-UPLOAD_FOLDER = 'd:/1.MyDoc/2020W/CST8268_Project/project/ACCM7/Upload/'
+currentWorkingDirectory = os.getcwd()
+UPLOAD_FOLDER = currentWorkingDirectory + '/Upload/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Change this to your secret key (can be anything, it's for extra protection)
@@ -33,7 +34,7 @@ app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = 1
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 # gmail account to notify a new user's registration (sender, receipient)
-emailAccount = '';
+emailAccount = ''
 
 # Intialize MySQL
 mysql = MySQL(app)
@@ -441,7 +442,7 @@ def viewFlowchart(sid, sVersion, sProgram, sLevel, sCourse):
     flowchart_courses = []
 
     mainc = []
-    prev = 0;
+    prev = 0
     for c in flowchart:
         if(prev != c['sequence']):
             flowchart_courses.append(
@@ -593,3 +594,5 @@ def viewFlowchart(sid, sVersion, sProgram, sLevel, sCourse):
     return render_template('viewFlowchart.html', flowchart_courses=iawd_course_map, prerequisite_links=prereq_links, sid = sid,
                            student_results = student_grades, studentName = student_name, studentNum = student_num, values=request.form,
                            bBackKey=bBackKey, random=r, admin_session = admin_session, v=v, bEditGrade=bEditGrade)
+
+

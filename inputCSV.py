@@ -1,7 +1,10 @@
+import os
 import csv
 import mysql.connector
+from configparser import ConfigParser
 
 def inputCSV2DB(pVersion, cTerm, sLevel, fileName):
+
    print("call uploadGrade2DB in inputCSV", pVersion, cTerm, sLevel, fileName)
    mydb = mysql.connector.connect(host='localhost', user='root', password='', database='accm')
    print("database connected")
