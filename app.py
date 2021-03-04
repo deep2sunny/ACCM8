@@ -7,8 +7,16 @@ from flask_mysqldb import MySQL
 from flask_mail import Mail, Message
 from passlib.hash import sha256_crypt
 import inputCSV
+from administrator import adminBlueprint
+from programs import programsBlueprint
+from programVersions import programVersionsBlueprint
+from courses import coursesBlueprint
 
 app = Flask(__name__)
+app.register_blueprint(adminBlueprint)
+app.register_blueprint(programsBlueprint)
+app.register_blueprint(programVersionsBlueprint)
+app.register_blueprint(coursesBlueprint)
 Bootstrap(app)
 
 # indicate the folder when loading the input files
@@ -177,6 +185,8 @@ def home():
         return render_template('home.html', bUpload=session['bUpload'])
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
+
+
 
 # http://localhost:5000/profile - this will be the profile page, only accessible for loggedin users
 @app.route('/profile', methods=['POST','GET'])

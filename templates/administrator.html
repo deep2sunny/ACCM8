@@ -1,0 +1,53 @@
+{% extends "bootstrap/base.html" %}
+{% include 'layout.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="py-5 text-center">
+        <h2>Administrator Page</h2>
+        <p class="my-3 text-muted">
+            The administrator can use this page to change the program and course information
+        </p>
+
+        <hr class="mb-4">
+        <div class="form-group row">
+            <h3>Programs Offering</h3>
+            <p class="my-3 text-muted">
+                This feature can be used to add or modify the Programs Offered at the College
+            </p>
+            <a href="{{ url_for('programs.programs') }}" class="btn btn-success my-2">Programs Offered
+                Page</a>
+        </div>
+
+        <hr class="mb-4">
+        <div class="form-group row">
+            <h3>Program Versions</h3>
+            <p class="my-3 text-muted">
+                This feature can be used to add or modify the Academic years this program is offered
+            </p>
+            <a href="{{ url_for('programVersions.programVersions') }}" class="btn btn-success my-2">Program Versions
+                Page</a>
+        </div>
+
+        <hr class="mb-4">
+        <div class="form-group row">
+            <h3>Courses</h3>
+            <p class="my-3 text-muted">
+                This feature can be used to add or modify the courses offered
+            </p>
+            <a href="{{ url_for('courses.courses') }}" class="btn btn-success my-2">Courses Offered
+                Page</a>
+        </div>
+
+        <hr class="mb-4">
+
+
+    </div>
+</div>
+
+<footer class="container ">
+  <p class="float-right">© Algonquin College 2019-2020</p>
+</footer>
+
+{% endblock %}
+
