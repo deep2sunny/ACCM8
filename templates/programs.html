@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="container">
-    <div class="py-5 text-center">
+    <div class="py-5 text-center ">
         <h2>Programs Page</h2>
         <p class="my-3 text-muted">
             The administrator can use this page to change the program and course information
@@ -11,14 +11,104 @@
 
         <hr class="mb-4">
     </div>
+
+
+    <form action="/" method="post" id="createProgramForm">
+        <div class="form-group row">
+            <label for="programCode" class="col-sm-2 col-form-label text-muted">Program Code</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="programCode" name="programCode" required>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="programName" class="col-sm-2 col-form-label text-muted">Program Name</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="programName" name="programName" required>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="programLevels" class="col-sm-2 col-form-label">Program Levels</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="programLevels" name="programLevels" required>
+            </div>
+        </div>
+        <div class="form-group row">
+            <span class="col-sm-2 col-form-label"></span>
+            <div class="col-sm-10">
+                <button type="submit" class="btn btn-success my-1" id="submitBtn">Create Program</button>
+                <button type="reset" class="btn btn-primary my-1" value="Reset" id="clearBtn">Clear Form</button>
+            </div>
+        </div>
+    </form>
+
+
+    <div class="form-group row col-md-12" id="messageBox" style="height: 100px;">
+        <div class="col-md-10"><label id="sucessConfirmation" class="form-control alert-success"
+                                      style="display: none; text-align: center;">{{message}}</label></div>
+        <div class="col-md-10"><label id="errorConfirmation" class="form-control alert-danger"
+                                      style="display: none; text-align: center;">{{message}}</label></div>
+    </div>
+
+
+    {% if codes|length > 0 %}
+
+    <div id="programTable">
+
+        <table class="table table-bordered table-striped text-muted">
+            <thead>
+            <tr>
+                <th scope="col">Program Code</th>
+                <th scope="col">Program Name</th>
+                <th scope="col">Levels</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody id="tableBody">
+            {% for x in codes %}
+            <tr>
+                <td>
+                    <span class="programCodeSpan">{{ codes[loop.index - 1]}}</span>
+                    <input type="text" class="form-control programCodeEditInputTag" name="editProgramCode"
+                           style="display:none;">
+                </td>
+                <td>
+                    <span class="programNameSpan">{{ names[loop.index - 1]}}</span>
+                    <input type="text" class="form-control programNameEditInputTag" name="editProgramName"
+                           style="display:none;">
+                </td>
+                <td>
+                    <span class="programLevelsSpan">{{ levels[loop.index - 1]}}</span>
+                    <input type="text" class="form-control programLevelsEditInputTag" name="editProgramLevels"
+                           style="display:none;">
+                </td>
+                <td>
+                    <button type="button" class="btn btn-primary editBtn">Edit</button>
+                    <button type="button" class="btn btn-success saveBtn" style="display:none;">Save</button>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-danger deleteBtn">Delete</button>
+                    <button type="button" class="btn btn-primary cancelBtn" style="display:none;">Cancel</button>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+    {% endif %}
+
+
 </div>
 
-<script  src="https://code.jquery.com/jquery-3.4.1.slim.min.js"  integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="  crossorigin="anonymous"></script>
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
 
 <script type="text/javascript" src="/static/programs.js"></script>
 
 <footer class="container ">
-  <p class="float-right">© Algonquin College 2019-2020</p>
+    <p class="float-right">© Algonquin College 2019-2020</p>
 </footer>
 
 {% endblock %}
