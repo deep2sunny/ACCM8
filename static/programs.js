@@ -22,11 +22,6 @@ $(document).ready(function () {
         $('.programCodeEditInputTag').eq(_index).show();
         $('.programCodeEditInputTag').eq(_index).val(codeValue);
 
-        var levelsValue = $('.programLevelsSpan').eq(_index).html();
-        $('.programLevelsSpan').eq(_index).hide();
-        $('.programLevelsEditInputTag').eq(_index).show();
-        $('.programLevelsEditInputTag').eq(_index).val(levelsValue);
-
         $('.editBtn').eq(_index).hide();
         $('.deleteBtn').eq(_index).hide();
 
@@ -47,9 +42,6 @@ $(document).ready(function () {
 
         $('.programCodeSpan').eq(_index).show();
         $('.programCodeEditInputTag').eq(_index).hide();
-
-        $('.programLevelsSpan').eq(_index).show();
-        $('.programLevelsEditInputTag').eq(_index).hide();
 
         $('.editBtn').eq(_index).show();
         $('.deleteBtn').eq(_index).show();
@@ -77,23 +69,16 @@ $(document).ready(function () {
 
         var programName = $('.programNameEditInputTag').eq(_index).val();
 
-        var programLevels = $('.programLevelsEditInputTag').eq(_index).val();
-
-        if (programCode == "" || programName == "" || programLevels == "") {
+        if (programCode == "" || programName == "") {
             $('#errorConfirmation').show();
             $('#errorConfirmation').html("All the form fields must be filled out");
-        } 
-        else if(programLevels < 0 || Number.isInteger(parseInt(programLevels)) == false || programLevels % 1 !== 0 ){
-            $('#errorConfirmation').show();
-            $('#errorConfirmation').html("Please enter a valid entry for number of levels");
         } 
         else {
 
             requestData = {
                 oldProgramCode: oldProgramCode,
                 programCode: programCode,
-                programName: programName,
-                programLevels: programLevels
+                programName: programName
             };
 
             $.ajax({
@@ -109,11 +94,9 @@ $(document).ready(function () {
 
                             $('.programCodeEditInputTag').eq(_index).val(programCode);
                             $('.programNameEditInputTag').eq(_index).val(programName);
-                            $('.programLevelsEditInputTag').eq(_index).val(programLevels);
 
                             $('.programCodeSpan').eq(_index).html(programCode);
                             $('.programNameSpan').eq(_index).html(programName);
-                            $('.programLevelsSpan').eq(_index).html(programLevels);
 
                             $('#sucessConfirmation').show();
                             $('#sucessConfirmation').html(response.message);
@@ -138,7 +121,7 @@ $(document).ready(function () {
 
     });
 
-    function addToDisplayTable(latestCode, latestName, latestLevels) {
+    function addToDisplayTable(latestCode, latestName) {
 
         var cell1 = $('<td>');
         var span = $('<span>').html(latestCode);
@@ -155,6 +138,7 @@ $(document).ready(function () {
 
         cell1.append(codeHiddenInputTag);
 
+        // ****
 
         var cell2 = $('<td>');
         var span = $('<span>').html(latestName);
@@ -171,22 +155,9 @@ $(document).ready(function () {
 
         cell2.append(nameHiddenInputTag);
 
+        // ***
+
         var cell3 = $('<td>');
-        var span = $('<span>').html(latestLevels);
-        span.attr("class", "programLevelsSpan");
-        cell3.append(span);
-        var levelsHiddenInputTag = $('<input>');
-        levelsHiddenInputTag.attr({
-            "type": "text",
-            "class": "form-control programLevelsEditInputTag",
-            "name": "editProgramLevels",
-            "style": "display:none;",
-            "value": latestLevels
-        });
-
-        cell3.append(levelsHiddenInputTag);
-
-        var cell4 = $('<td>');
 
         var editButton = $('<button>');
         editButton.html("Edit");
@@ -194,7 +165,7 @@ $(document).ready(function () {
             "type": "button",
             "class": "btn btn-primary editBtn"
         });
-        cell4.append(editButton);
+        cell3.append(editButton);
 
         // <button type="button" class="btn btn-primary saveBtn" style="display:none;">Save</button>
         var saveBtn = $('<button>');
@@ -205,9 +176,11 @@ $(document).ready(function () {
             "class": "btn btn-success saveBtn",
             "style": "display:none;"
         });
-        cell4.append(saveBtn);
+        cell3.append(saveBtn);
 
-        var cell5 = $('<td>');
+        // *****
+
+        var cell4 = $('<td>');
 
         var deleteButton = $('<button>');
         deleteButton.html("Delete");
@@ -215,7 +188,7 @@ $(document).ready(function () {
             "type": "button",
             "class": "btn btn-danger deleteBtn"
         });
-        cell5.append(deleteButton);
+        cell4.append(deleteButton);
 
         // <button type="button" class="btn btn-primary cancelBtn" style="display:none;">Cancel</button>
         var cancelBtn = $('<button>');
@@ -225,7 +198,7 @@ $(document).ready(function () {
             "class": "btn btn-primary cancelBtn",
             "style": "display:none;"
         });
-        cell5.append(cancelBtn);
+        cell4.append(cancelBtn);
 
 
         var row = $('<tr>');
@@ -233,7 +206,6 @@ $(document).ready(function () {
         row.append(cell2);
         row.append(cell3);
         row.append(cell4);
-        row.append(cell5);
 
         $('#tableBody').append(row);
 
@@ -243,21 +215,17 @@ $(document).ready(function () {
 
         programCode = $('#programCode').val();
         programName = $('#programName').val();
-        programLevels = parseFloat($('#programLevels').val());
+        
 
         $('#sucessConfirmation').hide();
         $('#errorConfirmation').hide();
 
-        console.log(programLevels);
 
-        if (programCode == "" || programName == "" || programLevels == "") {
+        if (programCode == "" || programName == "" ) {
             $('#errorConfirmation').show();
             $('#errorConfirmation').html("All the form fields must be filled out");
         } 
-        else if(programLevels < 0 || Number.isInteger(parseInt(programLevels)) == false || programLevels % 1 !== 0 ){
-            $('#errorConfirmation').show();
-            $('#errorConfirmation').html("Please enter a valid entry for number of levels");
-        } 
+        
         else {
 
             $.ajax({
@@ -266,7 +234,6 @@ $(document).ready(function () {
                 data: {
                     programCode: programCode,
                     programName: programName,
-                    programLevels: programLevels
                 },
                 dataType: "json",
                 success: function (response) {
@@ -274,7 +241,7 @@ $(document).ready(function () {
                     if (response !== null) {
                         if (response.status == "1") {
 
-                            addToDisplayTable(programCode, programName, programLevels);
+                            addToDisplayTable(programCode, programName);
 
                             $("#clearBtn").click();
 
@@ -363,3 +330,4 @@ $(document).ready(function () {
     });
 
 });
+

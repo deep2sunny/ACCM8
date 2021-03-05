@@ -27,12 +27,6 @@
             </div>
         </div>
         <div class="form-group row">
-            <label for="programLevels" class="col-sm-2 col-form-label">Program Levels</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" id="programLevels" name="programLevels" required>
-            </div>
-        </div>
-        <div class="form-group row">
             <span class="col-sm-2 col-form-label"></span>
             <div class="col-sm-10">
                 <button type="submit" class="btn btn-success my-1" id="submitBtn">Create Program</button>
@@ -59,7 +53,6 @@
             <tr>
                 <th scope="col">Program Code</th>
                 <th scope="col">Program Name</th>
-                <th scope="col">Levels</th>
                 <th scope="col"></th>
                 <th scope="col"></th>
             </tr>
@@ -75,11 +68,6 @@
                 <td>
                     <span class="programNameSpan">{{ names[loop.index - 1]}}</span>
                     <input type="text" class="form-control programNameEditInputTag" name="editProgramName"
-                           style="display:none;">
-                </td>
-                <td>
-                    <span class="programLevelsSpan">{{ levels[loop.index - 1]}}</span>
-                    <input type="text" class="form-control programLevelsEditInputTag" name="editProgramLevels"
                            style="display:none;">
                 </td>
                 <td>
