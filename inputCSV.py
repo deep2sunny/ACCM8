@@ -3,7 +3,7 @@ import mysql.connector
 
 def inputCSV2DB(pVersion, cTerm, sLevel, fileName):
    print("call uploadGrade2DB in inputCSV", pVersion, cTerm, sLevel, fileName)
-   mydb = mysql.connector.connect(host='localhost', user='root', password='', database='accm')
+   mydb = mysql.connector.connect(host='localhost', user='root', password='KK@*99*@K', database='accm')
    print("database connected")
 
    cursor = mydb.cursor()

@@ -1,3 +1,8 @@
+window.onload = function() {
+    viewFlowchart();
+};
+
+function viewFlowchart() {
 
 const program_map = {
     // 'nodes':[
@@ -517,6 +522,12 @@ else if (electives.length == 2) {
     elective_options[1].rcomment = electives[1].rcomment;
 }
 
+// window.onload = function() {
+//     viewFlowchart();
+// };
+
+// function viewFlowchart() {
+
 // graph: contains a reference to all components of your diagram
 // graph is a model holding all cells (elements/links) which are stored in property 'cells'
 var graph = new joint.dia.Graph;
@@ -623,6 +634,12 @@ joint.shapes.basic.CourseBox = joint.shapes.basic.Generic.extend({
 });
 
 
+
+
+//checkboxs
+var viewChecked = document.getElementById("view").checked;
+var genEdChecked = document.getElementById("genEd").checked;
+
 var courseList = program_map.nodes;
 var prereqlinks = program_map.links;
 var i;
@@ -630,15 +647,47 @@ var createdCourses = [];
 var portsides = ['top', 'right', 'bottom', 'left'];
 
 // loop through course list to create shape for each
+var second = false;
 for (i=0; i < courseList.length; i++) {
+    var code = null;
+    if (second == false && courseList[i].courseid === 'GED3002') {
+        if(elective_options[0].gedcode == undefined){
+            code = courseList[i].courseid;
+        }
+        else{
+            code = elective_options[0].gedcode;
+        }
+        second = true;
+    }
+    else if (second == true && courseList[i].courseid === 'GED3002') {
+        if(elective_options[1].gedcode == undefined){
+            code = courseList[i].courseid;
+        }
+        else{
+            code = elective_options[1].gedcode;
+        }
+    }
+    else{
+        code = courseList[i].courseid;
+    }
     var course = new joint.shapes.basic.CourseBox({
     position: { x: courseList[i].xcoord, y: courseList[i].ycoord },
     size: { width: 120, height: 110 },
     id: courseList[i].id,
     attrs: {
-        courseCode: { text: courseList[i].courseid},
+        // courseCode: { text: courseList[i].courseid},
+        courseCode: { text: code},
     }
+    
 });
+    // if genEdChecked checkbox not checked, no GenEds
+    if ((courseList[i].id == 12 || courseList[i].id == 17) && genEdChecked == false){
+        course.attr('box/display', 'none');
+        course.attr('courseCode/display', 'none');
+        course.attr('grade/display', 'none');
+        course.attr('infoIcon/display', 'none');
+        course.attr('editIcon/display', 'none');
+    }
 
     // if no grade, don't display
     if (courseList[i].grade === "" || courseList[i].grade == undefined) {
@@ -649,12 +698,16 @@ for (i=0; i < courseList.length; i++) {
         course.attr('grade/text', 'Grade: '+ courseList[i].grade);
 
         if (courseList[i].grade == "F " || courseList[i].grade == "F") {
-            course.attr('box/fill', '#176629');
-            course.attr('box/stroke', '#176629');
+            // course.attr('box/fill', '#176629');
+            // course.attr('box/stroke', '#176629');
+            course.attr('box/fill', '#ff4d4d');
+            course.attr('box/stroke', '#ff4d4d');
         }
         else {
             course.attr('box/fill', '#28A745');
             course.attr('box/stroke', '#28A745');
+            // course.attr('box/fill', '#47539b');
+            // course.attr('box/stroke', '#47539b');
         }
 
         course.attr('infoIcon/xlink:href', '/static/info-icon.png');
@@ -681,6 +734,8 @@ for (i=0; i < courseList.length; i++) {
     course.addTo(graph);
 }
 
+// if viewChecked checkbox not checked, no Lines(links)
+if(viewChecked == true) {
 // add links
 for (var l=0; l < prereqlinks.length; l++) {
     var link = new joint.shapes.standard.Link({
@@ -707,10 +762,10 @@ for (var l=0; l < prereqlinks.length; l++) {
 
     link.addTo(graph);
 }
-
+}
 
 // prevent moving shapes
-paper.setInteractivity({elementMove: false});
+// paper.setInteractivity({elementMove: false});
 
 
 // paper event edit edit
@@ -758,26 +813,21 @@ paper.on('element:edit', function(elementView, evt, x, y) {
 
 
                 if (elementView.model.id === 12) {
-                    console.log(getTitle);
                     for (j=0; j < elective_options.length; j++) {
                         if (courseList[k].mapid === elective_options[j].mapid) {
                             getCourseId = elective_options[j].gedcode;
-                            console.log(getCourseId);
                         }
                     }
                 }
                 else if (elementView.model.id === 17) {
-                    console.log(getTitle);
                     for (j=0; j < elective_options.length; j++) {
                         if (courseList[k].mapid === elective_options[j].mapid) {
                             getCourseId = elective_options[j].gedcode;
-                            console.log(getCourseId);
                         }
                     }
                 }
                 else {
                     getCourseId = courseList[k].courseid;
-                    console.log(getCourseId);
                 }
             }
         }
@@ -854,26 +904,21 @@ paper.on('element:info', function(elementView, evt, x, y) {
 
 
                 if (elementView.model.id === 12) {
-                    console.log(getTitle);
                     for (j=0; j < elective_options.length; j++) {
                         if (courseList[k].mapid === elective_options[j].mapid) {
                             getCourseId = elective_options[j].gedcode;
-                            console.log(getCourseId);
                         }
                     }
                 }
                 else if (elementView.model.id === 17) {
-                    console.log(getTitle);
                     for (j=0; j < elective_options.length; j++) {
                         if (courseList[k].mapid === elective_options[j].mapid) {
                             getCourseId = elective_options[j].gedcode;
-                            console.log(getCourseId);
                         }
                     }
                 }
                 else {
                     getCourseId = courseList[k].courseid;
-                    console.log(getCourseId);
                 }
             }
         }
@@ -890,10 +935,8 @@ paper.on('element:info', function(elementView, evt, x, y) {
         $('input#infocourseGrade').val(getGrade);
         $('input#infoGradeID').val(getGid);
 
-
-
     }
+
+  
 );
-
-
-
+}

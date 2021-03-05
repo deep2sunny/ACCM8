@@ -49,6 +49,20 @@
         console.log(getGrade);
         return valid;
     }
+
+  //   $(document).ready(function() {
+  //  $('.View').click(function() {
+  //     var current_status = $('.status').text();
+  //     if (current_status === 'Untoggled'){
+  //        $('.status').html('Toggled');
+  //     }
+  //     else{
+  //       $('.status').html('Untoggled');
+  //     }
+
+  //   });
+  //  });
+
     </script>
 
     <script src="/static/flowchart.js"></script>
@@ -62,19 +76,27 @@
     <div class="w-100 py-5 text-center">
     <h1>Student Program Progress</h1>
         <h2> {{ studentName }} <span style="font-size: 28px;color: darkgreen;"> [{{ studentNum }}]</span></h2>
-
     </div>
     <div class="container"  id="buttonPlace">
 
      {% if bBackKey %}
 
-         <form id="backForm" action="{{ url_for('viewGrade') }}" method="post">
+         <form id="backForm" action="{{ url_for('viewGrade') }}" method="post" style="display: inline-block;">
             <input type="text" class="form-control-plaintext" name = "version" id="version" value="{{ v['version'] }}" hidden>
             <input type="text" class="form-control-plaintext" name = "program" id="program" value="{{ v['program'] }}" hidden>
             <input type="text" class="form-control-plaintext" name = "level" id="level" value="{{ v['level'] }}" hidden>
             <input type="text" class="form-control-plaintext" name = "course" id="course" value="{{ v['course'] }}" hidden>
                 <button type="submit" class="btn btn-secondary" type="button" ><i class="fas fa-chevron-circle-up"></i></button>
-            </form>
+          </form>
+
+          <div style="display: inline-block; float: right;">
+            <label>View</label>
+            <input type="checkbox" id="view" onclick="viewFlowchart()">
+            &nbsp;
+            <label>GenEd</label>
+            <input type="checkbox" checked id="genEd" onclick="viewFlowchart()">
+          </div>
+
         <hr>
          <table>
          <tr>
@@ -95,7 +117,7 @@
         {% endif %}
     </div>
 
-    <div class="container"  id="flowchart">
+    <div class="container" style="padding-right: 0px;"  id="flowchart" onload="viewFlowchart()">
 
     </div>
 

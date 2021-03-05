@@ -139,6 +139,7 @@
     }
 
     </script>
+
     <style>
         div.modal
         {
@@ -204,8 +205,8 @@
             height: 90px;
         }
         [data-title] {
-          {#outline: red dotted 1px; /*optional styling*/#}
-          {#font-size: 30px; /*optional styling*/#}
+          {#outline: red dotted 1px;#}
+          {#font-size: 30px;#}
           {##}
           position: relative;
 
@@ -256,7 +257,7 @@
     <div class="container" >
 
       <div class="w-100 py-5 text-center">
-        <h2 >Students' Grade Book </h2>
+        <h2 >Students' Grade Book</h2>
           <hr class="mb-4">
 
         <form id="viewForm" action="{{ url_for('viewGrade') }}" method="post" class="needs-validation" >
@@ -270,7 +271,7 @@
                         {% if version['program_version'] == values['version'] %}
                             <option data-ref="{{ version['program_version'] }}" value="{{ version['program_version'] }}" selected>{{ version['program_version'] }}</option>
                         {% else %}
-                            <option data-ref="{{ version['program_version'] }}" value="{{ version['program_version'] }}">{{ version['program_version'] }}</option>
+                            <option data-ref="{{ version['program_version'] }}" value="{{ version['program_version'] }}" {% if version['program_version'] == "2017-2019" %} selected {% endif %}>{{ version['program_version'] }}</option>
                         {% endif %}
                     {% endfor %}
 
@@ -287,7 +288,7 @@
                     {% if program['pid']|string == values['program'] %}
                         <option data-belong="{{ program['program_version'] }}"  data-ref="{{ program['pid'] }}" value="{{ program['pid'] }}" selected>{{ program['name'] }}</option>
                     {% else %}
-                        <option data-belong="{{ program['program_version'] }}"  data-ref="{{ program['pid'] }}" value="{{ program['pid'] }}">{{ program['name'] }}</option>
+                        <option data-belong="{{ program['program_version'] }}"  data-ref="{{ program['pid'] }}" value="{{ program['pid'] }}" {% if program['pid'] == 20 %} selected {% endif %}>{{ program['name'] }}</option>
                     {% endif %}
                 {% endfor %}
 
@@ -382,9 +383,9 @@
                 <tr>
                 <th scope="row">
                     {% if values['course'] %}
-                        <a href="{{ url_for('viewFlowchart', sid= r['sid'], sVersion=values['version'], sProgram=values['program'], sLevel=values['level'], sCourse=values['course']) }}" class="badge badge-flowchart" title="Course flowchart" value="{{ r['sid'] }}"><i class="fas fa-project-diagram" ></i></a> {{ r['student_num'] }}</th>
+                        <a href="{{ url_for('viewFlowchart', sid= r['sid'], sVersion=values['version'], sProgram=values['program'], sLevel=values['level'], sCourse=values['course']) }}" class="badge badge-flowchart" title="Course flowchart" value="{{ r['sid'] }}"><i class="fas fa-project-diagram"></i></a> {{ r['student_num'] }}</th>
                     {% else %}
-                        <a href="{{ url_for('viewFlowchart', sid= r['sid'], sVersion=values['version'], sProgram=values['program'], sLevel=values['level'], sCourse='null') }}" class="badge badge-flowchart" title="Course flowchart" value="{{ r['sid'] }}"><i class="fas fa-project-diagram" ></i></a> {{ r['student_num'] }}</th>
+                        <a href="{{ url_for('viewFlowchart', sid= r['sid'], sVersion=values['version'], sProgram=values['program'], sLevel=values['level'], sCourse='null') }}" class="badge badge-flowchart" title="Course flowchart" value="{{ r['sid'] }}"><i class="fas fa-project-diagram"></i></a> {{ r['student_num'] }}</th>
                     {% endif %}
 
                 <td>{{ r['fullname'] }}</td>
