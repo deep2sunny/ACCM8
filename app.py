@@ -11,12 +11,14 @@ from administrator import adminBlueprint
 from programs import programsBlueprint
 from programVersions import programVersionsBlueprint
 from courses import coursesBlueprint
+from studentsReport import studentsReportBlueprint
 
 app = Flask(__name__)
 app.register_blueprint(adminBlueprint)
 app.register_blueprint(programsBlueprint)
 app.register_blueprint(programVersionsBlueprint)
 app.register_blueprint(coursesBlueprint)
+app.register_blueprint(studentsReportBlueprint)
 Bootstrap(app)
 
 # indicate the folder when loading the input files

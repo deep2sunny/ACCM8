@@ -1,0 +1,46 @@
+{% extends "bootstrap/base.html" %}
+{% include 'layout.html' %}
+
+{% block content %}
+<div class="container">
+
+    <div class="input-group">
+
+        <div class="col-md-2 mb-3">
+            <select name="startYear" class="custom-select" id="startYear">
+
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+
+            </select>
+            <div class="invalid-feedback">
+                Test
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="invalid-feedback">
+
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="invalid-feedback"></div>
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="/static/studentReport.js"></script>
+
+<footer class="container ">
+    <p class="float-right">© Algonquin College 2019-2020</p>
+</footer>
+
+{% endblock %}
+
