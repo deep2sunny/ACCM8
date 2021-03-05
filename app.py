@@ -9,7 +9,7 @@ from passlib.hash import sha256_crypt
 import inputCSV
 
 #test
-#akashdeep
+#akash
 
 app = Flask(__name__)
 Bootstrap(app)
