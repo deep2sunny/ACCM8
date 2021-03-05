@@ -9,9 +9,9 @@ programsBlueprint = Blueprint("programs", __name__, static_folder="static", temp
 def programs():
 
     rows = readAllProgramsOffered()
-    codes, names, levels = seperateProgramData(rows)
+    codes, names= seperateProgramData(rows)
 
-    return render_template("programs.html",codes=codes, names=names, levels=levels)
+    return render_template("programs.html",codes=codes, names=names)
 
 
 
@@ -22,12 +22,11 @@ def createProgram():
 
         programCode = request.form["programCode"]
         programName = request.form["programName"]
-        programLevels = request.form["programLevels"]
 
         if checkIfProgramOfferedExists(programCode):
             return jsonify(status="0", message="The specified program already exists")
 
-        createProgramOfferingQuery(programCode, programName, programLevels)
+        createProgramOfferingQuery(programCode, programName)
 
         return jsonify(status="1", message="Successfully added new program")
 
@@ -55,14 +54,13 @@ def updateProgram():
         programCode = request.json['programCode']
         programName = request.json['programName']
         oldProgramCode = request.json['oldProgramCode']
-        programLevels = request.json['programLevels']
 
         programVersionsExist = checkIfProgramVersionsExistQuery(oldProgramCode)
 
         if programVersionsExist:
             return jsonify(status="0", message="The Program has multiple year versions, it's information cannot be updated at this point")
 
-        updateProgramInfoQuery(programCode, programName, programLevels)
+        updateProgramInfoQuery(programCode, programName)
 
         return jsonify(status="1", message="Program was successfully updated")
 
@@ -85,34 +83,32 @@ def createCursor():
 def seperateProgramData(rows):
     codes = []
     names = []
-    levels = []
 
     for i in range(len(rows)):
         codes.append(rows[i][0])
         names.append(rows[i][1])
-        levels.append(rows[i][2])
 
-    return codes, names, levels
-
+    return codes, names
 
 
-def createProgramOfferingQuery(programCode, programName, programLevels):
+
+def createProgramOfferingQuery(programCode, programName):
 
     con = createCursor()
     cursor = con.cursor()
-    query = f"""INSERT INTO program_offered(program_code, program_name, levels) 
-            VALUES('{programCode}','{programName}', '{programLevels}');"""
+    query = f"""INSERT INTO program_offered(program_code, program_name) 
+            VALUES('{programCode}','{programName}');"""
 
     cursor.execute(query)
     con.commit()
     con.close()
 
 
-def updateProgramInfoQuery(programCode, programName, programLevels):
+def updateProgramInfoQuery(programCode, programName):
     con = createCursor()
     query = f""" 
             UPDATE program_offered 
-            SET program_code = '{programCode}', program_name = '{programName}', levels = '{programLevels}'
+            SET program_code = '{programCode}', program_name = '{programName}'
             WHERE program_code = '{programCode}';
             """
     cursor = con.cursor()
