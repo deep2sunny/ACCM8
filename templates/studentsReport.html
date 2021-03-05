@@ -4,10 +4,21 @@
 {% block content %}
 <div class="container">
 
+    <form id="viewForm" action="{{ url_for('studentsReport') }}" method="post" class="needs-validation" >
+
+    <div class="py-5 text-center ">
+        <h2>Students Reports Page</h2>
+        <p class="my-3 text-muted">
+            The administrator can use this page to generate student reports
+        </p>
+
+        <hr class="mb-4">
+    </div>
+
     <div class="input-group">
 
         <div class="col-md-2 mb-3">
-            <select name="startYear" class="custom-select" id="startYear">
+            <select name="programVersion" class="custom-select" id="programVersion">
 
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -15,26 +26,45 @@
 
             </select>
             <div class="invalid-feedback">
-                Test
+                Program Version
             </div>
         </div>
         <div class="col-md-2 mb-3">
-            <div class="invalid-feedback">
+            <select name="level" class="custom-select" id="level">
 
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+
+            </select>
+            <div class="invalid-feedback">
+                Program Level
             </div>
         </div>
         <div class="col-md-2 mb-3">
-            <div class="invalid-feedback"></div>
+            <select name="term" class="custom-select" id="term">
+
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+
+            </select>
+            <div class="invalid-feedback">
+                Program Term
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <button type="submit" class="btn btn-success my-1" id="submitBtn">View Report</button>
         </div>
 
     </div>
-
+    </form>
 
 </div>
 
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-        integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
+    integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
 
 <script type="text/javascript" src="/static/studentReport.js"></script>
 
@@ -43,4 +73,3 @@
 </footer>
 
 {% endblock %}
-
