@@ -6,6 +6,67 @@
     <script  src="https://code.jquery.com/jquery-3.4.1.slim.min.js"  integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="  crossorigin="anonymous"></script>
     <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
     {{ super() }}
+    <style>
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 48px;
+        height: 24px;
+      }
+      
+      .switch input { 
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+      
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 24px;
+        left: 2px;
+        bottom: 2px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+      
+      input:checked + .slider {
+        background-color: #2196F3;
+      }
+      
+      input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+      }
+      
+      input:checked + .slider:before {
+        -webkit-transform: translateX(20px);
+        -ms-transform: translateX(20px);
+        transform: translateX(20px);
+      }
+      
+      /* Rounded sliders */
+      .slider.round {
+        border-radius: 34px;
+      }
+      
+      .slider.round:before {
+        border-radius: 50%;
+      }
+      </style>
 {% endblock %}
 
 {% block scripts %}
@@ -50,19 +111,6 @@
         return valid;
     }
 
-  //   $(document).ready(function() {
-  //  $('.View').click(function() {
-  //     var current_status = $('.status').text();
-  //     if (current_status === 'Untoggled'){
-  //        $('.status').html('Toggled');
-  //     }
-  //     else{
-  //       $('.status').html('Untoggled');
-  //     }
-
-  //   });
-  //  });
-
     </script>
 
     <script src="/static/flowchart.js"></script>
@@ -91,10 +139,16 @@
 
           <div style="display: inline-block; float: right;">
             <label>View</label>
-            <input type="checkbox" id="view" onclick="viewFlowchart()">
+            <label class="switch">
+              <input type="checkbox" id="view" onclick="viewFlowchart()">
+              <span class="slider round"></span>
+            </label>
             &nbsp;
             <label>GenEd</label>
-            <input type="checkbox" checked id="genEd" onclick="viewFlowchart()">
+            <label class="switch">
+              <input type="checkbox" checked id="genEd" onclick="viewFlowchart()">
+              <span class="slider round"></span>
+            </label>
           </div>
 
         <hr>
