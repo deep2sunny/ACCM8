@@ -18,8 +18,6 @@ def studentsReport():
         # the value in the DB is an int
         # request.form['version'] = 20
 
-        print(level+"-"+programVersionID+"-"+programCode)
-
         failedStudentsRecords = readFailedStudents(level, programVersionID)
 
         passedStudentsRecords = readPassedStudents(level, programVersionID)
