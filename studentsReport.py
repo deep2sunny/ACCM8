@@ -6,21 +6,21 @@ studentsReportBlueprint = Blueprint("studentsReport", __name__, static_folder="s
 
 my_objects = []
 
+# http://localhost:5000/administrator/studentsreport
 @studentsReportBlueprint.route("/administrator/studentsreport", methods=['GET','POST'])
 def studentsReport():
 
+    # re-load page when View Report button is clicked
     if request.method == 'POST' and 'program' in request.form and 'level' in request.form and 'version' in request.form:
 
         level = request.form['level']
-        programVersionID = request.form['version']
+        programVersion = request.form['version']
         programCode = request.form['program']
 
-        # the value in the DB is an int
-        # request.form['version'] = 20
 
-        failedStudentsRecords = readFailedStudents(level, programVersionID)
+        failedStudentsRecords = readFailedStudents(level, programVersion, programCode)
 
-        passedStudentsRecords = readPassedStudents(level, programVersionID)
+        passedStudentsRecords = readPassedStudents(level, programVersion, programCode)
 
         programVersions = readProgramVersions()
 
@@ -32,12 +32,54 @@ def studentsReport():
 
         levels = ["A01", "A02", "A03", "A04"]
 
-        print(request.form)
+        showMessage = False
+
+
+        if len(failedStudentsRecords) == 0 and len(passedStudentsRecords) == 0:
+            showMessage = True
 
         return render_template("studentsReport.html", levels=levels, programs=programs, programVersions=programVersions,
                                failedStudentsRecords=failedStudentsRecords, passedStudentsRecords=passedStudentsRecords,
-                               values=request.form)
+                               values=request.form, showMessage=showMessage)
 
+    # this is to hand the POST request when "back to student report" button on viewFlowchart page is clicked
+    elif request.method == 'POST' and 'programReport' in request.form and 'levelReport' in request.form and 'versionReport' in request.form:
+
+        level = request.form['levelReport']
+        programVersion = request.form['versionReport']
+        programVersionPid = request.form['programReport']
+
+        programCode, programName, programVersionYear = getProgramCode(programVersionPid)
+
+        failedStudentsRecords = readFailedStudents(level, programVersion, programCode)
+
+        passedStudentsRecords = readPassedStudents(level, programVersion, programCode)
+
+        programVersions = readProgramVersions()
+
+        programs = readPrograms()
+
+        for i in range(len(programVersions)):
+            _old = programVersions[i]['pid']
+            programVersions[i]['pid'] = str(_old)
+
+        levels = ["A01", "A02", "A03", "A04"]
+
+        showMessage = False
+
+        if len(failedStudentsRecords) == 0 and len(passedStudentsRecords) == 0:
+            showMessage = True
+
+        values = dict()
+        values['level'] = level
+        values['program'] = programCode
+        values['version'] = programVersionYear
+
+        return render_template("studentsReport.html", levels=levels, programs=programs, programVersions=programVersions,
+                               failedStudentsRecords=failedStudentsRecords, passedStudentsRecords=passedStudentsRecords,
+                               values=values, showMessage=showMessage)
+
+    # Load page for the first time
     else:
         programVersions = readProgramVersions()
 
@@ -48,7 +90,6 @@ def studentsReport():
             programVersions[i]['pid'] = str(_old)
 
 
-        print(programVersions)
 
         levels = ["A01", "A02", "A03", "A04"]
 
@@ -57,7 +98,7 @@ def studentsReport():
         values['program'] = "0"
         values['version'] = "0"
 
-        return render_template("studentsReport.html", levels=levels, programs=programs, programVersions=programVersions, values=values)
+        return render_template("studentsReport.html", levels=levels, programs=programs, programVersions=programVersions, values=values, showMessage=False)
 
 
 
@@ -129,7 +170,7 @@ def readPrograms():
     return programs
 
 
-def readFailedStudents(level, programVersionID):
+def readFailedStudents(level, programVersion, programCode):
     con = createCursor()
     query = f"""
     
@@ -142,7 +183,8 @@ def readFailedStudents(level, programVersionID):
                 INNER JOIN course ON coursemap.cid = course.cid
                 INNER JOIN program ON coursemap.pid = program.pid
                 
-                WHERE coursemap.level = "{level}" AND grade.letter_grade = "F" AND program.pid="{programVersionID}"
+                WHERE coursemap.level = "{level}" AND grade.letter_grade = "F" AND program.program_version="{programVersion}"
+                AND program.code="{programCode}" 
                 
                 ;    
                 
@@ -160,7 +202,7 @@ def readFailedStudents(level, programVersionID):
     return failedStudentsRecords
 
 
-def readPassedStudents(level, programVersion):
+def readPassedStudents(level, programVersion, programCode):
     con = createCursor()
     query = f"""
 
@@ -173,7 +215,8 @@ def readPassedStudents(level, programVersion):
                 INNER JOIN course ON coursemap.cid = course.cid
                 INNER JOIN program ON coursemap.pid = program.pid
 
-                WHERE coursemap.level = "{level}" AND grade.letter_grade != "F" AND program.pid="{programVersion}"
+                WHERE coursemap.level = "{level}" AND grade.letter_grade != "F" AND program.program_version="{programVersion}"
+                AND program.code="{programCode}" 
 
                 ;    
 
@@ -191,3 +234,27 @@ def readPassedStudents(level, programVersion):
     return passedStudentsRecords
 
 
+def getProgramCode(programVersionId):
+    con = createCursor()
+    query = f"""
+
+                    SELECT program.code, program.name, program.program_version
+                    
+                    FROM accm.program
+
+                    where program.pid="{programVersionId}"
+                    
+                    ;
+
+                    ;    
+
+                """
+
+    cursor = con.cursor()
+    cursor.execute(query)
+    rows = cursor.fetchall()
+    programCode = rows[0][0]
+    programName = rows[0][1]
+    programVersionYear = rows[0][2]
+
+    return programCode, programName, programVersionYear
