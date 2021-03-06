@@ -92,6 +92,8 @@ $(document).ready(function () {
                     if (response !== null) {
                         if (response.status == "1") {
 
+                            console.log("success");
+
                             $('.programCodeEditInputTag').eq(_index).val(programCode);
                             $('.programNameEditInputTag').eq(_index).val(programName);
 
@@ -105,7 +107,9 @@ $(document).ready(function () {
 
                         } else if (response.status == "0") {
 
-                            $('#sucessConfirmation').show();
+                            console.log("failure");
+
+                            $('#errorConfirmation').show();
                             $('#errorConfirmation').html(response.message);
                         }
 

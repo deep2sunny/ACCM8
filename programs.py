@@ -57,6 +57,8 @@ def updateProgram():
 
         programVersionsExist = checkIfProgramVersionsExistQuery(oldProgramCode)
 
+        print(programCode + "-" + programName + "-" + oldProgramCode)
+
         if programVersionsExist:
             return jsonify(status="0", message="The Program has multiple year versions, it's information cannot be updated at this point")
 
