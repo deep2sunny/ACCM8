@@ -8,8 +8,6 @@ from flask_mail import Mail, Message
 from passlib.hash import sha256_crypt
 import inputCSV
 
-#test
-#akash
 
 app = Flask(__name__)
 Bootstrap(app)
