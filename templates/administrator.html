@@ -6,7 +6,7 @@
     <div class="py-5 text-center">
         <h2>Administrator Page</h2>
         <p class="my-3 text-muted">
-            The administrator can use this page to change the program and course information
+            This is the administrator page
         </p>
 
         <hr class="mb-4">
@@ -16,26 +16,6 @@
                 This generates a report to show which students can and cannot move to the next semester
             </p>
             <a href="{{ url_for('studentsReport.studentsReport') }}" class="btn btn-success my-2">Courses Offered
-                Page</a>
-        </div>
-
-        <hr class="mb-4">
-        <div class="form-group row">
-            <h3>Programs Offering</h3>
-            <p class="my-3 text-muted">
-                This feature can be used to add or modify the Programs Offered at the College
-            </p>
-            <a href="{{ url_for('programs.programs') }}" class="btn btn-success my-2">Programs Offered
-                Page</a>
-        </div>
-
-        <hr class="mb-4">
-        <div class="form-group row">
-            <h3>Program Versions</h3>
-            <p class="my-3 text-muted">
-                This feature can be used to add or modify the Academic years this program is offered
-            </p>
-            <a href="{{ url_for('programVersions.programVersions') }}" class="btn btn-success my-2">Program Versions
                 Page</a>
         </div>
 

@@ -7,18 +7,9 @@ from flask_mysqldb import MySQL
 from flask_mail import Mail, Message
 from passlib.hash import sha256_crypt
 import inputCSV
-from administrator import adminBlueprint
-from programs import programsBlueprint
-from programVersions import programVersionsBlueprint
-from courses import coursesBlueprint
-from studentsReport import studentsReportBlueprint
+
 
 app = Flask(__name__)
-app.register_blueprint(adminBlueprint)
-app.register_blueprint(programsBlueprint)
-app.register_blueprint(programVersionsBlueprint)
-app.register_blueprint(coursesBlueprint)
-app.register_blueprint(studentsReportBlueprint)
 Bootstrap(app)
 
 # indicate the folder when loading the input files
@@ -48,6 +39,17 @@ emailAccount = ''
 
 # Intialize MySQL
 mysql = MySQL(app)
+
+# Add the pages admin, courses, course progression
+from administrator import adminBlueprint
+from courses import coursesBlueprint
+from studentsReport import studentsReportBlueprint
+
+app.register_blueprint(adminBlueprint)
+app.register_blueprint(coursesBlueprint)
+app.register_blueprint(studentsReportBlueprint)
+
+
 
 # http://localhost:5000/ - this will be the login page, we need to use both GET and POST requests
 @app.route('/', methods=['GET','POST'])

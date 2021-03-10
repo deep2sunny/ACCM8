@@ -18,36 +18,8 @@
 
         <div class="input-group">
 
-            <div class="col-md-2 mb-6">
-                <select id="version" name="version" class="custom-select">
-                    <option value="0">Choose Version...</option>
-                    {% for version in programVersions %}                    
-                    {% if version['program_version'] == values['version'] %}
-                    <option value="{{ version['program_version'] }}" selected>{{version['program_version']}}</option>
-                    {% else %}
-                    <option value="{{ version['program_version'] }}">{{version['program_version']}}</option>
-                    {% endif %}
-                    {% endfor %}
-                </select>
-                <div class="invalid-feedback">
-                    Program Version
-                </div>
-            </div>
-            <div class="col-md-6 mb-6">
-                <select id="program" name="program" class="custom-select">
-                    <option value="0">Choose Program...</option>
-                    {% for program in programs %}
-                    {% if program['program_code'] == values['program'] %}
-                    <option value="{{ program['program_code'] }}" selected>{{ program['program_name'] }}</option>
-                    {% else %}
-                    <option value="{{ program['program_code'] }}">{{ program['program_name'] }}</option>
-                    {% endif %}
-                    {% endfor %}
-                </select>
-                <div class="invalid-feedback">
-                    Program Name
-                </div>
-            </div>
+
+
             <div class="col-md-2 mb-6">
                 <select id="level" name="level" class="custom-select">
                     <option value="0">Choose Level...</option>

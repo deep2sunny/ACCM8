@@ -1,69 +1,46 @@
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, render_template, request, jsonify, current_app
 import sys
 import MySQLdb as mdb1
+from flask_mysqldb import MySQL
+from app import app
 
 studentsReportBlueprint = Blueprint("studentsReport", __name__, static_folder="static", template_folder="template")
 
-my_objects = []
 
 # http://localhost:5000/administrator/studentsreport
 @studentsReportBlueprint.route("/administrator/studentsreport", methods=['GET','POST'])
 def studentsReport():
 
+    levels = ["A01", "A02", "A03", "A04"]
+    programPid = "20"
+
     # re-load page when View Report button is clicked
-    if request.method == 'POST' and 'program' in request.form and 'level' in request.form and 'version' in request.form:
+    if request.method == 'POST' and 'level' in request.form :
 
         level = request.form['level']
-        programVersion = request.form['version']
-        programCode = request.form['program']
 
+        failedStudentsRecords = readFailedStudents(level, programPid)
 
-        failedStudentsRecords = readFailedStudents(level, programVersion, programCode)
-
-        passedStudentsRecords = readPassedStudents(level, programVersion, programCode)
-
-        programVersions = readProgramVersions()
-
-        programs = readPrograms()
-
-        for i in range(len(programVersions)):
-            _old = programVersions[i]['pid']
-            programVersions[i]['pid'] = str(_old)
-
-        levels = ["A01", "A02", "A03", "A04"]
+        passedStudentsRecords = readPassedStudents(level, programPid)
 
         showMessage = False
-
 
         if len(failedStudentsRecords) == 0 and len(passedStudentsRecords) == 0:
             showMessage = True
 
-        return render_template("studentsReport.html", levels=levels, programs=programs, programVersions=programVersions,
+        return render_template("studentsReport.html", levels=levels,
                                failedStudentsRecords=failedStudentsRecords, passedStudentsRecords=passedStudentsRecords,
                                values=request.form, showMessage=showMessage)
 
+
     # this is to hand the POST request when "back to student report" button on viewFlowchart page is clicked
-    elif request.method == 'POST' and 'programReport' in request.form and 'levelReport' in request.form and 'versionReport' in request.form:
+    elif request.method == 'POST' and 'levelReport' in request.form:
 
         level = request.form['levelReport']
-        programVersion = request.form['versionReport']
-        programVersionPid = request.form['programReport']
 
-        programCode, programName, programVersionYear = getProgramCode(programVersionPid)
+        failedStudentsRecords = readFailedStudents(level, programPid)
 
-        failedStudentsRecords = readFailedStudents(level, programVersion, programCode)
-
-        passedStudentsRecords = readPassedStudents(level, programVersion, programCode)
-
-        programVersions = readProgramVersions()
-
-        programs = readPrograms()
-
-        for i in range(len(programVersions)):
-            _old = programVersions[i]['pid']
-            programVersions[i]['pid'] = str(_old)
-
-        levels = ["A01", "A02", "A03", "A04"]
+        passedStudentsRecords = readPassedStudents(level, programPid)
 
         showMessage = False
 
@@ -72,64 +49,30 @@ def studentsReport():
 
         values = dict()
         values['level'] = level
-        values['program'] = programCode
-        values['version'] = programVersionYear
 
-        return render_template("studentsReport.html", levels=levels, programs=programs, programVersions=programVersions,
+        return render_template("studentsReport.html", levels=levels,
                                failedStudentsRecords=failedStudentsRecords, passedStudentsRecords=passedStudentsRecords,
                                values=values, showMessage=showMessage)
 
     # Load page for the first time
     else:
-        programVersions = readProgramVersions()
-
-        programs = readPrograms()
-
-        for i in range(len(programVersions)):
-            _old = programVersions[i]['pid']
-            programVersions[i]['pid'] = str(_old)
-
-
-
-        levels = ["A01", "A02", "A03", "A04"]
 
         values = dict()
         values['level'] = "0"
-        values['program'] = "0"
-        values['version'] = "0"
 
-        return render_template("studentsReport.html", levels=levels, programs=programs, programVersions=programVersions, values=values, showMessage=False)
-
-
-
-
-
-@studentsReportBlueprint.route("/administrator/studentsreport/generatereport", methods=["POST", "GET"])
-def viewStudentsReport():
-    if request.method == "POST":
-
-        programCode = request.json['programCode']
-
-        level = "A03"
-        programVersionID = "20"
-
-        failedStudentsRecords = readFailedStudents(level, programVersionID)
-
-        passedStudentsRecords = readPassedStudents(level, programVersionID)
-
-        programVersions = readProgramVersions()
-
-        programs = readPrograms()
-
-        levels = ["A01", "A02", "A03", "A04"]
-
-        return jsonify(status="1", message="Program was successfully deleted")
+        return render_template("studentsReport.html", levels=levels, values=values, showMessage=False)
 
 
 
 def createCursor():
+    mysql = MySQL(app)
+
     try:
-        con = mdb1.connect(host='localhost', user='root', password='5Iodine3', database='accm', port=3306)
+        con = mdb1.connect(host=mysql.app.config['MYSQL_HOST'],
+                           user=mysql.app.config['MYSQL_USER'],
+                           password=mysql.app.config['MYSQL_PASSWORD'],
+                           database=mysql.app.config['MYSQL_DB'],
+                           port=mysql.app.config['MYSQL_PORT'])
 
 
     except mdb1.Error as e:
@@ -140,37 +83,10 @@ def createCursor():
 
 
 
-def readProgramVersions():
-    con = createCursor()
-    query = f"""SELECT * FROM accm.program;"""
+def readFailedStudents(level, programPid):
 
-    cursor = con.cursor()
-    cursor.execute(query)
+    global cursor
 
-    names = [d[0] for d in cursor.description]
-    programVersions = [dict(zip(names, row)) for row in cursor.fetchall()]
-
-    con.close()
-
-    return programVersions
-
-
-def readPrograms():
-    con = createCursor()
-    query = f"""SELECT * FROM accm.program_offered;"""
-
-    cursor = con.cursor()
-    cursor.execute(query)
-
-    names = [d[0] for d in cursor.description]
-    programs = [dict(zip(names, row)) for row in cursor.fetchall()]
-
-    con.close()
-
-    return programs
-
-
-def readFailedStudents(level, programVersion, programCode):
     con = createCursor()
     query = f"""
     
@@ -183,26 +99,27 @@ def readFailedStudents(level, programVersion, programCode):
                 INNER JOIN course ON coursemap.cid = course.cid
                 INNER JOIN program ON coursemap.pid = program.pid
                 
-                WHERE coursemap.level = "{level}" AND grade.letter_grade = "F" AND program.program_version="{programVersion}"
-                AND program.code="{programCode}" 
+                WHERE coursemap.level = "{level}" AND grade.letter_grade = "F" AND program.pid="{programPid}"
+                
                 
                 ;    
                 
             """
 
+
     cursor = con.cursor()
     cursor.execute(query)
-    #rows = cursor.fetchall()
+    rows = cursor.fetchall()
 
     names = [d[0] for d in cursor.description]
-    failedStudentsRecords = [dict(zip(names, row)) for row in cursor.fetchall()]
+    failedStudentsRecords = [dict(zip(names, row)) for row in rows]
 
     con.close()
 
     return failedStudentsRecords
 
 
-def readPassedStudents(level, programVersion, programCode):
+def readPassedStudents(level, programPid):
     con = createCursor()
     query = f"""
 
@@ -215,8 +132,8 @@ def readPassedStudents(level, programVersion, programCode):
                 INNER JOIN course ON coursemap.cid = course.cid
                 INNER JOIN program ON coursemap.pid = program.pid
 
-                WHERE coursemap.level = "{level}" AND grade.letter_grade != "F" AND program.program_version="{programVersion}"
-                AND program.code="{programCode}" 
+                WHERE coursemap.level = "{level}" AND grade.letter_grade != "F" AND program.pid="{programPid}"
+                
 
                 ;    
 
@@ -224,10 +141,10 @@ def readPassedStudents(level, programVersion, programCode):
 
     cursor = con.cursor()
     cursor.execute(query)
-    # rows = cursor.fetchall()
+    rows = cursor.fetchall()
 
     names = [d[0] for d in cursor.description]
-    passedStudentsRecords = [dict(zip(names, row)) for row in cursor.fetchall()]
+    passedStudentsRecords = [dict(zip(names, row)) for row in rows]
 
     con.close()
 
