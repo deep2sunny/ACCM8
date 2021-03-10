@@ -1,0 +1,121 @@
+{% extends "bootstrap/base.html" %}
+{% include 'layout.html' %}
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{url_for('.static', filename='accm.css')}}">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jointjs/2.1.0/joint.css">
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
+{{ super() }}
+{% endblock %}
+
+# ctr + alt + shift + L to format code
+# ctr +shift + / : to comment blocks of code
+{% block content %}
+<div class="container">
+    </br>
+    <h1 class="text-center font-weight-bold">Course Progression Page</h1>
+    </br>
+    </br>
+    <p class="text-center">This page is used to edit the course sequence for different program versions</p>
+
+    <div>
+        <div class="gap"> <!--d-flex justify-content-center-->
+            <button type="button" class="btn btn-success gapbutton">Save Progression</button>
+            <button type="button" class="btn btn-secondary gapbutton">Edit Form</button>
+        </div>
+        <div class="d-flex justify-content-center">
+            <span>This is the message space</span>
+        </div>
+        </br>
+        </br>
+        <div>
+            <table class="table">
+                <col style="width:20%">
+                <col style="width:30%">
+                <col style="width:30%">
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col" class="text-center">Sequense</th>
+                    <th scope="col" class="text-center">Course</th>
+                    <th scope="col" class="text-center">Pre-requisite</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td scope="row">
+                        <div class="form-select form-select-sm text-center">
+                            <input type="text" class="text-center custom .bg-secondary" value="1">
+                        </div>
+                    </td>
+                    <td>
+                        <select class="form-select form-select-sm text-center">
+                            <option value="" class="text-center">CST8260</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-select form-select-sm text-center">
+                            <option value="" class="text-center">None</option>
+                        </select>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- end-container class  -->
+
+</div>
+<div class="container">
+    <footer>
+        <p class="float-right">© Algonquin College 2019-2020</p>
+    </footer>
+</div>
+<style>
+select {
+background-color:transparent;
+border:0px;
+outline:0px;
+width:100%;
+}
+
+.custom {
+//background-color: #f3f4f7;
+border:0px;
+outline:0px;
+width: 8%;
+}
+
+.container {
+padding-bottom: 100px;
+}
+
+footer {
+    width: 100%;
+    padding-right: 250px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+    padding-top: 50px;
+    padding-bottom: 0px;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+}
+
+.gap {
+ display: flex;
+ justify-content: center;
+}
+.gapbutton {
+ margin: 15px;
+}
+
+input:hover, select:hover {
+color: #ff0000;
+}
+
+
+</style>
+{% endblock %}
