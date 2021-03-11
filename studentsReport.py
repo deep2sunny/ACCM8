@@ -15,7 +15,7 @@ def studentsReport():
     programPid = "20"
 
     # re-load page when View Report button is clicked
-    if request.method == 'POST' and 'level' in request.form :
+    if request.method == 'POST' and 'level' in request.form:
 
         level = request.form['level']
 
@@ -84,8 +84,6 @@ def createCursor():
 
 
 def readFailedStudents(level, programPid):
-
-    global cursor
 
     con = createCursor()
     query = f"""

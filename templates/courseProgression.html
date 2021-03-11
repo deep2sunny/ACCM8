@@ -20,45 +20,117 @@
     <p class="text-center">This page is used to edit the course sequence for different program versions</p>
 
     <div>
-        <div class="gap"> <!--d-flex justify-content-center-->
-            <button type="button" class="btn btn-success gapbutton">Save Progression</button>
-            <button type="button" class="btn btn-secondary gapbutton">Edit Form</button>
-        </div>
-        <div class="d-flex justify-content-center">
-            <span>This is the message space</span>
-        </div>
+
         </br>
         </br>
         <div>
+
+            <form action="{{ url_for('courseProgression.courseProgression') }}" method="post" id="createProgramForm" name="createProgramForm">
+                <div class="form-group row">
+                    <label for="courseCode" class="col-sm-2 col-form-label ">Course</label>
+                    <label for="prereqCode1" class="col-sm-2 col-form-label">Prerequisite 1</label>
+                    <label for="prereqCode2" class="col-sm-2 col-form-label">Prerequisite 2</label>
+                    <label for="prereqCode3" class="col-sm-2 col-form-label">Prerequisite 3</label>
+                    <label for="prereqCode4" class="col-sm-2 col-form-label">Prerequisite 4</label>
+                    <label for="prereqCode5" class="col-sm-2 col-form-label">Prerequisite 5</label>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control" id="courseCode" name="courseCode" required>
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control" id="prereqCode1" name="prereqCode1" required>
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control" id="prereqCode2" name="prereqCode2" required>
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control" id="prereqCode3" name="prereqCode3" required>
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control" id="prereqCode4" name="prereqCode4" required>
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control" id="prereqCode5" name="prereqCode5" required>
+                    </div>
+                </div>
+
+
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                        <button type="submit" class="btn btn-primary my-1" id="addBtn" name="addBtn">Add Progression</button>
+                        <button type="reset" class="btn btn-primary my-1" value="Reset" id="clearBtn">Clear Form</button>
+                    </div>
+                </div>
+            </form>
+
+
+            <div class="row" id="messageBox" style="height: 100px;">
+                {% if success %}
+                <div class="col-md-10"><label id="sucessConfirmation" class="form-control alert-success d-flex justify-content-center" >{{message}}</label></div>
+                {% elif failure %}
+                <div class="col-md-10"><label id="errorConfirmation" class="form-control alert-danger d-flex justify-content-center" >{{message}}</label></div>
+                {% endif %}
+            </div>
+
+
+
             <table class="table">
                 <col style="width:20%">
-                <col style="width:30%">
-                <col style="width:30%">
+                <col style="width:20%">
                 <thead class="thead-light">
                 <tr>
-                    <th scope="col" class="text-center">Sequense</th>
-                    <th scope="col" class="text-center">Course</th>
-                    <th scope="col" class="text-center">Pre-requisite</th>
+                    <th scope="col" class="text-center col-sm-2">Course</th>
+
+                    {% if largestSize >= 1 %}
+                    <th scope="col" class="text-center col-sm-2">Pre-requisite 1</th>
+                    {% endif %}
+
+                    {% if largestSize >= 2 %}
+                    <th scope="col" class="text-center col-sm-2">Pre-requisite 2</th>
+                    {% endif %}
+
+                    {% if largestSize >= 3 %}
+                    <th scope="col" class="text-center col-sm-2">Pre-requisite 3</th>
+                    {% endif %}
+
+                    {% if largestSize >= 4 %}
+                    <th scope="col" class="text-center col-sm-2">Pre-requisite 4</th>
+                    {% endif %}
+
+                    {% if largestSize >= 5 %}
+                    <th scope="col" class="text-center col-sm-2">Pre-requisite 5</th>
+                    {% endif %}
+
+                    <th scope="col" class="text-center col-sm-2"></th>
+
+                    <th scope="col" class="text-center col-sm-2"></th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td scope="row">
-                        <div class="form-select form-select-sm text-center">
-                            <input type="text" class="text-center custom .bg-secondary" value="1">
-                        </div>
-                    </td>
-                    <td>
-                        <select class="form-select form-select-sm text-center">
-                            <option value="" class="text-center">CST8260</option>
-                        </select>
-                    </td>
-                    <td>
-                        <select class="form-select form-select-sm text-center">
-                            <option value="" class="text-center">None</option>
-                        </select>
-                    </td>
-                </tr>
+
+                {% for course in allCoreCourses %}
+                <form action="{{ url_for('courseProgression.courseProgression') }}" method="post" id="testForm2" name="testForm2">
+                    <tr>
+                        <td>
+                            <input type="text" class="text-center custom .bg-secondary col-sm-2" value="{{course['core_course_num']}}">
+                        </td>
+                        {% for i in range(1,5) %}
+                        {% if largestSize >= i %}
+                        <td>
+                            <input type="text" class="text-center custom .bg-secondary col-sm-2" value="{{course['prerequisites'][loop.index - 1]}}">
+                        </td>
+                        {% endif %}
+                        {% endfor %}
+                        <td>
+                            <button type="submit" id="editBtn_{{loop.index - 1}}" name="editBtn_{{loop.index - 1}}" class="btn btn-primary editBtn">Edit</button>
+                        </td>
+                        <td>
+                            <button type="submit" id="deleteBtn_{{loop.index - 1}}" name="deleteBtn_{{loop.index - 1}}" class="btn btn-danger deleteBtn">Delete</button>
+                        </td>
+                    </tr>
+                </form>
+                {% endfor %}
                 </tbody>
             </table>
         </div>
@@ -84,7 +156,7 @@ width:100%;
 //background-color: #f3f4f7;
 border:0px;
 outline:0px;
-width: 8%;
+width: 80%;
 }
 
 .container {
@@ -117,5 +189,7 @@ color: #ff0000;
 }
 
 
+
 </style>
 {% endblock %}
+

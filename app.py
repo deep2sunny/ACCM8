@@ -44,10 +44,12 @@ mysql = MySQL(app)
 from administrator import adminBlueprint
 from courses import coursesBlueprint
 from studentsReport import studentsReportBlueprint
+from courseProgression import courseProgressionBlueprint
 
 app.register_blueprint(adminBlueprint)
 app.register_blueprint(coursesBlueprint)
 app.register_blueprint(studentsReportBlueprint)
+app.register_blueprint(courseProgressionBlueprint)
 
 
 
