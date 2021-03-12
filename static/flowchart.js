@@ -854,9 +854,53 @@ paper.on("cell:mouseover", function(cellView) {
 //
 //});
 }
+else {
+    var link;
+    
+    paper.on("cell:mouseover", function(cellView) {
+          for (var l=0; l < prereqlinks.length; l++) {
+            if(cellView.model.id === prereqlinks[l].source.id)
+            {
+               link = new joint.shapes.standard.Link({
+                    source: prereqlinks[l].source,
+                    target: prereqlinks[l].target,
+                    connector: {name: 'rounded'},
+                    router: {
+                        name: 'manhattan',
+                        args: {
+                        step: 15,
+                        startDirections: [prereqlinks[l].source.port],
+                        endDirections: [prereqlinks[l].target.port],
+                        maximumLoops: 300
+                        }
+                    },
+                    attrs: {
+                        line: {
+                        strokeWidth: 4,
+                        stroke: '#000000',
+                        cursor: 'default',
+                        }
+                     }
+                });
+                link.addTo(graph);
+               // console.log(link);
+            }
+          }
+    });
+    
+    paper.on("cell:mouseout", function(cellView) {
+    for (var l=0; l < prereqlinks.length; l++) {
+            _.each(cellView.paper.model.getLinks(), function(link) {
+            console.log(link.id, link.get('source'), link.get('target'))
+            link.remove();
+         })
+    
+    
+     }});
+}
 
 // prevent moving shapes
-// paper.setInteractivity({elementMove: false});
+paper.setInteractivity({elementMove: false});
 
 
 // paper event edit edit
