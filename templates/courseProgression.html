@@ -144,28 +144,31 @@
                 <tbody>
                 {% for course in allCoreCourses %}
                 <form action="{{ url_for('courseProgression.courseProgression') }}" method="post" id="testForm2" name="testForm2">
-                    <tr>
+                    <tr class="{% if course['core_course_num'] == updatedCourse %} {{ rowClass }} {% endif %}">
                         <td>
                             <input type="hidden" class="text-center custom .bg-secondary col-sm-2" name="sequence" value="{{course['sequence']}}">
-                            {{course['sequence']}}
+                            <span class="sequenceSpan">{{course['sequence']}}</span>
                         </td>
                         <td>
-                            <input type="hidden" class="text-center custom .bg-secondary col-sm-2" name="courseCode" value="{{course['core_course_num']}}">
-                            {{course['core_course_num']}}
+                            <input class="text-center custom .bg-secondary col-sm-2 courseCode" name="courseCode" value="{{course['core_course_num']}}" style="display:none">
+                            <input type="hidden" class="text-center custom .bg-secondary col-sm-2 courseCode" name="oldCourseCode" value="{{course['core_course_num']}}">
+                            <span class="courseCodeSpan">{{course['core_course_num']}}</span>
                         </td>
                         {% for i in range(1,6) %}
 
                         <td>
-                            <input type="hidden" class="text-center custom .bg-secondary col-sm-2" name="prerequisite_{{loop.index}}" value="{{course['prerequisites'][loop.index-1]}}">
-                            {{course['prerequisites'][loop.index-1]}}
+                            <input class="text-center custom .bg-secondary col-sm-2 prereqInput" name="prerequisite_{{loop.index}}" value="{{course['prerequisites'][loop.index-1]}}"  style="display:none">
+                            <span class="prereqSpan">{{course['prerequisites'][loop.index-1]}}</span>
                         </td>
 
                         {% endfor %}
                         <td>
-                            <button type="submit" id="editBtn_{{loop.index - 1}}" name="editBtn_{{loop.index}}" class="btn btn-primary editBtn">Edit</button>
+                            <button id="editBtn_{{loop.index - 1}}" name="editBtn_{{loop.index}}" class="btn btn-primary editBtn">Edit</button>
+                            <button type="submit" id="saveBtn_{{loop.index - 1}}" name="saveBtn_{{loop.index}}" class="btn btn-primary saveBtn" style="display: none;">Save</button>
                         </td>
                         <td>
                             <button type="submit" id="deleteBtn_{{loop.index - 1}}" name="deleteBtn_{{loop.index}}" class="btn btn-danger deleteBtn">Delete</button>
+                            <button type="submit" id="cancelBtn_{{loop.index - 1}}" name="cancelBtn_{{loop.index}}" class="btn btn-danger cancelBtn" style="display: none;">Cancel</button>
                         </td>
                     </tr>
                 </form>
@@ -234,6 +237,14 @@ color: #ff0000;
 
 .seq{
 width: 65%;
+}
+
+.updatedRow{
+ background-color: #dff0d8
+}
+
+.errorRow{
+ background-color: #f2dede
 }
 
 
