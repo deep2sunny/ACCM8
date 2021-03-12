@@ -136,6 +136,7 @@
             <input type="text" class="form-control-plaintext" name = "course" id="course" value="{{ v['course'] }}" hidden>
                 <button type="submit" class="btn btn-secondary" type="button" ><i class="fas fa-chevron-circle-up"></i></button>
           </form>
+     {% endif %}
 
           <div style="display: inline-block; float: right;">
             <label>View</label>
@@ -150,6 +151,7 @@
               <span class="slider round"></span>
             </label>
           </div>
+
 
         <hr>
          <table>
@@ -168,7 +170,7 @@
          </table>
 
 
-        {% endif %}
+
     </div>
 
     <div class="container" style="padding-right: 0px;"  id="flowchart" onload="viewFlowchart()">

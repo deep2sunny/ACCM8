@@ -328,6 +328,8 @@ const program_map = {
                 'id': prerequisite_links[4].target_id,
                 'port': 'left'
             }
+
+
         },
         {
             'source': {
@@ -406,8 +408,11 @@ const program_map = {
             },
             'target': {
                 'id': prerequisite_links[8].target_id,
-                'port': 'top'
+                'port': 'top',
+                'xcoord': 810,
+                'ycoord': 430
             }
+
         },
         {
             'source': {
@@ -479,7 +484,7 @@ for (var g = 0; g < student_results.length; g++) {
                 electives.push(student_results[g]);
             }
         }
-    }
+}
 
 var elective_options = [];
 for (var i = 0; i < program_map.nodes.length; i++) {
@@ -648,6 +653,7 @@ var portsides = ['top', 'right', 'bottom', 'left'];
 
 // loop through course list to create shape for each
 var second = false;
+var course;
 for (i=0; i < courseList.length; i++) {
     var code = null;
     if (second == false && courseList[i].courseid === 'GED3002') {
@@ -670,7 +676,7 @@ for (i=0; i < courseList.length; i++) {
     else{
         code = courseList[i].courseid;
     }
-    var course = new joint.shapes.basic.CourseBox({
+    course = new joint.shapes.basic.CourseBox({
     position: { x: courseList[i].xcoord, y: courseList[i].ycoord },
     size: { width: 120, height: 110 },
     id: courseList[i].id,
@@ -678,8 +684,11 @@ for (i=0; i < courseList.length; i++) {
         // courseCode: { text: courseList[i].courseid},
         courseCode: { text: code},
     }
-    
-});
+
+    });
+
+
+
     // if genEdChecked checkbox not checked, no GenEds
     if ((courseList[i].id == 12 || courseList[i].id == 17) && genEdChecked == false){
         course.attr('box/display', 'none');
@@ -734,8 +743,9 @@ for (i=0; i < courseList.length; i++) {
     course.addTo(graph);
 }
 
+
 // if viewChecked checkbox not checked, no Lines(links)
-if(viewChecked == true) {
+if(viewChecked) {
 // add links
 for (var l=0; l < prereqlinks.length; l++) {
     var link = new joint.shapes.standard.Link({
@@ -761,7 +771,88 @@ for (var l=0; l < prereqlinks.length; l++) {
     });
 
     link.addTo(graph);
+    }
 }
+else {
+shapeCourse;
+//var link;
+
+
+paper.on("cell:mouseover", function(cellView) {
+    for (var l=0; l < prereqlinks.length; l++){
+        if(cellView.model.id === prereqlinks[l].source.id)
+        {
+            console.log(cellView.model.id);
+            console.log(prereqlinks[l].source.id);
+            console.log(prereqlinks[l].target.id);
+            for (i=0; i < courseList.length; i++){
+                console.log('true');
+                if(prereqlinks[l].target.id === courseList[i].id){
+
+                    //console.log('inside loop xlist --> '+prereqlinks[l].target.xcoord);
+
+
+                 //   course['id'] = courseList[i].id;
+                //    console.log(course['id']);
+                     course.position(courseList[prereqlinks[l].target.id].xcoord,courseList[prereqlinks[l].target.id].ycoord);
+                  //   course.attr('courseCode', courseList[i].courseid);
+
+                  //  course.id(prereqlinks[l].target.id);
+
+
+                }
+              //  course.attr('box/fill', '#000000');
+                    course.addTo(graph);
+
+                  //  console.log('courseList[i].id --> '+ courseList[i].id);
+                  //  console.log('prereqlinks prereqlinks[l].source.id --> ' + prereqlinks[l].source.id);
+                 //   xlist.push(prereqlinks[l].target.id);
+                 //   console.log(xlist);
+
+
+
+            }
+
+}
+
+
+
+
+
+      }
+
+
+});
+
+
+
+//paper.on("cell:mouseout", function(cellView) {
+//
+//      for (var l=0; l < prereqlinks.length; l++) {
+//
+//if(cellView.model.id === prereqlinks[l].source.id){
+//        for(var i =0;i<courseList.length;i++){
+//            if(prereqlinks[l].target.id === courseList[i].id){
+//                console.log('true');
+//              //  shapeCourse.remove();
+//                shapeCourse = new joint.shapes.basic.CourseBox({
+//                              position: { x: courseList[i].xcoord, y: courseList[i].ycoord },
+//                              cursor: 'default'
+//                              });
+//                shapeCourse.attr('box/fill', '#28A745');
+//                shapeCourse.addTo(graph);
+//            }
+//
+//           }
+//
+//
+//
+//
+//
+//                }
+//}
+//
+//});
 }
 
 // prevent moving shapes
