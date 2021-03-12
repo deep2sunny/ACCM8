@@ -27,31 +27,72 @@
 
             <form action="{{ url_for('courseProgression.courseProgression') }}" method="post" id="createProgramForm" name="createProgramForm">
                 <div class="form-group row">
-                    <label for="courseCode" class="col-sm-2 col-form-label ">Course</label>
-                    <label for="prereqCode1" class="col-sm-2 col-form-label">Prerequisite 1</label>
-                    <label for="prereqCode2" class="col-sm-2 col-form-label">Prerequisite 2</label>
-                    <label for="prereqCode3" class="col-sm-2 col-form-label">Prerequisite 3</label>
-                    <label for="prereqCode4" class="col-sm-2 col-form-label">Prerequisite 4</label>
-                    <label for="prereqCode5" class="col-sm-2 col-form-label">Prerequisite 5</label>
+                    <label for="sequence" class="col-sm-1 col-form-label ">Sequence</label>
+                    <label for="courseCode" class="col-sm-1 col-form-label ">Course</label>
+                    <label for="prereqCode1" class="col-sm-1 col-form-label">Prerequisite 1</label>
+                    <label for="prereqCode2" class="col-sm-1 col-form-label">Prerequisite 2</label>
+                    <label for="prereqCode3" class="col-sm-1 col-form-label">Prerequisite 3</label>
+                    <label for="prereqCode4" class="col-sm-1 col-form-label">Prerequisite 4</label>
+                    <label for="prereqCode5" class="col-sm-1 col-form-label">Prerequisite 5</label>
                 </div>
                 <div class="form-group row">
-                    <div class="col-sm-2">
+                    <div class="col-sm-1">
+                        {% if values['sequence'] == "" %}
+                        <input type="text" class="form-control seq" id="sequence" name="sequence" required>
+                        {% else %}
+                        <input type="text" class="form-control seq" id="sequence" name="sequence" value="{{values['sequence']}}" required>
+                        {% endif %}
+                    </div>
+                    <div class="col-sm-1">
+                        {% if values['courseCode'] == "" %}
                         <input type="text" class="form-control" id="courseCode" name="courseCode" required>
+                        {% else %}
+                        <input type="text" class="form-control" id="courseCode" name="courseCode" value="{{values['courseCode']}}" required>
+                        {% endif %}
                     </div>
-                    <div class="col-sm-2">
-                        <input type="text" class="form-control" id="prereqCode1" name="prereqCode1" required>
+                    <div class="col-sm-1">
+
+                        {% if values['prereqCode1'] == "" %}
+                        <input type="text" class="form-control" id="prereqCode1" name="prereqCode1"  placeholder="None" >
+                        {% else %}
+                        <input type="text" class="form-control" id="prereqCode1" name="prereqCode1" placeholder="None" value="{{values['prereqCode1']}}" >
+                        {% endif %}
+
                     </div>
-                    <div class="col-sm-2">
-                        <input type="text" class="form-control" id="prereqCode2" name="prereqCode2" required>
+                    <div class="col-sm-1">
+
+                        {% if values['prereqCode2'] == "" %}
+                        <input type="text" class="form-control" id="prereqCode2" name="prereqCode2"  placeholder="None" >
+                        {% else %}
+                        <input type="text" class="form-control" id="prereqCode2" name="prereqCode2"  placeholder="None" value="{{values['prereqCode2']}}" >
+                        {% endif %}
+
                     </div>
-                    <div class="col-sm-2">
-                        <input type="text" class="form-control" id="prereqCode3" name="prereqCode3" required>
+                    <div class="col-sm-1">
+
+                        {% if values['prereqCode3'] == "" %}
+                        <input type="text" class="form-control" id="prereqCode3" name="prereqCode3"  placeholder="None" >
+                        {% else %}
+                        <input type="text" class="form-control" id="prereqCode3" name="prereqCode3"  placeholder="None" value="{{values['prereqCode3']}}" >
+                        {% endif %}
+
+
                     </div>
-                    <div class="col-sm-2">
-                        <input type="text" class="form-control" id="prereqCode4" name="prereqCode4" required>
+                    <div class="col-sm-1">
+                        {% if values['prereqCode4'] == "" %}
+                        <input type="text" class="form-control" id="prereqCode4" name="prereqCode4"  placeholder="None" >
+                        {% else %}
+                        <input type="text" class="form-control" id="prereqCode4" name="prereqCode4"  placeholder="None" value="{{values['prereqCode4']}}" >
+                        {% endif %}
+
                     </div>
-                    <div class="col-sm-2">
-                        <input type="text" class="form-control" id="prereqCode5" name="prereqCode5" required>
+                    <div class="col-sm-1">
+                        {% if values['prereqCode5'] == "" %}
+                        <input type="text" class="form-control" id="prereqCode5" name="prereqCode5"  placeholder="None" >
+                        {% else %}
+                        <input type="text" class="form-control" id="prereqCode5" name="prereqCode5"  placeholder="None" value="{{values['prereqCode5']}}" >
+                        {% endif %}
+
                     </div>
                 </div>
 
@@ -80,27 +121,20 @@
                 <col style="width:20%">
                 <thead class="thead-light">
                 <tr>
+
+                    <th scope="col" class="text-center col-sm-2">Sequence</th>
+
                     <th scope="col" class="text-center col-sm-2">Course</th>
 
-                    {% if largestSize >= 1 %}
                     <th scope="col" class="text-center col-sm-2">Pre-requisite 1</th>
-                    {% endif %}
 
-                    {% if largestSize >= 2 %}
                     <th scope="col" class="text-center col-sm-2">Pre-requisite 2</th>
-                    {% endif %}
 
-                    {% if largestSize >= 3 %}
                     <th scope="col" class="text-center col-sm-2">Pre-requisite 3</th>
-                    {% endif %}
 
-                    {% if largestSize >= 4 %}
                     <th scope="col" class="text-center col-sm-2">Pre-requisite 4</th>
-                    {% endif %}
 
-                    {% if largestSize >= 5 %}
                     <th scope="col" class="text-center col-sm-2">Pre-requisite 5</th>
-                    {% endif %}
 
                     <th scope="col" class="text-center col-sm-2"></th>
 
@@ -108,25 +142,30 @@
                 </tr>
                 </thead>
                 <tbody>
-
                 {% for course in allCoreCourses %}
                 <form action="{{ url_for('courseProgression.courseProgression') }}" method="post" id="testForm2" name="testForm2">
                     <tr>
                         <td>
-                            <input type="text" class="text-center custom .bg-secondary col-sm-2" value="{{course['core_course_num']}}">
+                            <input type="hidden" class="text-center custom .bg-secondary col-sm-2" name="sequence" value="{{course['sequence']}}">
+                            {{course['sequence']}}
                         </td>
-                        {% for i in range(1,5) %}
-                        {% if largestSize >= i %}
                         <td>
-                            <input type="text" class="text-center custom .bg-secondary col-sm-2" value="{{course['prerequisites'][loop.index - 1]}}">
+                            <input type="hidden" class="text-center custom .bg-secondary col-sm-2" name="courseCode" value="{{course['core_course_num']}}">
+                            {{course['core_course_num']}}
                         </td>
-                        {% endif %}
+                        {% for i in range(1,6) %}
+
+                        <td>
+                            <input type="hidden" class="text-center custom .bg-secondary col-sm-2" name="prerequisite_{{loop.index}}" value="{{course['prerequisites'][loop.index-1]}}">
+                            {{course['prerequisites'][loop.index-1]}}
+                        </td>
+
                         {% endfor %}
                         <td>
-                            <button type="submit" id="editBtn_{{loop.index - 1}}" name="editBtn_{{loop.index - 1}}" class="btn btn-primary editBtn">Edit</button>
+                            <button type="submit" id="editBtn_{{loop.index - 1}}" name="editBtn_{{loop.index}}" class="btn btn-primary editBtn">Edit</button>
                         </td>
                         <td>
-                            <button type="submit" id="deleteBtn_{{loop.index - 1}}" name="deleteBtn_{{loop.index - 1}}" class="btn btn-danger deleteBtn">Delete</button>
+                            <button type="submit" id="deleteBtn_{{loop.index - 1}}" name="deleteBtn_{{loop.index}}" class="btn btn-danger deleteBtn">Delete</button>
                         </td>
                     </tr>
                 </form>
@@ -144,6 +183,11 @@
         <p class="float-right">© Algonquin College 2019-2020</p>
     </footer>
 </div>
+
+
+<script type="text/javascript" src="/static/courseProgression.js"></script>
+
+
 <style>
 select {
 background-color:transparent;
@@ -188,6 +232,9 @@ input:hover, select:hover {
 color: #ff0000;
 }
 
+.seq{
+width: 65%;
+}
 
 
 </style>

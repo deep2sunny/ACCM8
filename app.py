@@ -56,7 +56,7 @@ app.register_blueprint(courseProgressionBlueprint)
 # http://localhost:5000/ - this will be the login page, we need to use both GET and POST requests
 @app.route('/', methods=['GET','POST'])
 def login():
-    # ronak changes
+
     # Output message if something goes wrong...
     msg = ''
     # Check if "username" and "password" POST requests exist (user submitted form)
