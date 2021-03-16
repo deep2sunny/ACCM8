@@ -10,7 +10,7 @@
         <div class="py-5 text-center ">
             <h2>Students Reports Page</h2>
             <p class="my-3 text-muted">
-                The administrator can use this page to generate student reports
+                This page is can be used to generate Student Reports
             </p>
 
             <hr class="mb-4">
@@ -21,7 +21,7 @@
 
 
             <div class="col-md-2 mb-6">
-                <select id="level" name="level" class="custom-select">
+                <select id="level" name="level" class="form-select dropdown-toggle">
                     <option value="0">Choose Level...</option>
                     {% for level in levels %}
                     {% if level == values['level'] %}
@@ -36,7 +36,7 @@
                     Program Level
                 </div>
             </div>
-            <div class="col-md-2 mb-6">
+            <div class="col-md-2 mb-6 viewReportButtonDiv">
                 <button type="submit" class="btn btn-success my-1" id="submitBtn">View Report</button>
             </div>
 
@@ -64,7 +64,7 @@
 
         {% if failedStudentsRecords|length > 0 %}
 
-        <p>Students who failed</p>
+        <p class="tableCaption">The following is a list of students who cannot proceed to the next Level</p>
 
 
 
@@ -103,7 +103,7 @@
 
         {% if passedStudentsRecords|length > 0 %}
 
-        <p>Students who passed</p>
+        <p>The following is a list of students successfully passed all courses</p>
 
 
 
@@ -149,13 +149,66 @@
 </div>
 
 
+
+
+<footer class="container">
+    <p class="float-right">© Algonquin College 2019-2020</p>
+</footer>
+
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
     integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
 
 <script type="text/javascript" src="/static/studentsReport.js"></script>
 
-<footer class="container ">
-    <p class="float-right">© Algonquin College 2019-2020</p>
-</footer>
+<style>
+
+    .viewReportButtonDiv{
+        margin-left: 100px;
+    }
+
+    .invalid-feedback{
+        width: 200px;
+    }
+
+    / style for the progress map icon
+    .fa-project-diagram:before {
+        content: "\f542";
+    }
+    .badge-flowchart {
+        color: #20C997;
+        border: 1px solid #20C997;
+        background-color: #A2E6D2;
+    }
+    .badge {
+        display: inline-block;
+        padding: .25em .4em;
+        font-size: 75%;
+        font-weight: 700;
+        line-height: 1;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: .25rem;
+    }
+
+    .table td, .table th {
+        padding: .75rem;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+        text-align: center;
+    }
+
+    h3 {
+      margin-top: 2rem;
+        border: 0;
+        border-top: 1px solid rgba(0,0,0,.1);
+        padding-top: 50px;
+    }
+
+    .tableCaption{
+        width: 75%;
+    }
+
+</style>
 
 {% endblock %}

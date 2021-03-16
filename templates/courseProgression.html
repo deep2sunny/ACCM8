@@ -27,30 +27,30 @@
 
             <form action="{{ url_for('courseProgression.courseProgression') }}" method="post" id="createProgramForm" name="createProgramForm">
                 <div class="form-group row">
-                    <label for="sequence" class="col-sm-1 col-form-label ">Sequence</label>
-                    <label for="courseCode" class="col-sm-1 col-form-label ">Course</label>
-                    <label for="prereqCode1" class="col-sm-1 col-form-label">Prerequisite 1</label>
-                    <label for="prereqCode2" class="col-sm-1 col-form-label">Prerequisite 2</label>
-                    <label for="prereqCode3" class="col-sm-1 col-form-label">Prerequisite 3</label>
-                    <label for="prereqCode4" class="col-sm-1 col-form-label">Prerequisite 4</label>
-                    <label for="prereqCode5" class="col-sm-1 col-form-label">Prerequisite 5</label>
+                    <label for="sequence" class="col-sm-1 col-form-label  courseInputField">Sequence</label>
+                    <label for="courseCode" class="col-sm-1 col-form-label  courseInputField">Course</label>
+                    <label for="prereqCode1" class="col-sm-1 col-form-label courseInputField">Prerequisite 1</label>
+                    <label for="prereqCode2" class="col-sm-1 col-form-label courseInputField">Prerequisite 2</label>
+                    <label for="prereqCode3" class="col-sm-1 col-form-label courseInputField">Prerequisite 3</label>
+                    <label for="prereqCode4" class="col-sm-1 col-form-label courseInputField">Prerequisite 4</label>
+                    <label for="prereqCode5" class="col-sm-1 col-form-label courseInputField">Prerequisite 5</label>
                 </div>
                 <div class="form-group row">
-                    <div class="col-sm-1">
+                    <div class="col-sm-1 courseInputField">
                         {% if values['sequence'] == "" %}
                         <input type="text" class="form-control seq" id="sequence" name="sequence" required>
                         {% else %}
                         <input type="text" class="form-control seq" id="sequence" name="sequence" value="{{values['sequence']}}" required>
                         {% endif %}
                     </div>
-                    <div class="col-sm-1">
+                    <div class="col-sm-1 courseInputField">
                         {% if values['courseCode'] == "" %}
                         <input type="text" class="form-control" id="courseCode" name="courseCode" required>
                         {% else %}
                         <input type="text" class="form-control" id="courseCode" name="courseCode" value="{{values['courseCode']}}" required>
                         {% endif %}
                     </div>
-                    <div class="col-sm-1">
+                    <div class="col-sm-1 courseInputField">
 
                         {% if values['prereqCode1'] == "" %}
                         <input type="text" class="form-control" id="prereqCode1" name="prereqCode1"  placeholder="None" >
@@ -59,7 +59,7 @@
                         {% endif %}
 
                     </div>
-                    <div class="col-sm-1">
+                    <div class="col-sm-1 courseInputField">
 
                         {% if values['prereqCode2'] == "" %}
                         <input type="text" class="form-control" id="prereqCode2" name="prereqCode2"  placeholder="None" >
@@ -68,7 +68,7 @@
                         {% endif %}
 
                     </div>
-                    <div class="col-sm-1">
+                    <div class="col-sm-1 courseInputField">
 
                         {% if values['prereqCode3'] == "" %}
                         <input type="text" class="form-control" id="prereqCode3" name="prereqCode3"  placeholder="None" >
@@ -78,7 +78,7 @@
 
 
                     </div>
-                    <div class="col-sm-1">
+                    <div class="col-sm-1 courseInputField">
                         {% if values['prereqCode4'] == "" %}
                         <input type="text" class="form-control" id="prereqCode4" name="prereqCode4"  placeholder="None" >
                         {% else %}
@@ -86,7 +86,7 @@
                         {% endif %}
 
                     </div>
-                    <div class="col-sm-1">
+                    <div class="col-sm-1 courseInputField">
                         {% if values['prereqCode5'] == "" %}
                         <input type="text" class="form-control" id="prereqCode5" name="prereqCode5"  placeholder="None" >
                         {% else %}
@@ -99,7 +99,7 @@
 
                 <div class="form-group row">
                     <div class="col-sm-10">
-                        <button type="submit" class="btn btn-primary my-1" id="addBtn" name="addBtn">Add Progression</button>
+                        <button type="submit" class="btn btn-success my-1" id="addBtn" name="addBtn">Add Progression</button>
                         <button type="reset" class="btn btn-primary my-1" value="Reset" id="clearBtn">Clear Form</button>
                     </div>
                 </div>
@@ -116,13 +116,12 @@
 
 
 
-            <table class="table">
-                <col style="width:20%">
-                <col style="width:20%">
+            <table class="table table-bordered table-striped ">
+
                 <thead class="thead-light">
                 <tr>
 
-                    <th scope="col" class="text-center col-sm-2">Sequence</th>
+                    <th scope="col" class="text-center sequenceCell">Seq</th>
 
                     <th scope="col" class="text-center col-sm-2">Course</th>
 
@@ -145,8 +144,8 @@
                 {% for course in allCoreCourses %}
                 <form action="{{ url_for('courseProgression.courseProgression') }}" method="post" id="testForm2" name="testForm2">
                     <tr class="{% if course['core_course_num'] == updatedCourse %} {{ rowClass }} {% endif %}">
-                        <td>
-                            <input type="hidden" class="text-center custom .bg-secondary col-sm-2" name="sequence" value="{{course['sequence']}}">
+                        <td class="sequenceCell">
+                            <input type="hidden" class="text-center .bg-secondary" name="sequence" value="{{course['sequence']}}">
                             <span class="sequenceSpan">{{course['sequence']}}</span>
                         </td>
                         <td>
@@ -247,6 +246,25 @@ width: 65%;
  background-color: #f2dede
 }
 
+.courseInputField{
+width: 150px;
+}
+
+
+.sequenceCell{
+width: 75px;
+}
+
+.table{
+    table-layout: fixed;
+}
+
+.table td, .table th {
+        padding: .75rem;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+        text-align: center;
+}
 
 </style>
 {% endblock %}

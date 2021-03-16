@@ -1,23 +1,94 @@
-from flask import Blueprint, render_template, request, jsonify, current_app
+from flask import Blueprint, render_template, request, session, redirect, url_for
 import sys
 import MySQLdb as mdb1
-from flask_mysqldb import MySQL
-from app import app
+import configparser
+import os
 
 studentsReportBlueprint = Blueprint("studentsReport", __name__, static_folder="static", template_folder="template")
 
 
+# http://localhost:5000/administrator/studentsreport
+@studentsReportBlueprint.route("/administrator/studentsreport", methods=['GET','POST'])
+def studentsReport():
+    x = 5
+
+    # check if user is logged in
+    if 'loggedin' in session:
+    # if x == 5:
+        levels = ["A01", "A02", "A03", "A04"]
+        programPid = "20"
+
+        # re-load page when View Report button is clicked
+        if request.method == 'POST' and 'level' in request.form:
+
+            level = request.form['level']
+
+            showMessage = False
+
+            failedStudentsRecords = readFailedStudents(level, programPid)
+
+            passedStudentsRecords = readPassedStudents(level, programPid)
+
+            if len(failedStudentsRecords) == 0 and len(passedStudentsRecords) == 0 and level != "0":
+                showMessage = True
+
+            return render_template("studentsReport.html", levels=levels,
+                                   failedStudentsRecords=failedStudentsRecords, passedStudentsRecords=passedStudentsRecords,
+                                   values=request.form, showMessage=showMessage)
+
+
+        # this is to hand the POST request when "back to student report" button on viewFlowchart page is clicked
+        elif request.method == 'POST' and 'levelReport' in request.form:
+
+            level = request.form['levelReport']
+
+            failedStudentsRecords = readFailedStudents(level, programPid)
+
+            passedStudentsRecords = readPassedStudents(level, programPid)
+
+            showMessage = False
+
+            if len(failedStudentsRecords) == 0 and len(passedStudentsRecords) == 0:
+                showMessage = True
+
+            values = dict()
+            values['level'] = level
+
+
+
+            return render_template("studentsReport.html", levels=levels,
+                                   failedStudentsRecords=failedStudentsRecords, passedStudentsRecords=passedStudentsRecords,
+                                   values=values, showMessage=showMessage)
+
+        # Load page for the first time
+        else:
+
+            values = dict()
+            values['level'] = "0"
+
+
+
+            return render_template("studentsReport.html", levels=levels, values=values, showMessage=False)
+
+    else:
+        return redirect(url_for('login'))
+
+
+
 def createConnection():
-    mysql = MySQL(app)
+
+    config = configparser.ConfigParser()
+    config.read(os.path.dirname(os.path.abspath(__file__)) + '/static/mysql-config.ini')
+
 
     try:
-        con = mdb1.connect(host=mysql.app.config['MYSQL_HOST'],
-                           user=mysql.app.config['MYSQL_USER'],
-                           password=mysql.app.config['MYSQL_PASSWORD'],
-                           database=mysql.app.config['MYSQL_DB'],
-                           #database="accm_test",
-                           port=mysql.app.config['MYSQL_PORT'])
-
+        con = mdb1.connect(
+                            host=config['DEFAULT']['MYSQL_HOST'],
+                            user=config['DEFAULT']['MYSQL_USER'],
+                            password=config['DEFAULT']['MYSQL_PASSWORD'],
+                            database=config['DEFAULT']['MYSQL_DB'],
+                            port=int(config['DEFAULT']['MYSQL_PORT']),
+                           )
 
     except mdb1.Error as e:
         print("Error %d: %s" % (e.args[0], e.args[1]))
@@ -27,78 +98,7 @@ def createConnection():
 
 
 
-
-# http://localhost:5000/administrator/studentsreport
-@studentsReportBlueprint.route("/administrator/studentsreport", methods=['GET','POST'])
-def studentsReport():
-
-
-    levels = ["A01", "A02", "A03", "A04"]
-    programPid = "20"
-
-    # re-load page when View Report button is clicked
-    if request.method == 'POST' and 'level' in request.form:
-
-        level = request.form['level']
-
-        failedStudentsRecords = readFailedStudents(level, programPid)
-
-        passedStudentsRecords = readPassedStudents(level, programPid)
-
-        showMessage = False
-
-        if len(failedStudentsRecords) == 0 and len(passedStudentsRecords) == 0:
-            showMessage = True
-
-
-
-        return render_template("studentsReport.html", levels=levels,
-                               failedStudentsRecords=failedStudentsRecords, passedStudentsRecords=passedStudentsRecords,
-                               values=request.form, showMessage=showMessage)
-
-
-    # this is to hand the POST request when "back to student report" button on viewFlowchart page is clicked
-    elif request.method == 'POST' and 'levelReport' in request.form:
-
-        level = request.form['levelReport']
-
-        failedStudentsRecords = readFailedStudents(level, programPid)
-
-        passedStudentsRecords = readPassedStudents(level, programPid)
-
-        showMessage = False
-
-        if len(failedStudentsRecords) == 0 and len(passedStudentsRecords) == 0:
-            showMessage = True
-
-        values = dict()
-        values['level'] = level
-
-
-
-        return render_template("studentsReport.html", levels=levels,
-                               failedStudentsRecords=failedStudentsRecords, passedStudentsRecords=passedStudentsRecords,
-                               values=values, showMessage=showMessage)
-
-    # Load page for the first time
-    else:
-
-        values = dict()
-        values['level'] = "0"
-
-
-
-        return render_template("studentsReport.html", levels=levels, values=values, showMessage=False)
-
-
-
-
-
-
-
 def readFailedStudents(level, programPid):
-
-
     con = createConnection()
     cursor = con.cursor()
     query = f"""
@@ -113,7 +113,6 @@ def readFailedStudents(level, programPid):
                 INNER JOIN program ON coursemap.pid = program.pid
                 
                 WHERE coursemap.level = "{level}" AND grade.letter_grade = "F" AND program.pid="{programPid}"
-                
                 
                 ;    
                 
@@ -132,6 +131,7 @@ def readFailedStudents(level, programPid):
 
 def readPassedStudents(level, programPid):
     con = createConnection()
+    cursor = con.cursor()
 
     query = f"""
 
@@ -151,7 +151,6 @@ def readPassedStudents(level, programPid):
 
             """
 
-    cursor = con.cursor()
     cursor.execute(query)
     rows = cursor.fetchall()
 
@@ -164,6 +163,7 @@ def readPassedStudents(level, programPid):
 
 def getProgramCode(programVersionId):
     con = createConnection()
+    cursor = con.cursor()
     query = f"""
 
                     SELECT program.code, program.name, program.program_version
@@ -178,7 +178,7 @@ def getProgramCode(programVersionId):
 
                 """
 
-    cursor = con.cursor()
+
     cursor.execute(query)
     rows = cursor.fetchall()
     programCode = rows[0][0]

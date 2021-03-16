@@ -1,39 +1,21 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for
 import sys
 import MySQLdb as mdb1
-from flask_mysqldb import MySQL
-from app import app
 import copy
+import configparser
+import os
 
 courseProgressionBlueprint = Blueprint("courseProgression", __name__, static_folder="static", template_folder="template")
 
 
-def checkButtonType(dict):
-    allKeys = list(dict.keys())
-
-    for key in allKeys:
-
-        if "deleteBtn" in key:
-            return "deleteBtn"
-        if "saveBtn" in key:
-            return "saveBtn"
-        if "addBtn" in key:
-            return "addBtn"
-
-    return ""
-
 @courseProgressionBlueprint.route("/administrator/courseprogression", methods=['GET','POST'])
 def courseProgression():
-
-    global con
 
     x=5
 
     # check if user is logged in
-    #if 'loggedin' in session:
-    if x == 5:
-
-        con = createConnection()
+    if 'loggedin' in session:
+    #if x == 5:
 
         parameters = request.form.to_dict()
         _list = list(parameters.keys())
@@ -48,7 +30,8 @@ def courseProgression():
             if len(course['prerequisites']) > largestSize:
                 largestSize = len(course['prerequisites'])
 
-
+        prerequisite_col = ['prerequisite_1', 'prerequisite_2', 'prerequisite_3', 'prerequisite_4',
+                        'prerequisite_5']
 
         if request.method == 'POST' and buttonType == "addBtn":
 
@@ -62,7 +45,7 @@ def courseProgression():
             prereqCode4 = parameters['prereqCode4'].upper()
             prereqCode5 = parameters['prereqCode5'].upper()
 
-            prerequisite_col = ['prereqCode1', 'prereqCode2', 'prereqCode3', 'prereqCode4', 'prereqCode5']
+            prerequisite_name = ['prereqCode1', 'prereqCode2', 'prereqCode3', 'prereqCode4', 'prereqCode5']
 
             prerequisites = []
 
@@ -71,7 +54,7 @@ def courseProgression():
                 return render_template("courseProgression.html", allCoreCourses=allCoreCourses, largestSize=largestSize,
                                        message=message, success=False, failure=True, values=request.form)
 
-            for col in prerequisite_col:
+            for col in prerequisite_name:
                 if parameters[col].upper():
                     prerequisites.append(parameters[col].upper())
 
@@ -159,9 +142,6 @@ def courseProgression():
             print("clicked save button")
             print(parameters)
 
-            prerequisite_col = ['prerequisite_1', 'prerequisite_2', 'prerequisite_3', 'prerequisite_4',
-                                'prerequisite_5']
-
             courseCode = parameters['courseCode'].upper()
             oldCourseCode = parameters['oldCourseCode'].upper()
 
@@ -247,8 +227,6 @@ def courseProgression():
             print(parameters)
             print("clicked delete button")
 
-            prerequisite_col = ['prerequisite_1','prerequisite_2','prerequisite_3','prerequisite_4','prerequisite_5']
-
             courseCode = parameters['courseCode'].upper()
 
             prerequisites = []
@@ -300,6 +278,21 @@ def courseProgression():
         return redirect(url_for('login'))
 
 
+def checkButtonType(dict):
+    allKeys = list(dict.keys())
+
+    for key in allKeys:
+
+        if "deleteBtn" in key:
+            return "deleteBtn"
+        if "saveBtn" in key:
+            return "saveBtn"
+        if "addBtn" in key:
+            return "addBtn"
+
+    return ""
+
+
 def RepresentsInt(s):
     try:
         int(s)
@@ -307,19 +300,20 @@ def RepresentsInt(s):
     except ValueError:
         return False
 
-
-
 def createConnection():
-    mysql = MySQL(app)
+
+    config = configparser.ConfigParser()
+    config.read(os.path.dirname(os.path.abspath(__file__)) + '/static/mysql-config.ini')
+
 
     try:
-        con = mdb1.connect(host=mysql.app.config['MYSQL_HOST'],
-                           user=mysql.app.config['MYSQL_USER'],
-                           password=mysql.app.config['MYSQL_PASSWORD'],
-                           #database=mysql.app.config['MYSQL_DB'],
-                           database="accm_test",
-                           port=mysql.app.config['MYSQL_PORT'])
-
+        con = mdb1.connect(
+                            host=config['DEFAULT']['MYSQL_HOST'],
+                            user=config['DEFAULT']['MYSQL_USER'],
+                            password=config['DEFAULT']['MYSQL_PASSWORD'],
+                            database=config['DEFAULT']['MYSQL_DB'],
+                            port=int(config['DEFAULT']['MYSQL_PORT']),
+                           )
 
     except mdb1.Error as e:
         print("Error %d: %s" % (e.args[0], e.args[1]))
@@ -377,13 +371,18 @@ def createCoreCourseDataDict():
             if 0 <= index < len(prerequisites):
                 course['prerequisites'].append(prerequisites[index])
 
+    cursor.close()
+    con.close()
+
     return allCoreCourses
 
 
 
 def checkCoreCourseExistence(courseCode):
 
-    global con
+    # >>> Setup MySQL Connection
+    con = createConnection()
+
 
     query = f"""
 
@@ -397,6 +396,9 @@ def checkCoreCourseExistence(courseCode):
     rowCount = cursor.fetchone()
     count = rowCount[0]
 
+    cursor.close()
+    con.close()
+
     if count > 0:
         return True
 
@@ -404,7 +406,9 @@ def checkCoreCourseExistence(courseCode):
 
 
 def checkCoreCourseFlowchart(courseCode):
-    global con
+    # >>> Setup MySQL Connection
+    con = createConnection()
+
     query = f"""
 
                         SELECT count(*) FROM core_course_flowchart
@@ -416,7 +420,8 @@ def checkCoreCourseFlowchart(courseCode):
     cursor.execute(query)
     rowCount = cursor.fetchone()
     count = rowCount[0]
-
+    cursor.close()
+    con.close()
 
     if count > 0:
         return True
@@ -425,7 +430,9 @@ def checkCoreCourseFlowchart(courseCode):
 
 
 def addIntoFlowchart(courseCode, sequence):
-    global con
+    # >>> Setup MySQL Connection
+    con = createConnection()
+
     query = f"""
 
             insert into core_course_flowchart(core_course_num, sequence) values('{courseCode}', {sequence})
@@ -435,11 +442,15 @@ def addIntoFlowchart(courseCode, sequence):
     cursor = con.cursor()
     cursor.execute(query)
     con.commit()
+    cursor.close()
+    con.close()
 
 
 
 def addIntoPrerequisite(order, courseCode, prereqCode):
-    global con
+    # >>> Setup MySQL Connection
+    con = createConnection()
+
     query = f"""
 
             insert into core_course_prerequisites(`order`, core_course_num, prerequisite_num)
@@ -451,11 +462,12 @@ def addIntoPrerequisite(order, courseCode, prereqCode):
     cursor = con.cursor()
     cursor.execute(query)
     con.commit()
-
+    cursor.close()
+    con.close()
 
 
 def getSequenceNumber():
-    global con
+    con = createConnection()
     query = f"""
                 SELECT count(*) FROM core_course_flowchart;
             """
@@ -464,13 +476,14 @@ def getSequenceNumber():
     cursor.execute(query)
     rowCount = cursor.fetchone()
     count = rowCount[0]
-
+    cursor.close()
+    con.close()
 
     return count + 1
 
 
 def getOrderNumber():
-    global con
+    con = createConnection()
     query = f"""
                 SELECT count(*) FROM core_course_prerequisites;
             """
@@ -479,13 +492,15 @@ def getOrderNumber():
     cursor.execute(query)
     rowCount = cursor.fetchone()
     count = rowCount[0]
+    cursor.close()
+    con.close()
 
 
     return count + 1
 
 
 def checkIfPrerequisite(courseCode):
-    global con
+    con = createConnection()
     query = f"""
                     SELECT count(*) FROM core_course_prerequisites WHERE prerequisite_num='{courseCode}';
                 """
@@ -494,6 +509,8 @@ def checkIfPrerequisite(courseCode):
     cursor.execute(query)
     rowCount = cursor.fetchone()
     count = rowCount[0]
+    cursor.close()
+    con.close()
 
     if count > 0:
         return True
@@ -502,7 +519,7 @@ def checkIfPrerequisite(courseCode):
 
 
 def deletePrerequisite(courseCode,prerequisite):
-    global con
+    con = createConnection()
 
     query = f""" 
             DELETE FROM core_course_prerequisites 
@@ -512,10 +529,12 @@ def deletePrerequisite(courseCode,prerequisite):
     cursor = con.cursor()
     cursor.execute(query)
     con.commit()
+    cursor.close()
+    con.close()
 
 
 def deleteFlowchart(courseCode):
-    global con
+    con = createConnection()
 
     query = f""" 
                 DELETE FROM core_course_flowchart 
@@ -524,9 +543,11 @@ def deleteFlowchart(courseCode):
     cursor = con.cursor()
     cursor.execute(query)
     con.commit()
+    cursor.close()
+    con.close()
 
 def findCourseSequenceNumber(courseCode):
-    global con
+    con = createConnection()
     query = f"""
                 SELECT sequence FROM core_course_flowchart
                 WHERE core_course_num = "{courseCode}"
@@ -537,11 +558,13 @@ def findCourseSequenceNumber(courseCode):
     cursor.execute(query)
     row = cursor.fetchone()
     sequence = row[0]
+    cursor.close()
+    con.close()
 
     return sequence
 
 def checkIfSequenceExists(sequence):
-    global con
+    con = createConnection()
     query = f"""
                         SELECT count(*) FROM core_course_flowchart WHERE sequence='{sequence}';
                     """
@@ -550,6 +573,8 @@ def checkIfSequenceExists(sequence):
     cursor.execute(query)
     rowCount = cursor.fetchone()
     count = rowCount[0]
+    cursor.close()
+    con.close()
 
     if count > 0:
         return True
@@ -557,7 +582,7 @@ def checkIfSequenceExists(sequence):
     return False
 
 def findHighestSequence():
-    global con
+    con = createConnection()
     query = f"""
                     SELECT sequence FROM core_course_flowchart
                     order by sequence desc
@@ -568,7 +593,8 @@ def findHighestSequence():
     cursor = con.cursor()
     cursor.execute(query)
     row = cursor.fetchone()
-
+    cursor.close()
+    con.close()
 
     if row is None:
         return 0
@@ -577,7 +603,7 @@ def findHighestSequence():
 
 
 def updatePrerequisite(courseCode, prerequisite):
-    global con
+    con = createConnection()
 
     query = f"""
                 UPDATE core_course_prerequisites
@@ -588,10 +614,12 @@ def updatePrerequisite(courseCode, prerequisite):
     cursor = con.cursor()
     cursor.execute(query)
     con.commit()
+    cursor.close()
+    con.close()
 
 
 def deletePrerequisites(courseCode):
-    global con
+    con = createConnection()
 
     query = f"""
                 DELETE FROM core_course_prerequisites
@@ -601,4 +629,6 @@ def deletePrerequisites(courseCode):
     cursor = con.cursor()
     cursor.execute(query)
     con.commit()
+    cursor.close()
+    con.close()
 
