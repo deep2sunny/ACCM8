@@ -7,12 +7,8 @@ from flask_mysqldb import MySQL
 from flask_mail import Mail, Message
 from passlib.hash import sha256_crypt
 import inputCSV
-from administrator import adminBlueprint
-from courses import coursesBlueprint
 
 app = Flask(__name__)
-app.register_blueprint(adminBlueprint)
-app.register_blueprint(coursesBlueprint)
 Bootstrap(app)
 
 # indicate the folder when loading the input files
