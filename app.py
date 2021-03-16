@@ -11,7 +11,7 @@ import configparser
 
 # Add the pages admin, courses, course progression
 from administrator import adminBlueprint
-from courses import coursesBlueprint
+from coreCourses import coreCoursesBlueprint
 from studentsReport import studentsReportBlueprint
 from courseProgression import courseProgressionBlueprint
 
@@ -21,7 +21,7 @@ app = Flask(__name__)
 Bootstrap(app)
 
 app.register_blueprint(adminBlueprint)
-app.register_blueprint(coursesBlueprint)
+app.register_blueprint(coreCoursesBlueprint)
 app.register_blueprint(studentsReportBlueprint)
 app.register_blueprint(courseProgressionBlueprint)
 
