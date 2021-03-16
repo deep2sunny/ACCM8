@@ -114,6 +114,51 @@
                 {% endif %}
             </div>
 
+            <!--   The form for modal box delete course-->
+            <div class="modal fade" id="myModalDelete" name="nameModalDelete" role="dialog">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header detele-header">
+                            <h5 class="modal-title">Delete Course</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <i class="far fa-times-circle"></i>
+                            </button>
+                        </div>
+                        <form class="needs-validation" action="{{ url_for('courseProgression.courseProgression') }}" method="post" id="deleteCourse" name="deleteCourse">
+                            <div class="modal-body">
+
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Sequence</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="sequenceDeleteInput" name="sequenceDeleteInput" value="test" readonly/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Course Code</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="courseDeleteInput" name="courseDeleteInput" value="test" readonly/>
+                                    </div>
+                                </div>
+
+                                <input type="hidden" class="prerequisite_1" name="prerequisite_1" value=""  >
+                                <input  type="hidden" class="prerequisite_2"  name="prerequisite_2" value=""  >
+                                <input  type="hidden" class="prerequisite_3"  name="prerequisite_3" value=""  >
+                                <input  type="hidden" class="prerequisite_4"  name="prerequisite_4" value=""  >
+                                <input  type="hidden" class="prerequisite_5"  name="prerequisite_5" value=""  >
+
+                                <p class="text-center font-weight-bold">Are you sure to delete the course progression?</p>
+                            </div>
+                            <div class="modal-footer">
+                                </br>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <input type="submit" class="btn btn-success" name="confirmDeleteBtn" value="OK">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
 
 
             <table class="table table-bordered table-striped ">
@@ -145,29 +190,29 @@
                 <form action="{{ url_for('courseProgression.courseProgression') }}" method="post" id="testForm2" name="testForm2">
                     <tr class="{% if course['core_course_num'] == updatedCourse %} {{ rowClass }} {% endif %}">
                         <td class="sequenceCell">
-                            <input type="hidden" class="text-center .bg-secondary" name="sequence" value="{{course['sequence']}}">
+                            <input type="hidden" class="text-center .bg-secondary sequence" name="sequence" value="{{course['sequence']}}">
                             <span class="sequenceSpan">{{course['sequence']}}</span>
                         </td>
                         <td>
                             <input class="text-center custom .bg-secondary col-sm-2 courseCode" name="courseCode" value="{{course['core_course_num']}}" style="display:none">
-                            <input type="hidden" class="text-center custom .bg-secondary col-sm-2 courseCode" name="oldCourseCode" value="{{course['core_course_num']}}">
+                            <input type="hidden" class="text-center custom .bg-secondary col-sm-2 courseCode" id="oldCourseCode" name="oldCourseCode" value="{{course['core_course_num']}}">
                             <span class="courseCodeSpan">{{course['core_course_num']}}</span>
                         </td>
                         {% for i in range(1,6) %}
 
                         <td>
-                            <input class="text-center custom .bg-secondary col-sm-2 prereqInput" name="prerequisite_{{loop.index}}" value="{{course['prerequisites'][loop.index-1]}}"  style="display:none">
+                            <input class="text-center custom .bg-secondary col-sm-2 prereqInput prerequisite_{{loop.index}}" name="prerequisite_{{loop.index}}" value="{{course['prerequisites'][loop.index-1]}}"  style="display:none">
                             <span class="prereqSpan">{{course['prerequisites'][loop.index-1]}}</span>
                         </td>
 
                         {% endfor %}
                         <td>
-                            <button id="editBtn_{{loop.index - 1}}" name="editBtn_{{loop.index}}" class="btn btn-primary editBtn">Update</button>
-                            <button type="submit" id="saveBtn_{{loop.index - 1}}" name="saveBtn_{{loop.index}}" class="btn btn-primary saveBtn" style="display: none;">Save</button>
+                            <button id="editBtn_{{loop.index - 1}}" name="editBtn_{{loop.index}}" class="btn btn-success editBtn">Update</button>
+                            <button type="submit" id="saveBtn_{{loop.index - 1}}" name="saveBtn_{{loop.index}}" class="btn btn-success saveBtn" style="display: none;">Save</button>
                         </td>
                         <td>
-                            <button type="submit" id="deleteBtn_{{loop.index - 1}}" name="deleteBtn_{{loop.index}}" class="btn btn-danger deleteBtn">Delete</button>
-                            <button type="submit" id="cancelBtn_{{loop.index - 1}}" name="cancelBtn_{{loop.index}}" class="btn btn-danger cancelBtn" style="display: none;">Cancel</button>
+                            <button type="submit" id="deleteBtn_{{loop.index - 1}}" name="deleteBtn_{{loop.index}}" class="btn btn-danger deleteBtn"  data-toggle="modal" data-target="#myModalDelete">Delete</button>
+                            <button type="submit" id="cancelBtn_{{loop.index - 1}}" name="cancelBtn_{{loop.index}}" class="btn btn-primary cancelBtn" style="display: none;">Cancel</button>
                         </td>
                     </tr>
                 </form>
@@ -276,6 +321,13 @@ width: 75px;
 
 .alert-danger, .alert-success{
     border: none;
+}
+
+.modal-header {
+background-color: #66b45f;
+}
+.detele-header {
+background-color: #d66464;
 }
 
 </style>

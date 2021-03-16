@@ -8,43 +8,64 @@ coreCoursesBlueprint = Blueprint("coreCourses", __name__, static_folder="static"
 
 @coreCoursesBlueprint.route("/administrator/corecourses", methods=['GET','POST'])
 def coreCourses():
-    global con
+    x = 5
 
-    parameters = request.form.to_dict()
+    # check if user is logged in
+    if 'loggedin' in session:
+    # if x == 5:
 
-    print(parameters)
+        parameters = request.form.to_dict()
 
-    allCoreCourses = readCourses()
+        print(parameters)
 
-    if request.method == 'POST' and "addBtn" in parameters:
-        courseCode = parameters['courseCode'].upper()
-        courseTitle = parameters['courseTitle']
-        addCourse(courseCode, courseTitle)
         allCoreCourses = readCourses()
-        message = "The course was added successfully"
-        return render_template("coreCourses.html", allCoreCourses=allCoreCourses, message=message, success=True, failure=False)
 
-    if request.method == 'POST' and "confirmDeleteBtn" in parameters:
-        courseCode = parameters['courseDeleteInput'].upper()
-        deleteCourse(courseCode)
-        allCoreCourses = readCourses()
-        message = "The course was deleted successfully"
-        return render_template("coreCourses.html", allCoreCourses=allCoreCourses, message=message, success=True, failure=False)
-
-    if request.method == 'POST' and "confirmEditBtn" in parameters:
-        oldCourseCode = parameters['oldCourseCode']
-        courseCode = parameters['editCourseCodeInput'].upper()
-        courseTitle = parameters['editCourseTitleInput']
-        updateCourse(oldCourseCode, courseCode, courseTitle)
-        allCoreCourses = readCourses()
-        message = "The course information was successfully updated"
-        return render_template("coreCourses.html", allCoreCourses=allCoreCourses, message=message, success=True,
-                               failure=False)
+        if request.method == 'POST' and "addBtn" in parameters:
+            courseCode = parameters['courseCode'].upper()
+            courseTitle = parameters['courseTitle']
 
 
-    # confirmEditBtn
+            if checkCoreCourseExistence(courseCode) == True:
+                message = "The course code " + courseCode + " already exists"
+                return render_template("coreCourses.html", allCoreCourses=allCoreCourses,message=message, success=False, failure=True)
 
-    return render_template("coreCourses.html", allCoreCourses=allCoreCourses, success=False, failure=False)
+            addCourse(courseCode, courseTitle)
+            allCoreCourses = readCourses()
+
+            message = "The course was added successfully"
+            return render_template("coreCourses.html", allCoreCourses=allCoreCourses, message=message, success=True, failure=False)
+
+        if request.method == 'POST' and "confirmDeleteBtn" in parameters:
+            courseCode = parameters['courseDeleteInput'].upper()
+
+            if checkCoreCourseFlowchart(courseCode) == True or checkCoreCoursePrerequisite(courseCode) == True:
+                message = "The course code " + courseCode + " cannot be deleted as it has other data associated with it"
+                return render_template("coreCourses.html", allCoreCourses=allCoreCourses, message=message, success=False,
+                                       failure=True)
+
+            deleteCourse(courseCode)
+            allCoreCourses = readCourses()
+
+            message = "The course was deleted successfully"
+            return render_template("coreCourses.html", allCoreCourses=allCoreCourses, message=message, success=True, failure=False)
+
+        if request.method == 'POST' and "confirmEditBtn" in parameters:
+            oldCourseCode = parameters['oldCourseCode']
+            courseCode = parameters['editCourseCodeInput'].upper()
+            courseTitle = parameters['editCourseTitleInput']
+            updateCourse(oldCourseCode, courseCode, courseTitle)
+            allCoreCourses = readCourses()
+            message = "The course information was successfully updated"
+            return render_template("coreCourses.html", allCoreCourses=allCoreCourses, message=message, success=True,
+                                   failure=False)
+
+
+        # confirmEditBtn
+
+        return render_template("coreCourses.html", allCoreCourses=allCoreCourses, success=False, failure=False)
+
+    else:
+        return redirect(url_for('login'))
 
 
 def createConnection():
@@ -70,7 +91,6 @@ def createConnection():
 
 
 def readCourses():
-    global con
 
     con = createConnection()
 
@@ -89,8 +109,7 @@ def readCourses():
 
 
 def addCourse(courseCode, courseTitle):
-    global con
-
+    con = createConnection()
     cursor = con.cursor()
 
     # >>> fetch all core courses
@@ -100,7 +119,7 @@ def addCourse(courseCode, courseTitle):
 
 
 def deleteCourse(courseCode):
-    global con
+    con = createConnection()
 
     cursor = con.cursor()
 
@@ -112,7 +131,7 @@ def deleteCourse(courseCode):
 
 
 def updateCourse(oldCourseCode, courseCode, courseTitle):
-    global con
+    con = createConnection()
 
     cursor = con.cursor()
 
@@ -123,3 +142,73 @@ def updateCourse(oldCourseCode, courseCode, courseTitle):
     cursor.execute(query)
     con.commit()
 
+
+def checkCoreCourseExistence(courseCode):
+    con = createConnection()
+
+    # >>> Setup MySQL Connection
+    con = createConnection()
+
+
+    query = f"""
+
+                    SELECT count(*) FROM core_course
+                    where core_course_num = '{courseCode}';
+
+                """
+
+    cursor = con.cursor()
+    cursor.execute(query)
+    rowCount = cursor.fetchone()
+    count = rowCount[0]
+
+    cursor.close()
+    con.close()
+
+    if count > 0:
+        return True
+
+    return False
+
+
+def checkCoreCourseFlowchart(courseCode):
+    # >>> Setup MySQL Connection
+    con = createConnection()
+
+    query = f"""
+
+                        SELECT count(*) FROM core_course_flowchart
+                        where core_course_num = '{courseCode}';
+
+                    """
+
+    cursor = con.cursor()
+    cursor.execute(query)
+    rowCount = cursor.fetchone()
+    count = rowCount[0]
+    cursor.close()
+    con.close()
+
+    if count > 0:
+        return True
+
+    return False
+
+
+def checkCoreCoursePrerequisite(courseCode):
+    con = createConnection()
+    query = f"""
+                    SELECT count(*) FROM core_course_prerequisites WHERE core_course_num='{courseCode}';
+                """
+
+    cursor = con.cursor()
+    cursor.execute(query)
+    rowCount = cursor.fetchone()
+    count = rowCount[0]
+    cursor.close()
+    con.close()
+
+    if count > 0:
+        return True
+
+    return False

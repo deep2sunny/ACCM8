@@ -13,23 +13,30 @@
 {% block content %}
 
 <div class="container">
+
+
+
+
     <!--The first form for table course overview-->
     <div id="Courses" class="tabcontent">
         <h1 class="text-center">Course Overview</h1>
+        </br>
+        </br>
+        <p class="text-center">This page can be used to add, update or delete core courses for the Internet Applications and Web Development Program.</p>
         </br>
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModalCreate">Add New Course</button>
 
         <div class="row" id="messageBox" style="height: 100px;">
             {% if success %}
-            <div class="col-md-10"><label id="sucessConfirmation" class="form-control alert-success d-flex justify-content-center" >{{message}}</label></div>
+            <div class="col-md-12"><label id="sucessConfirmation" class="form-control alert-success d-flex justify-content-center text-center" >{{message}}</label></div>
             {% elif failure %}
-            <div class="col-md-10"><label id="errorConfirmation" class="form-control alert-danger d-flex justify-content-center" >{{message}}</label></div>
+            <div class="col-md-12"><label id="errorConfirmation" class="form-control alert-danger d-flex justify-content-center text-center" >{{message}}</label></div>
             {% endif %}
         </div>
 
         </br>
 
-        <table class="table">
+        <table class="table table-bordered table-striped ">
             <thead class="thead-light">
             <tr>
                 <th scope="col">Course Code</th>
@@ -78,7 +85,7 @@
                             <label class="col-sm-3 col-form-label">Code</label>
                             <div class="col-sm-9">
                                 <input type="hidden" id="oldCourseCode" name="oldCourseCode" >
-                                <input type="text" class="form-control" id="editCourseCodeInput" name="editCourseCodeInput">
+                                <input type="text" class="form-control" id="editCourseCodeInput" name="editCourseCodeInput" readonly>
                             </div>
                         </div>
 
@@ -204,6 +211,12 @@ background-color: #66b45f;
 }
 .detele-header {
 background-color: #d66464;
+}
+
+#messageBox{
+
+    margin-top: 25px;
+
 }
 
 

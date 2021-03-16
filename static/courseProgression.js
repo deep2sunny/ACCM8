@@ -3,6 +3,7 @@ $(document).ready(function () {
     // Delete Program
     $(document).on('click', '.deleteBtn', function (event) {
 
+        /*
         var userResponse1 = confirm("Are you sure you want to delete this Program?");
 
         if (userResponse1) {
@@ -14,7 +15,27 @@ $(document).ready(function () {
 
         if (userResponse2 == false){
             event.preventDefault();
-        }
+        }*/
+
+        event.preventDefault();
+
+        console.log("clicked delete");
+
+        var sequence = $(this).parents("tr").find(".sequence").val();
+        console.log($(this).parents("tr"));
+        $("#sequenceDeleteInput").val(sequence);
+
+        var courseCode = $(this).parents("tr").find(".courseCode").val();
+        console.log(courseCode);
+        $("#courseDeleteInput").val(courseCode);
+
+        $('#myModalDelete').find('.prerequisite_1').val($(this).parents("tr").find(".prerequisite_1").val())  ;
+        $('#myModalDelete').find('.prerequisite_2').val($(this).parents("tr").find(".prerequisite_2").val())  ;
+        $('#myModalDelete').find('.prerequisite_3').val($(this).parents("tr").find(".prerequisite_3").val())  ;
+        $('#myModalDelete').find('.prerequisite_4').val($(this).parents("tr").find(".prerequisite_4").val())  ;
+        $('#myModalDelete').find('.prerequisite_5').val($(this).parents("tr").find(".prerequisite_5").val())  ;
+
+
 
     });
 

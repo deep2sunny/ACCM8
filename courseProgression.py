@@ -37,7 +37,10 @@ def courseProgression():
 
             print("clicked add button")
 
+            prerequisite_name = ['prereqCode1', 'prereqCode2', 'prereqCode3', 'prereqCode4', 'prereqCode5']
+
             sequence = parameters['sequence'].upper()
+
             courseCode = parameters['courseCode'].upper()
             prereqCode1 = parameters['prereqCode1'].upper()
             prereqCode2 = parameters['prereqCode2'].upper()
@@ -45,7 +48,6 @@ def courseProgression():
             prereqCode4 = parameters['prereqCode4'].upper()
             prereqCode5 = parameters['prereqCode5'].upper()
 
-            prerequisite_name = ['prereqCode1', 'prereqCode2', 'prereqCode3', 'prereqCode4', 'prereqCode5']
 
             prerequisites = []
 
@@ -59,6 +61,7 @@ def courseProgression():
                     prerequisites.append(parameters[col].upper())
 
             print(parameters)
+            print(prerequisites)
 
             if checkIfSequenceExists(sequence):
                 message = "The sequence number " + sequence + " is already taken, please use a different number"
@@ -84,7 +87,7 @@ def courseProgression():
                                        largestSize=largestSize,
                                        message=message, success=False, failure=True, values=request.form)
 
-            prerequisites = [prereqCode1, prereqCode2, prereqCode3, prereqCode4, prereqCode5]
+
 
             CoreCourseCheckPass = False
 
@@ -115,6 +118,8 @@ def courseProgression():
 
             addIntoFlowchart(courseCode, sequence)
             print("** added course code into flowchart")
+
+            print(prerequisites)
 
 
             for prereq in prerequisites:
@@ -220,14 +225,12 @@ def courseProgression():
                                    message=message, success=True, failure=False, values=dict(), updatedCourse=courseCode, rowClass="updatedRow")
 
 
-
-
-        if request.method == 'POST' and buttonType == "deleteBtn":
+        if request.method == 'POST' and "confirmDeleteBtn" in parameters:
 
             print(parameters)
             print("clicked delete button")
 
-            courseCode = parameters['courseCode'].upper()
+            courseCode = parameters['courseDeleteInput'].upper()
 
             prerequisites = []
 
