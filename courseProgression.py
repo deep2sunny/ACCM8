@@ -39,15 +39,9 @@ def courseProgression():
 
             prerequisite_name = ['prereqCode1', 'prereqCode2', 'prereqCode3', 'prereqCode4', 'prereqCode5']
 
-            sequence = parameters['sequence'].upper()
+            sequence = parameters['sequence'].upper().strip()
 
-            courseCode = parameters['courseCode'].upper()
-            prereqCode1 = parameters['prereqCode1'].upper()
-            prereqCode2 = parameters['prereqCode2'].upper()
-            prereqCode3 = parameters['prereqCode3'].upper()
-            prereqCode4 = parameters['prereqCode4'].upper()
-            prereqCode5 = parameters['prereqCode5'].upper()
-
+            courseCode = parameters['courseCode'].upper().strip()
 
             prerequisites = []
 
@@ -57,8 +51,8 @@ def courseProgression():
                                        message=message, success=False, failure=True, values=request.form)
 
             for col in prerequisite_name:
-                if parameters[col].upper():
-                    prerequisites.append(parameters[col].upper())
+                if parameters[col].upper().strip():
+                    prerequisites.append(parameters[col].upper().strip())
 
             print(parameters)
             print(prerequisites)
@@ -143,12 +137,12 @@ def courseProgression():
                                    message=message, success=True, failure=False, values=dict())
 
 
-        if request.method == 'POST' and buttonType == "saveBtn":
+        if request.method == 'POST' and "confirmEditBtn" in parameters:
             print("clicked save button")
             print(parameters)
 
-            courseCode = parameters['courseCode'].upper()
-            oldCourseCode = parameters['oldCourseCode'].upper()
+            courseCode = parameters['courseCode'].upper().strip()
+            oldCourseCode = parameters['oldCourseCode'].upper().strip()
 
             oldPrerequisites = []
 
@@ -167,8 +161,8 @@ def courseProgression():
             highestSequence = findHighestSequence()
 
             for col in prerequisite_col:
-                if parameters[col].upper():
-                    prerequisites.append(parameters[col].upper())
+                if parameters[col].upper().strip():
+                    prerequisites.append(parameters[col].upper().strip())
 
             if checkCoreCourseExistence(courseCode) == False:
                 message = "The course code " + courseCode + " provided isn't a core course"
@@ -219,6 +213,14 @@ def courseProgression():
 
             allCoreCourses = createCoreCourseDataDict()
 
+            largestSize = 0
+
+            for course in allCoreCourses:
+                if len(course['prerequisites']) > largestSize:
+                    largestSize = len(course['prerequisites'])
+
+            print("largest size " + str(largestSize))
+
             message = "The course progression was successfully updated"
             return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
                                    largestSize=largestSize,
@@ -230,13 +232,13 @@ def courseProgression():
             print(parameters)
             print("clicked delete button")
 
-            courseCode = parameters['courseDeleteInput'].upper()
+            courseCode = parameters['courseDeleteInput'].upper().strip()
 
             prerequisites = []
 
             for col in prerequisite_col:
-                if parameters[col].upper():
-                    prerequisites.append(parameters[col].upper())
+                if parameters[col].upper().strip():
+                    prerequisites.append(parameters[col].upper().strip())
 
 
             print(prerequisites)
@@ -270,10 +272,20 @@ def courseProgression():
 
             allCoreCourses = createCoreCourseDataDict()
 
+            largestSize = 0
+
+            for course in allCoreCourses:
+                if len(course['prerequisites']) > largestSize:
+                    largestSize = len(course['prerequisites'])
+
+            print("largest size " + str(largestSize))
+
             message = "The course progression was successfully deleted"
             return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
                                    largestSize=largestSize,
                                    message=message, success=True, failure=False, values=dict())
+
+
 
         return render_template("courseProgression.html", allCoreCourses=allCoreCourses, largestSize=largestSize, message="", success=False, failure=False, values=dict())
 

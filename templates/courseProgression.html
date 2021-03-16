@@ -29,11 +29,11 @@
                 <div class="form-group row">
                     <label for="sequence" class="col-sm-1 col-form-label  courseInputField text-center">Sequence</label>
                     <label for="courseCode" class="col-sm-1 col-form-label  courseInputField text-center">Course</label>
-                    <label for="prereqCode1" class="col-sm-1 col-form-label courseInputField text-center">Prerequisite 1</label>
-                    <label for="prereqCode2" class="col-sm-1 col-form-label courseInputField text-center">Prerequisite 2</label>
-                    <label for="prereqCode3" class="col-sm-1 col-form-label courseInputField text-center">Prerequisite 3</label>
-                    <label for="prereqCode4" class="col-sm-1 col-form-label courseInputField text-center">Prerequisite 4</label>
-                    <label for="prereqCode5" class="col-sm-1 col-form-label courseInputField text-center">Prerequisite 5</label>
+                    <label for="prereqCode1" class="col-sm-1 col-form-label courseInputField text-center" id="prereqLabel1">Prerequisite 1</label>
+                    <label for="prereqCode2" class="col-sm-1 col-form-label courseInputField text-center" id="prereqLabel2" style="display: none;">Prerequisite 2</label>
+                    <label for="prereqCode3" class="col-sm-1 col-form-label courseInputField text-center" id="prereqLabel3" style="display: none;">Prerequisite 3</label>
+                    <label for="prereqCode4" class="col-sm-1 col-form-label courseInputField text-center" id="prereqLabel4" style="display: none;">Prerequisite 4</label>
+                    <label for="prereqCode5" class="col-sm-1 col-form-label courseInputField text-center" id="prereqLabel5" style="display: none;">Prerequisite 5</label>
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-1 sequenceInputField">
@@ -62,35 +62,35 @@
                     <div class="col-sm-1 courseInputField">
 
                         {% if values['prereqCode2'] == "" %}
-                        <input type="text" class="form-control" id="prereqCode2" name="prereqCode2"  placeholder="None" >
+                        <input type="text" class="form-control" id="prereqCode2" name="prereqCode2"  placeholder="None" style="display: none;">
                         {% else %}
-                        <input type="text" class="form-control" id="prereqCode2" name="prereqCode2"  placeholder="None" value="{{values['prereqCode2']}}" >
+                        <input type="text" class="form-control" id="prereqCode2" name="prereqCode2"  placeholder="None" value="{{values['prereqCode2']}}"  style="display: none;">
                         {% endif %}
 
                     </div>
                     <div class="col-sm-1 courseInputField">
 
                         {% if values['prereqCode3'] == "" %}
-                        <input type="text" class="form-control" id="prereqCode3" name="prereqCode3"  placeholder="None" >
+                        <input type="text" class="form-control" id="prereqCode3" name="prereqCode3"  placeholder="None"  style="display: none;">
                         {% else %}
-                        <input type="text" class="form-control" id="prereqCode3" name="prereqCode3"  placeholder="None" value="{{values['prereqCode3']}}" >
+                        <input type="text" class="form-control" id="prereqCode3" name="prereqCode3"  placeholder="None" value="{{values['prereqCode3']}}"  style="display: none;">
                         {% endif %}
 
 
                     </div>
                     <div class="col-sm-1 courseInputField">
                         {% if values['prereqCode4'] == "" %}
-                        <input type="text" class="form-control" id="prereqCode4" name="prereqCode4"  placeholder="None" >
+                        <input type="text" class="form-control" id="prereqCode4" name="prereqCode4"  placeholder="None"  style="display: none;">
                         {% else %}
-                        <input type="text" class="form-control" id="prereqCode4" name="prereqCode4"  placeholder="None" value="{{values['prereqCode4']}}" >
+                        <input type="text" class="form-control" id="prereqCode4" name="prereqCode4"  placeholder="None" value="{{values['prereqCode4']}}"  style="display: none;">
                         {% endif %}
 
                     </div>
                     <div class="col-sm-1 courseInputField">
                         {% if values['prereqCode5'] == "" %}
-                        <input type="text" class="form-control" id="prereqCode5" name="prereqCode5"  placeholder="None" >
+                        <input type="text" class="form-control" id="prereqCode5" name="prereqCode5"  placeholder="None"  style="display: none;">
                         {% else %}
-                        <input type="text" class="form-control" id="prereqCode5" name="prereqCode5"  placeholder="None" value="{{values['prereqCode5']}}" >
+                        <input type="text" class="form-control" id="prereqCode5" name="prereqCode5"  placeholder="None" value="{{values['prereqCode5']}}"  style="display: none;">
                         {% endif %}
 
                     </div>
@@ -101,6 +101,7 @@
                     <div class="col-sm-10 addFormButtonsDiv">
                         <button type="submit" class="btn btn-success my-1" id="addBtn" name="addBtn">Add Progression</button>
                         <button type="reset" class="btn btn-primary my-1" value="Reset" id="clearBtn">Clear Form</button>
+                        <button type="button" class="btn btn-primary my-1" id="prereqBtn">Add Another Prerequisite</button>
                     </div>
                 </div>
             </form>
@@ -159,6 +160,73 @@
                 </div>
             </div>
 
+            <!--   The second form for modal box update  -->
+            <div class="modal fade" id="myEditModal" name="nameModalEdit" role="dialog">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit Course Name</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <i class="far fa-times-circle"></i>
+                            </button>
+                        </div>
+                        <form class="needs-validation" action="{{ url_for('courseProgression.courseProgression') }}" method="post" id="editCourse" name="editCourse">
+                            <div class="modal-body">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Course Code</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="courseEditInput" name="courseCode" value="test"/>
+                                        <input type="hidden" id="oldCourseEditInput" name="oldCourseCode" value="test"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Prerequisite 1</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="prereq1EditInput" name="prerequisite_1" value="test"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Prerequisite 2</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="prereq2EditInput" name="prerequisite_2" value="test"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Prerequisite 3</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="prereq3EditInput" name="prerequisite_3" value="test"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Prerequisite 4</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="prereq4EditInput" name="prerequisite_4" value="test"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Prerequisite 5</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="prereq5EditInput" name="prerequisite_5" value="test"/>
+                                    </div>
+                                </div>
+
+                                <p class="text-danger text-center" id="editCourseError" style="display: none;"></p>
+                            </div>
+                            <div class="modal-footer">
+                                </br>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <input type="submit" class="btn btn-success" value="Save" id="confirmEditBtn" name="confirmEditBtn">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
 
 
             <table class="table table-bordered table-striped ">
@@ -170,15 +238,15 @@
 
                     <th scope="col" class="text-center col-sm-2">Course</th>
 
-                    <th scope="col" class="text-center col-sm-2">Prerequisite 1</th>
+                    {% for i in range(1,6) %}
 
-                    <th scope="col" class="text-center col-sm-2">Prerequisite 2</th>
+                    {% if i<=largestSize %}
 
-                    <th scope="col" class="text-center col-sm-2">Prerequisite 3</th>
+                    <th scope="col" class="text-center col-sm-2">Prerequisite {{i}}</th>
 
-                    <th scope="col" class="text-center col-sm-2">Prerequisite 4</th>
+                    {% endif %}
 
-                    <th scope="col" class="text-center col-sm-2">Prerequisite 5</th>
+                    {% endfor %}
 
                     <th scope="col" class="text-center col-sm-2"></th>
 
@@ -188,6 +256,7 @@
                 <tbody>
                 {% for course in allCoreCourses %}
                 <form action="{{ url_for('courseProgression.courseProgression') }}" method="post" id="testForm2" name="testForm2">
+
                     <tr class="{% if course['core_course_num'] == updatedCourse %} {{ rowClass }} {% endif %}">
                         <td class="sequenceCell">
                             <input type="hidden" class="text-center .bg-secondary sequence" name="sequence" value="{{course['sequence']}}">
@@ -200,14 +269,18 @@
                         </td>
                         {% for i in range(1,6) %}
 
+                        {% if i<=largestSize %}
+
                         <td>
                             <input class="text-center custom .bg-secondary col-sm-2 prereqInput prerequisite_{{loop.index}}" name="prerequisite_{{loop.index}}" value="{{course['prerequisites'][loop.index-1]}}"  style="display:none">
                             <span class="prereqSpan">{{course['prerequisites'][loop.index-1]}}</span>
                         </td>
 
+                        {% endif %}
+
                         {% endfor %}
                         <td>
-                            <button id="editBtn_{{loop.index - 1}}" name="editBtn_{{loop.index}}" class="btn btn-success editBtn">Update</button>
+                            <button id="editBtn_{{loop.index - 1}}" name="editBtn_{{loop.index}}" class="btn btn-success editBtn"  data-toggle="modal" data-target="#myEditModal">Update</button>
                             <button type="submit" id="saveBtn_{{loop.index - 1}}" name="saveBtn_{{loop.index}}" class="btn btn-success saveBtn" style="display: none;">Save</button>
                         </td>
                         <td>
@@ -215,6 +288,7 @@
                             <button type="submit" id="cancelBtn_{{loop.index - 1}}" name="cancelBtn_{{loop.index}}" class="btn btn-primary cancelBtn" style="display: none;">Cancel</button>
                         </td>
                     </tr>
+
                 </form>
                 {% endfor %}
                 </tbody>
