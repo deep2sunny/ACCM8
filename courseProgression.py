@@ -50,7 +50,7 @@ def courseProgression():
             prerequisites = []
 
             if not RepresentsInt(sequence):
-                message = "The sequence number must be a valid integer"
+                message = "The sequence number " + sequence + " must be a valid integer"
                 return render_template("courseProgression.html", allCoreCourses=allCoreCourses, largestSize=largestSize,
                                        message=message, success=False, failure=True, values=request.form)
 
@@ -61,7 +61,7 @@ def courseProgression():
             print(parameters)
 
             if checkIfSequenceExists(sequence):
-                message = "The sequence number is already taken, please use a different number"
+                message = "The sequence number " + sequence + " is already taken, please use a different number"
                 return render_template("courseProgression.html", allCoreCourses=allCoreCourses, largestSize=largestSize,
                                        message=message, success=False, failure=True, values=request.form)
 
@@ -69,17 +69,17 @@ def courseProgression():
             sequence_int = int(sequence)
 
             if sequence_int <= highestSequence:
-                message = "The sequence number provided must be greater than the existing course progression sequences"
+                message = "The sequence number " + sequence + " is greater than the existing course progression sequences"
                 return render_template("courseProgression.html", allCoreCourses=allCoreCourses, largestSize=largestSize,
                                        message=message, success=False, failure=True, values=request.form)
 
             if checkCoreCourseExistence(courseCode) == False:
-                message = "The course code provided isn't a core course"
+                message = "The course code " + courseCode + " provided isn't a core course"
                 return render_template("courseProgression.html", allCoreCourses=allCoreCourses, largestSize=largestSize,
                                        message=message, success=False, failure=True, values=request.form)
 
             if checkCoreCourseFlowchart(courseCode) == True:
-                message = "The course code is already in the sequence"
+                message = "The course code " + courseCode + " is already in the sequence"
                 return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
                                        largestSize=largestSize,
                                        message=message, success=False, failure=True, values=request.form)
@@ -93,7 +93,7 @@ def courseProgression():
                 if prereq:
 
                     if checkCoreCourseExistence(prereq) == False:
-                        message = "The prerequisite course code provided doesn't exist"
+                        message = "The prerequisite " + prereq + " course code provided doesn't exist"
                         return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
                                                largestSize=largestSize,
                                                message=message, success=False, failure=True, values=request.form)
@@ -105,7 +105,7 @@ def courseProgression():
                 for prereq in prerequisites:
                     if prereq:
                         if checkCoreCourseFlowchart(prereq) == False:
-                            message = "The prerequisite code needs to first be added in the sequence"
+                            message = "The prerequisite code " + prereq + " needs to first be added in the sequence"
                             return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
                                                    largestSize=largestSize,
                                                    message=message, success=False, failure=True, values=request.form)
@@ -132,7 +132,7 @@ def courseProgression():
                 if len(course['prerequisites']) > largestSize:
                     largestSize = len(course['prerequisites'])
 
-            message = "The course sequence was added successfully"
+            message = "The course progression was added successfully"
             return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
                                    largestSize=largestSize,
                                    message=message, success=True, failure=False, values=dict())
@@ -166,24 +166,24 @@ def courseProgression():
                     prerequisites.append(parameters[col].upper())
 
             if checkCoreCourseExistence(courseCode) == False:
-                message = "The course code provided isn't a core course"
+                message = "The course code " + courseCode + " provided isn't a core course"
                 return render_template("courseProgression.html", allCoreCourses=allCoreCourses, largestSize=largestSize,
                                        message=message, success=False, failure=True, values=request.form, updatedCourse=courseCode, rowClass="errorRow")
 
             if checkCoreCourseFlowchart(courseCode) == True and courseCode != oldCourseCode:
-                message = "The course code is already in the sequence"
+                message = "The course code " + courseCode + " is already in the sequence"
                 return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
                                        largestSize=largestSize,
                                        message=message, success=False, failure=True, values=request.form, updatedCourse=courseCode, rowClass="errorRow")
 
             if findCourseSequenceNumber(courseCode) < highestSequence and courseCode != oldCourseCode:
-                message = "The course code cannot be edited as it comes before other progressions and would affect the display of flowcharts"
+                message = "The course code " + courseCode + " cannot be edited as it comes before other progressions and would affect the display of flowcharts"
                 return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
                                    largestSize=largestSize,
                                    message=message, success=False, failure=True, values=dict(), updatedCourse=courseCode, rowClass="errorRow")
 
             if checkIfPrerequisite(courseCode) == True:
-                message = "This course code cannot be edited as it's used as a prerequisite for another course"
+                message = "This course code " + courseCode + " cannot be edited as it's used as a prerequisite for another course"
                 return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
                                        largestSize=largestSize,
                                        message=message, success=False, failure=True, values=dict(), updatedCourse=courseCode, rowClass="errorRow")
@@ -193,7 +193,7 @@ def courseProgression():
                 if prereq:
 
                     if checkCoreCourseExistence(prereq) == False:
-                        message = "The prerequisite course code provided isn't a core course"
+                        message = "The prerequisite " + prereq + " isn't a valid core course code. Please re-check the course code."
                         return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
                                                largestSize=largestSize,
                                                message=message, success=False, failure=True, values=request.form, updatedCourse=courseCode, rowClass="errorRow")
@@ -214,7 +214,7 @@ def courseProgression():
 
             allCoreCourses = createCoreCourseDataDict()
 
-            message = "The progression was successfully updated"
+            message = "The course progression was successfully updated"
             return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
                                    largestSize=largestSize,
                                    message=message, success=True, failure=False, values=dict(), updatedCourse=courseCode, rowClass="updatedRow")
@@ -243,13 +243,13 @@ def courseProgression():
             highestSequence = findHighestSequence()
 
             if _sequenceNumber < highestSequence:
-                message = "This progression cannot be deleted as it comes before other progressions and would affect the display of flowcharts"
+                message = "This course progression cannot be deleted as it comes before other progressions and would affect the display of flowcharts"
                 return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
                                    largestSize=largestSize,
                                    message=message, success=False, failure=True, values=dict(), updatedCourse=courseCode, rowClass="errorRow")
 
             if checkIfPrerequisite(courseCode) == True:
-                message = "This progression cannot be deleted as it's used as a prerequisite for another course"
+                message = "This course progression cannot be deleted as it's used as a prerequisite for another course"
                 return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
                                        largestSize=largestSize,
                                        message=message, success=False, failure=True, values=dict(), updatedCourse=courseCode, rowClass="errorRow")
@@ -267,7 +267,7 @@ def courseProgression():
 
             allCoreCourses = createCoreCourseDataDict()
 
-            message = "The progression was successfully deleted"
+            message = "The course progression was successfully deleted"
             return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
                                    largestSize=largestSize,
                                    message=message, success=True, failure=False, values=dict())
