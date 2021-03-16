@@ -7,9 +7,31 @@ from app import app
 studentsReportBlueprint = Blueprint("studentsReport", __name__, static_folder="static", template_folder="template")
 
 
+def createConnection():
+    mysql = MySQL(app)
+
+    try:
+        con = mdb1.connect(host=mysql.app.config['MYSQL_HOST'],
+                           user=mysql.app.config['MYSQL_USER'],
+                           password=mysql.app.config['MYSQL_PASSWORD'],
+                           database=mysql.app.config['MYSQL_DB'],
+                           #database="accm_test",
+                           port=mysql.app.config['MYSQL_PORT'])
+
+
+    except mdb1.Error as e:
+        print("Error %d: %s" % (e.args[0], e.args[1]))
+        sys.exit(1)
+
+    return con
+
+
+
+
 # http://localhost:5000/administrator/studentsreport
 @studentsReportBlueprint.route("/administrator/studentsreport", methods=['GET','POST'])
 def studentsReport():
+
 
     levels = ["A01", "A02", "A03", "A04"]
     programPid = "20"
@@ -27,6 +49,8 @@ def studentsReport():
 
         if len(failedStudentsRecords) == 0 and len(passedStudentsRecords) == 0:
             showMessage = True
+
+
 
         return render_template("studentsReport.html", levels=levels,
                                failedStudentsRecords=failedStudentsRecords, passedStudentsRecords=passedStudentsRecords,
@@ -50,6 +74,8 @@ def studentsReport():
         values = dict()
         values['level'] = level
 
+
+
         return render_template("studentsReport.html", levels=levels,
                                failedStudentsRecords=failedStudentsRecords, passedStudentsRecords=passedStudentsRecords,
                                values=values, showMessage=showMessage)
@@ -60,32 +86,21 @@ def studentsReport():
         values = dict()
         values['level'] = "0"
 
+
+
         return render_template("studentsReport.html", levels=levels, values=values, showMessage=False)
 
 
 
-def createCursor():
-    mysql = MySQL(app)
 
-    try:
-        con = mdb1.connect(host=mysql.app.config['MYSQL_HOST'],
-                           user=mysql.app.config['MYSQL_USER'],
-                           password=mysql.app.config['MYSQL_PASSWORD'],
-                           database=mysql.app.config['MYSQL_DB'],
-                           port=mysql.app.config['MYSQL_PORT'])
-
-
-    except mdb1.Error as e:
-        print("Error %d: %s" % (e.args[0], e.args[1]))
-        sys.exit(1)
-
-    return con
 
 
 
 def readFailedStudents(level, programPid):
 
-    con = createCursor()
+
+    con = createConnection()
+    cursor = con.cursor()
     query = f"""
     
                 SELECT 
@@ -104,8 +119,6 @@ def readFailedStudents(level, programPid):
                 
             """
 
-
-    cursor = con.cursor()
     cursor.execute(query)
     rows = cursor.fetchall()
 
@@ -118,7 +131,8 @@ def readFailedStudents(level, programPid):
 
 
 def readPassedStudents(level, programPid):
-    con = createCursor()
+    con = createConnection()
+
     query = f"""
 
                 SELECT 
@@ -145,12 +159,11 @@ def readPassedStudents(level, programPid):
     passedStudentsRecords = [dict(zip(names, row)) for row in rows]
 
     con.close()
-
     return passedStudentsRecords
 
 
 def getProgramCode(programVersionId):
-    con = createCursor()
+    con = createConnection()
     query = f"""
 
                     SELECT program.code, program.name, program.program_version
@@ -171,5 +184,7 @@ def getProgramCode(programVersionId):
     programCode = rows[0][0]
     programName = rows[0][1]
     programVersionYear = rows[0][2]
+
+    con.close()
 
     return programCode, programName, programVersionYear
