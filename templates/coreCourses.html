@@ -11,20 +11,27 @@
 
 # ctr + alt + shift + L to format code
 {% block content %}
-
+{% include 'adminNavigation.html' %}
 <div class="container">
+
+    </br>
+    <div class="py-5 text-center font-weight-bold">
+        <h2>Core Courses</h2>
+        </br>
+        <p class="my-3 text-muted text-center">
+            This page can be used to add, update or delete core courses for the Internet Applications and Web Development Program.
+        </p>
+
+        <hr class="mb-4">
+    </div>
 
 
     <!--The first form for table course overview-->
     <div id="Courses" class="tabcontent">
-        <h1 class="text-center">Course Overview</h1>
-        </br>
-        </br>
-        <p class="text-center">This page can be used to add, update or delete core courses for the Internet Applications and Web Development Program.</p>
-        </br>
+
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModalCreate">Add New Course</button>
 
-        <div class="row" id="messageBox" style="height: 100px;">
+        <div class="row" id="messageBox" style="height: 50px;">
             {% if success %}
             <div class="col-md-12"><label id="sucessConfirmation" class="form-control alert-success d-flex justify-content-center text-center" >{{message}}</label></div>
             {% elif failure %}
@@ -192,7 +199,6 @@ html, body {
 /* Style the tab content (and add height:100% for full page content) */
 .tabcontent {
   color: black;
-  padding: 100px 20px;
   height: 100%;
 }
 

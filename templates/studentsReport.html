@@ -2,19 +2,25 @@
 {% include 'layout.html' %}
 
 {% block content %}
+{% include 'adminNavigation.html' %}
 <div class="container">
 
+    </br>
+
+    <div class="py-5 text-center font-weight-bold">
+        <h2>Students Reports</h2>
+        </br>
+        <p class="my-3 text-muted text-center">
+            This page is can be used to generate Student Reports
+        </p>
+
+        <hr class="mb-4">
+    </div>
+
     <form id="reportForm" action="{{ url_for('studentsReport.studentsReport') }}" method="post"
-        class="needs-validation">
+          class="needs-validation">
 
-        <div class="py-5 text-center ">
-            <h2>Students Reports Page</h2>
-            <p class="my-3 text-muted">
-                This page is can be used to generate Student Reports
-            </p>
 
-            <hr class="mb-4">
-        </div>
 
         <div class="input-group">
 
@@ -43,10 +49,10 @@
         </div>
     </form>
 
-    <div class="form-group row col-md-12" id="messageBox" style="height: 100px;">
+    <div class="form-group row col-md-12" id="messageBox" style="height: 50px;">
 
         <div class="col-md-10"><label id="errorConfirmation" class="form-control alert-danger"
-                style="display: none; text-align: center;"></label></div>
+                                      style="display: none; text-align: center;"></label></div>
     </div>
 
 
@@ -54,7 +60,7 @@
 
     {% if showMessage %}
     <div class="alert alert-danger">
-                No Student Data is available
+        No Student Data is available
     </div>
     {% endif %}
 
@@ -70,30 +76,30 @@
 
         <table class="table table-striped table-bordered">
             <thead>
-                <tr>
-                    <th scope="col">Student Number</th>
-                    <th scope="col">Student Name</th>
-                    <th scope="col">Progression Map</th>
-                </tr>
+            <tr>
+                <th scope="col">Student Number</th>
+                <th scope="col">Student Name</th>
+                <th scope="col">Progression Map</th>
+            </tr>
             </thead>
             <tbody >
-                {% for student in failedStudentsRecords %}
-                <tr>
-                    <td>
-                        {{ student['student_num'] }}
-                    </td>
-                    <td>
-                        {{ student['fname'] + " " + student['lname']}}
-                    </td>
-                    <td>
-                        <a href="{{ url_for('viewFlowchart', sid= student['sid'], sVersion=student['program_version'], sProgram=student['pid'], sLevel=student['level'], sCourse='null') }}"
-                            class="badge badge-flowchart" title="Course flowchart" value="{{ student['sid'] }}"><i
-                                class="fas fa-project-diagram"></i></a>
-                    </td>
+            {% for student in failedStudentsRecords %}
+            <tr>
+                <td>
+                    {{ student['student_num'] }}
+                </td>
+                <td>
+                    {{ student['fname'] + " " + student['lname']}}
+                </td>
+                <td>
+                    <a href="{{ url_for('viewFlowchart', sid= student['sid'], sVersion=student['program_version'], sProgram=student['pid'], sLevel=student['level'], sCourse='null') }}"
+                       class="badge badge-flowchart" title="Course flowchart" value="{{ student['sid'] }}"><i
+                            class="fas fa-project-diagram"></i></a>
+                </td>
 
 
-                </tr>
-                {% endfor %}
+            </tr>
+            {% endfor %}
             </tbody>
 
         </table>
@@ -109,30 +115,30 @@
 
         <table class="table table-striped table-bordered">
             <thead>
-                <tr>
-                    <th scope="col">Student Number</th>
-                    <th scope="col">Student Name</th>
-                    <th scope="col">Progression Map</th>
-                </tr>
+            <tr>
+                <th scope="col">Student Number</th>
+                <th scope="col">Student Name</th>
+                <th scope="col">Progression Map</th>
+            </tr>
             </thead>
             <tbody >
-                {% for student in passedStudentsRecords %}
-                <tr>
-                    <td>
-                        {{ student['student_num'] }}
-                    </td>
-                    <td>
-                        {{ student['fname'] + " " + student['lname']}}
-                    </td>
-                    <td>
-                        <a href="{{ url_for('viewFlowchart', sid= student['sid'], sVersion=student['program_version'], sProgram=student['pid'], sLevel=student['level'], sCourse='null') }}"
-                            class="badge badge-flowchart" title="Course flowchart" value="{{ student['sid'] }}"><i
-                                class="fas fa-project-diagram"></i></a>
-                    </td>
+            {% for student in passedStudentsRecords %}
+            <tr>
+                <td>
+                    {{ student['student_num'] }}
+                </td>
+                <td>
+                    {{ student['fname'] + " " + student['lname']}}
+                </td>
+                <td>
+                    <a href="{{ url_for('viewFlowchart', sid= student['sid'], sVersion=student['program_version'], sProgram=student['pid'], sLevel=student['level'], sCourse='null') }}"
+                       class="badge badge-flowchart" title="Course flowchart" value="{{ student['sid'] }}"><i
+                            class="fas fa-project-diagram"></i></a>
+                </td>
 
 
-                </tr>
-                {% endfor %}
+            </tr>
+            {% endfor %}
             </tbody>
 
         </table>
@@ -156,7 +162,7 @@
 </footer>
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-    integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
+        integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
 
 <script type="text/javascript" src="/static/studentsReport.js"></script>
 

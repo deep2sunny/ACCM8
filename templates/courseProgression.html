@@ -8,16 +8,21 @@
 <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
 {{ super() }}
 {% endblock %}
-
 # ctr + alt + shift + L to format code
 # ctr +shift + / : to comment blocks of code
 {% block content %}
+{% include 'adminNavigation.html' %}
 <div class="container">
     </br>
-    <h1 class="text-center font-weight-bold">Course Progression Page</h1>
-    </br>
-    </br>
-    <p class="text-center">This page is used to edit the course sequence for different program versions</p>
+    <div class="py-5 text-center font-weight-bold">
+        <h2>Course Progression</h2>
+        </br>
+        <p class="my-3 text-muted text-center">
+            This page is used to edit the course sequence for different program versions
+        </p>
+
+        <hr class="mb-4">
+    </div>
 
     <div>
 
@@ -107,7 +112,7 @@
             </form>
 
 
-            <div class="row" id="messageBox" style="height: 100px;">
+            <div class="row" id="messageBox" style="height: 50px;">
                 {% if success %}
                 <div class="col-md-12"><label id="sucessConfirmation" class="form-control alert-success d-flex justify-content-center text-center" >{{message}}</label></div>
                 {% elif failure %}

@@ -1,7 +1,5 @@
 $(document).ready(function () {
 
-
-
     // Delete Program
     $(document).on('click', '.deleteBtn', function (event) {
 
