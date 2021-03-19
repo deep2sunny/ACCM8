@@ -244,7 +244,7 @@ const program_map = {
         },
         {
             'id': 12,
-            'courseid': 'GED3002',
+            'courseid': 'GENED',
             'xcoord': 990,
             'ycoord': 220,
             'port': []
@@ -281,7 +281,7 @@ const program_map = {
         },
         {
             'id': 17,
-            'courseid': 'GED3002',
+            'courseid': 'GENED',
             'xcoord': 990,
             'ycoord': 430,
             'port': []
@@ -488,7 +488,7 @@ for (var g = 0; g < student_results.length; g++) {
 
 var elective_options = [];
 for (var i = 0; i < program_map.nodes.length; i++) {
-    if (program_map.nodes[i].courseid === 'GED3002') {
+    if (program_map.nodes[i].courseid === 'GENED') {
         elective_options.push(program_map.nodes[i]);
     }
 }
@@ -656,7 +656,7 @@ var second = false;
 var course;
 for (i=0; i < courseList.length; i++) {
     var code = null;
-    if (second == false && courseList[i].courseid === 'GED3002') {
+    if (second == false && courseList[i].courseid === 'GENED') {
         if(elective_options[0].gedcode == undefined){
             code = courseList[i].courseid;
         }
@@ -665,7 +665,7 @@ for (i=0; i < courseList.length; i++) {
         }
         second = true;
     }
-    else if (second == true && courseList[i].courseid === 'GED3002') {
+    else if (second == true && courseList[i].courseid === 'GENED') {
         if(elective_options[1].gedcode == undefined){
             code = courseList[i].courseid;
         }
@@ -745,145 +745,76 @@ for (i=0; i < courseList.length; i++) {
 
 
 // if viewChecked checkbox not checked, no Lines(links)
-if(viewChecked) {
+if(viewChecked == true) {
+var line = false
 // add links
 for (var l=0; l < prereqlinks.length; l++) {
-    var link = new joint.shapes.standard.Link({
-        source: prereqlinks[l].source,
-        target: prereqlinks[l].target,
-        connector: {name: 'rounded'},
-        router: {
-            name: 'manhattan',
-            args: {
-                step: 15,
-                startDirections: [prereqlinks[l].source.port],
-                endDirections: [prereqlinks[l].target.port],
-                maximumLoops: 300
-            }
-        },
-        attrs: {
-            line: {
-                strokeWidth: 4,
-                stroke: '#000000',
-                cursor: 'default'
-            }
+    
+    if(line == false){
+        if(prereqlinks[l].target.id == 20){
+            line = true;
         }
-    });
-
-    link.addTo(graph);
+        var link = new joint.shapes.standard.Link({
+            source: prereqlinks[l].source,
+            target: prereqlinks[l].target,
+            connector: {name: 'rounded'},
+            router: {
+                name: 'manhattan',
+                args: {
+                    step: 15,
+                    startDirections: [prereqlinks[l].source.port],
+                    endDirections: [prereqlinks[l].target.port],
+                    maximumLoops: 300
+                }
+            },
+            attrs: {
+                line: {
+                    strokeWidth: 4,
+                    stroke: '#000000',
+                    cursor: 'default'
+                }
+            }
+        });
+        link.addTo(graph);
+    }
+    
     }
 }
 else {
-shapeCourse;
-//var link;
-
-
-paper.on("cell:mouseover", function(cellView) {
-    for (var l=0; l < prereqlinks.length; l++){
-        if(cellView.model.id === prereqlinks[l].source.id)
-        {
-            console.log(cellView.model.id);
-            console.log(prereqlinks[l].source.id);
-            console.log(prereqlinks[l].target.id);
-            for (i=0; i < courseList.length; i++){
-                console.log('true');
-                if(prereqlinks[l].target.id === courseList[i].id){
-
-                    //console.log('inside loop xlist --> '+prereqlinks[l].target.xcoord);
-
-
-                 //   course['id'] = courseList[i].id;
-                //    console.log(course['id']);
-                     course.position(courseList[prereqlinks[l].target.id].xcoord,courseList[prereqlinks[l].target.id].ycoord);
-                  //   course.attr('courseCode', courseList[i].courseid);
-
-                  //  course.id(prereqlinks[l].target.id);
-
-
-                }
-              //  course.attr('box/fill', '#000000');
-                    course.addTo(graph);
-
-                  //  console.log('courseList[i].id --> '+ courseList[i].id);
-                  //  console.log('prereqlinks prereqlinks[l].source.id --> ' + prereqlinks[l].source.id);
-                 //   xlist.push(prereqlinks[l].target.id);
-                 //   console.log(xlist);
-
-
-
-            }
-
-}
-
-
-
-
-
-      }
-
-
-});
-
-
-
-//paper.on("cell:mouseout", function(cellView) {
-//
-//      for (var l=0; l < prereqlinks.length; l++) {
-//
-//if(cellView.model.id === prereqlinks[l].source.id){
-//        for(var i =0;i<courseList.length;i++){
-//            if(prereqlinks[l].target.id === courseList[i].id){
-//                console.log('true');
-//              //  shapeCourse.remove();
-//                shapeCourse = new joint.shapes.basic.CourseBox({
-//                              position: { x: courseList[i].xcoord, y: courseList[i].ycoord },
-//                              cursor: 'default'
-//                              });
-//                shapeCourse.attr('box/fill', '#28A745');
-//                shapeCourse.addTo(graph);
-//            }
-//
-//           }
-//
-//
-//
-//
-//
-//                }
-//}
-//
-//});
-}
-else {
     var link;
-    
     paper.on("cell:mouseover", function(cellView) {
+        var line = false
           for (var l=0; l < prereqlinks.length; l++) {
             if(cellView.model.id === prereqlinks[l].source.id)
             {
-               link = new joint.shapes.standard.Link({
-                    source: prereqlinks[l].source,
-                    target: prereqlinks[l].target,
-                    connector: {name: 'rounded'},
-                    router: {
-                        name: 'manhattan',
-                        args: {
-                        step: 15,
-                        startDirections: [prereqlinks[l].source.port],
-                        endDirections: [prereqlinks[l].target.port],
-                        maximumLoops: 300
-                        }
-                    },
-                    attrs: {
-                        line: {
-                        strokeWidth: 4,
-                        stroke: '#000000',
-                        cursor: 'default',
-                        }
-                     }
-                });
-                link.addTo(graph);
-               // console.log(link);
+                if(line == false){
+                    if(prereqlinks[l].target.id == 20){
+                        line = true;
+                    }
+                    link = new joint.shapes.standard.Link({
+                        source: prereqlinks[l].source,
+                        target: prereqlinks[l].target,
+                        connector: {name: 'rounded'},
+                        router: {
+                            name: 'manhattan',
+                            args: {
+                            step: 15,
+                            startDirections: [prereqlinks[l].source.port],
+                            endDirections: [prereqlinks[l].target.port],
+                            maximumLoops: 300
+                            }
+                        },
+                        attrs: {
+                            line: {
+                            strokeWidth: 4,
+                            stroke: '#000000',
+                            cursor: 'default',
+                            }
+                         }
+                    });
+                    link.addTo(graph);
+                }
+               
             }
           }
     });
@@ -891,11 +822,8 @@ else {
     paper.on("cell:mouseout", function(cellView) {
     for (var l=0; l < prereqlinks.length; l++) {
             _.each(cellView.paper.model.getLinks(), function(link) {
-            console.log(link.id, link.get('source'), link.get('target'))
             link.remove();
          })
-    
-    
      }});
 }
 

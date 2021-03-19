@@ -23,7 +23,7 @@ app.secret_key = 'your secret key'
 # Enter your database connection details below
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_DB'] = 'accm'
+app.config['MYSQL_DB'] = 'accmnew'
 
 # configuration file for db password, mailing setting
 app.config.from_pyfile('./static/config.cfg')
@@ -254,13 +254,13 @@ def uploadGrade():
 @app.route('/uploadGrade2DB', methods=['POST'])
 def uploadGrade2DB():
     # print("call uploadGrade2DB")
-    if request.method == 'POST' and 'pVersion' in request.form and 'cTerm' in request.form:
+    if request.method == 'POST':
         # print("call inputCSV2DB")
         file = request.files['inputFile']
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
 
         #call inputCSV2DB with file name
-        inputCSV.inputCSV2DB(request.form['pVersion'], request.form['cTerm'], "", file.filename)
+        inputCSV.inputCSV2DB(file.filename)
 
     if 'loggedin' in session:
         # User is loggedin show them the uploadGrade page
@@ -592,7 +592,7 @@ def viewFlowchart(sid, sVersion, sProgram, sLevel, sCourse):
         ccode = r['courseCode']
         iawd_course_map.append({'id': r['sequence'], 'ccode': r['courseCode']})
     
-    prelinkQuery = "select T2.source_id as source_id, T2.source as source, T1.target_id as target_id, T1.target as target from (select core_course_flowchart.core_course_num as 'target', core_course_flowchart.sequence as 'target_id', core_course_prerequisites.prerequisite_num as 'source' from core_course_flowchart left join core_course_prerequisites on core_course_flowchart.core_course_num = core_course_prerequisites.core_course_num)T1 left join (select core_course_flowchart.core_course_num as 'source', core_course_flowchart.sequence as 'source_id' from core_course_flowchart)T2 on (T1.source = T2.source) where T2.source is not null order by target_id asc, case when target_id = '13' then source_id end desc"
+    prelinkQuery = "select T2.source_id as source_id, T2.source as source, T1.target_id as target_id, T1.target as target from (select core_course_flowchart.core_course_num as 'target', core_course_flowchart.sequence as 'target_id', core_course_prerequisites.prerequisite_num as 'source' from core_course_flowchart left join core_course_prerequisites on core_course_flowchart.core_course_num = core_course_prerequisites.core_course_num)T1 left join (select core_course_flowchart.core_course_num as 'source', core_course_flowchart.sequence as 'source_id' from core_course_flowchart)T2 on (T1.source = T2.source) where T2.source is not null order by target_id asc, case when target_id = '13' then source_id end desc, case when target_id = '14' then source_id end asc"
     cursor.execute(prelinkQuery)
     preLinks = cursor.fetchall()
 
