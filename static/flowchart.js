@@ -244,7 +244,7 @@ const program_map = {
         },
         {
             'id': 12,
-            'courseid': 'GED3002',
+            'courseid': 'GENED',
             'xcoord': 990,
             'ycoord': 220,
             'port': []
@@ -281,7 +281,7 @@ const program_map = {
         },
         {
             'id': 17,
-            'courseid': 'GED3002',
+            'courseid': 'GENED',
             'xcoord': 990,
             'ycoord': 430,
             'port': []
@@ -483,7 +483,7 @@ for (var g = 0; g < student_results.length; g++) {
 
 var elective_options = [];
 for (var i = 0; i < program_map.nodes.length; i++) {
-    if (program_map.nodes[i].courseid === 'GED3002') {
+    if (program_map.nodes[i].courseid === 'GENED') {
         elective_options.push(program_map.nodes[i]);
     }
 }
@@ -650,7 +650,7 @@ var portsides = ['top', 'right', 'bottom', 'left'];
 var second = false;
 for (i=0; i < courseList.length; i++) {
     var code = null;
-    if (second == false && courseList[i].courseid === 'GED3002') {
+    if (second == false && courseList[i].courseid === 'GENED') {
         if(elective_options[0].gedcode == undefined){
             code = courseList[i].courseid;
         }
@@ -659,7 +659,7 @@ for (i=0; i < courseList.length; i++) {
         }
         second = true;
     }
-    else if (second == true && courseList[i].courseid === 'GED3002') {
+    else if (second == true && courseList[i].courseid === 'GENED') {
         if(elective_options[1].gedcode == undefined){
             code = courseList[i].courseid;
         }
@@ -736,63 +736,75 @@ for (i=0; i < courseList.length; i++) {
 
 // if viewChecked checkbox not checked, no Lines(links)
 if(viewChecked == true) {
+var line = false
 // add links
 for (var l=0; l < prereqlinks.length; l++) {
-    var link = new joint.shapes.standard.Link({
-        source: prereqlinks[l].source,
-        target: prereqlinks[l].target,
-        connector: {name: 'rounded'},
-        router: {
-            name: 'manhattan',
-            args: {
-                step: 15,
-                startDirections: [prereqlinks[l].source.port],
-                endDirections: [prereqlinks[l].target.port],
-                maximumLoops: 300
-            }
-        },
-        attrs: {
-            line: {
-                strokeWidth: 4,
-                stroke: '#000000',
-                cursor: 'default'
-            }
+    
+    if(line == false){
+        if(prereqlinks[l].target.id == 20){
+            line = true;
         }
-    });
-
-    link.addTo(graph);
+        var link = new joint.shapes.standard.Link({
+            source: prereqlinks[l].source,
+            target: prereqlinks[l].target,
+            connector: {name: 'rounded'},
+            router: {
+                name: 'manhattan',
+                args: {
+                    step: 15,
+                    startDirections: [prereqlinks[l].source.port],
+                    endDirections: [prereqlinks[l].target.port],
+                    maximumLoops: 300
+                }
+            },
+            attrs: {
+                line: {
+                    strokeWidth: 4,
+                    stroke: '#000000',
+                    cursor: 'default'
+                }
+            }
+        });
+        link.addTo(graph);
+    }
+    
 }
 }
 else {
     var link;
-    
     paper.on("cell:mouseover", function(cellView) {
+        var line = false
           for (var l=0; l < prereqlinks.length; l++) {
             if(cellView.model.id === prereqlinks[l].source.id)
             {
-               link = new joint.shapes.standard.Link({
-                    source: prereqlinks[l].source,
-                    target: prereqlinks[l].target,
-                    connector: {name: 'rounded'},
-                    router: {
-                        name: 'manhattan',
-                        args: {
-                        step: 15,
-                        startDirections: [prereqlinks[l].source.port],
-                        endDirections: [prereqlinks[l].target.port],
-                        maximumLoops: 300
-                        }
-                    },
-                    attrs: {
-                        line: {
-                        strokeWidth: 4,
-                        stroke: '#000000',
-                        cursor: 'default',
-                        }
-                     }
-                });
-                link.addTo(graph);
-               // console.log(link);
+                if(line == false){
+                    if(prereqlinks[l].target.id == 20){
+                        line = true;
+                    }
+                    link = new joint.shapes.standard.Link({
+                        source: prereqlinks[l].source,
+                        target: prereqlinks[l].target,
+                        connector: {name: 'rounded'},
+                        router: {
+                            name: 'manhattan',
+                            args: {
+                            step: 15,
+                            startDirections: [prereqlinks[l].source.port],
+                            endDirections: [prereqlinks[l].target.port],
+                            maximumLoops: 300
+                            }
+                        },
+                        attrs: {
+                            line: {
+                            strokeWidth: 4,
+                            stroke: '#000000',
+                            cursor: 'default',
+                            }
+                         }
+                    });
+                    link.addTo(graph);
+                }
+               
             }
           }
     });
@@ -800,11 +812,8 @@ else {
     paper.on("cell:mouseout", function(cellView) {
     for (var l=0; l < prereqlinks.length; l++) {
             _.each(cellView.paper.model.getLinks(), function(link) {
-            console.log(link.id, link.get('source'), link.get('target'))
             link.remove();
          })
-    
-    
      }});
 }
 
