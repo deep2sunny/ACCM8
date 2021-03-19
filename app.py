@@ -23,7 +23,7 @@ app.secret_key = 'your secret key'
 # Enter your database connection details below
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_DB'] = 'accmnew'
+app.config['MYSQL_DB'] = 'accm'
 
 # configuration file for db password, mailing setting
 app.config.from_pyfile('./static/config.cfg')

@@ -7,7 +7,7 @@ import datetime
 
 
 def inputCSV2DB(fileName):
-    mydb = mysql.connector.connect(host='localhost', user='root', password='KK@*99*@K', database='accmnew')
+    mydb = mysql.connector.connect(host='localhost', user='root', password='password', database='accmnew')
     cursor = mydb.cursor()
 
     with open('./Upload/' + fileName, encoding='UTF-8-sig') as csv_file:
