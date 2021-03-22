@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.topnav {
+  	background-color: #333;
+  	height: 50px;
+  	width: 100%;
+  	border: 0;
+}
+.topnav div {
+  	display: flex;
+  	margin: 0 auto;
+  	width: 1000px;
+  	height: 100%;
+}
+.topnav div h1, .topnav div a {
+  	display: inline-flex;
+  	align-items: center;
+}
+.topnav div h1 {
+  	flex: 1;
+  	font-size: 24px;
+  	padding: 0;
+ 	margin: 0;
+  	color: #eaebed;
+  	font-weight: normal;
+}
+.topnav div a {
+  	padding: 0 20px;
+  	text-decoration: none;
+  	color: #c1c4c8;
+  	font-weight: bold;
+}
+.topnav div a i {
+  	padding: 2px 8px 0 0;
+}
+.topnav div a:hover {
+  	color: #eaebed;
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+    <div>
+        <a href="{{ url_for('studentsReport.studentsReport') }}">Students Report</a>
+        <a href="{{ url_for('coreCourses.coreCourses') }}">Core Courses</a>
+        <a href="{{ url_for('courseProgression.courseProgression') }}">Course Progression</a>
+    </div>
+</nav>
+
+</body>
+</html>

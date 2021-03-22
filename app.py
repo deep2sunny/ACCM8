@@ -7,9 +7,19 @@ from flask_mysqldb import MySQL
 from flask_mail import Mail, Message
 from passlib.hash import sha256_crypt
 import inputCSV
+import configparser
+
+# Add the pages core courses, course progression , students report
+from coreCourses import coreCoursesBlueprint
+from studentsReport import studentsReportBlueprint
+from courseProgression import courseProgressionBlueprint
 
 app = Flask(__name__)
 Bootstrap(app)
+
+app.register_blueprint(coreCoursesBlueprint)
+app.register_blueprint(studentsReportBlueprint)
+app.register_blueprint(courseProgressionBlueprint)
 
 # indicate the folder when loading the input files
 currentWorkingDirectory = os.getcwd()
@@ -39,10 +49,24 @@ emailAccount = ''
 # Intialize MySQL
 mysql = MySQL(app)
 
+# Writing mysql credentials into a separate file for blueprints
+mysql_config = os.path.dirname(os.path.abspath(__file__)) + '/static/mysql-config.ini'
+config = configparser.ConfigParser()
+config.read(mysql_config)
+config['DEFAULT']['MYSQL_HOST'] = mysql.app.config['MYSQL_HOST']
+config['DEFAULT']['MYSQL_USER'] = mysql.app.config['MYSQL_USER']
+config['DEFAULT']['MYSQL_PASSWORD'] = mysql.app.config['MYSQL_PASSWORD']
+config['DEFAULT']['MYSQL_DB'] = mysql.app.config['MYSQL_DB']
+config['DEFAULT']['MYSQL_PORT'] = str(mysql.app.config['MYSQL_PORT'])
+
+with open(mysql_config, 'w') as configfile:    # save
+    config.write(configfile)
+
+
 # http://localhost:5000/ - this will be the login page, we need to use both GET and POST requests
 @app.route('/', methods=['GET','POST'])
 def login():
-    # ronak changes
+
     # Output message if something goes wrong...
     msg = ''
     # Check if "username" and "password" POST requests exist (user submitted form)
@@ -88,7 +112,7 @@ def login():
                     session['sid'] = account['sid']
                 
                 # Redirect to home page
-                return render_template('home.html', bUpload=bUpload)
+                return render_template('home.html', bUpload=bUpload, category=session['category'])
             else:
                 # Account doesnt exist or username/password incorrect
                 msg = 'Incorrect username/password'
@@ -174,7 +198,7 @@ def home():
     # Check if user is loggedin
     if 'loggedin' in session:
         # User is loggedin show them the home page
-        return render_template('home.html', bUpload=session['bUpload'])
+        return render_template('home.html', bUpload=session['bUpload'], category=session['category'])
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
 
