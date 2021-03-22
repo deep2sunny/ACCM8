@@ -36,7 +36,7 @@ def studentsReport():
 
                 return render_template("studentsReport.html", levels=levels,
                                        failedStudentsRecords=failedStudentsRecords, passedStudentsRecords=passedStudentsRecords,
-                                       values=request.form, showMessage=showMessage)
+                                       values=request.form, showMessage=showMessage, currentLevel=level)
 
 
             # this is to handle the POST request when "back to student report" button on viewFlowchart page is clicked
@@ -60,7 +60,7 @@ def studentsReport():
 
                 return render_template("studentsReport.html", levels=levels,
                                        failedStudentsRecords=failedStudentsRecords, passedStudentsRecords=passedStudentsRecords,
-                                       values=values, showMessage=showMessage)
+                                       values=values, showMessage=showMessage, currentLevel=level)
 
             # Load page for the first time
             else:
