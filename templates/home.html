@@ -21,7 +21,9 @@
           <br>
         <a href="{{ url_for('viewGrade') }}" class="btn btn-success my-2">View Grade Book</a>
         <a href="{{ url_for('uploadGrade') }}" class="btn btn-success my-2" {{ bUpload }}>Upload Grade </a>
-        <a href="{{ url_for('administrator.administrator') }}" class="btn btn-success my-2">Administrator Page</a>
+        {% if category == "coordinator" or category == "secretary" %}
+        <a href="{{ url_for('studentsReport.studentsReport') }}" class="btn btn-success my-2">Administrator Tools</a>
+        {% endif %}
       </p>
     </div>
   </section>

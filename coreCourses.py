@@ -6,63 +6,68 @@ import os
 
 coreCoursesBlueprint = Blueprint("coreCourses", __name__, static_folder="static", template_folder="template")
 
+# http://localhost:5000/administrator/corecourses
 @coreCoursesBlueprint.route("/administrator/corecourses", methods=['GET','POST'])
 def coreCourses():
-    x = 5
 
     # check if user is logged in
     if 'loggedin' in session:
-    # if x == 5:
 
-        parameters = request.form.to_dict()
+        # check if user is coordinator or secretary
+        if session['category'] == "coordinator" or session['category'] == "secretary":
 
-        print(parameters)
+            parameters = request.form.to_dict()
 
-        allCoreCourses = readCourses()
-
-        if request.method == 'POST' and "addBtn" in parameters:
-            courseCode = parameters['courseCode'].upper()
-            courseTitle = parameters['courseTitle']
-
-
-            if checkCoreCourseExistence(courseCode) == True:
-                message = "The course code " + courseCode + " already exists"
-                return render_template("coreCourses.html", allCoreCourses=allCoreCourses,message=message, success=False, failure=True)
-
-            addCourse(courseCode, courseTitle)
             allCoreCourses = readCourses()
 
-            message = "The course was added successfully"
-            return render_template("coreCourses.html", allCoreCourses=allCoreCourses, message=message, success=True, failure=False)
-
-        if request.method == 'POST' and "confirmDeleteBtn" in parameters:
-            courseCode = parameters['courseDeleteInput'].upper()
-
-            if checkCoreCourseFlowchart(courseCode) == True or checkCoreCoursePrerequisite(courseCode) == True:
-                message = "The course code " + courseCode + " cannot be deleted as it has other data associated with it"
-                return render_template("coreCourses.html", allCoreCourses=allCoreCourses, message=message, success=False,
-                                       failure=True)
-
-            deleteCourse(courseCode)
-            allCoreCourses = readCourses()
-
-            message = "The course was deleted successfully"
-            return render_template("coreCourses.html", allCoreCourses=allCoreCourses, message=message, success=True, failure=False)
-
-        if request.method == 'POST' and "confirmEditBtn" in parameters:
-            oldCourseCode = parameters['oldCourseCode']
-            courseCode = parameters['editCourseCodeInput'].upper()
-            courseTitle = parameters['editCourseTitleInput']
-            updateCourse(oldCourseCode, courseCode, courseTitle)
-            allCoreCourses = readCourses()
-            message = "The course information was successfully updated"
-            return render_template("coreCourses.html", allCoreCourses=allCoreCourses, message=message, success=True,
-                                   failure=False)
+            if request.method == 'POST' and "addBtn" in parameters:
+                courseCode = parameters['courseCode'].upper()
+                courseTitle = parameters['courseTitle']
 
 
-        # confirmEditBtn
+                if checkCoreCourseExistence(courseCode) == True:
+                    message = "The course code " + courseCode + " already exists"
+                    return render_template("coreCourses.html", allCoreCourses=allCoreCourses,message=message, success=False, failure=True)
 
-        return render_template("coreCourses.html", allCoreCourses=allCoreCourses, success=False, failure=False)
+                addCourse(courseCode, courseTitle)
+                allCoreCourses = readCourses()
+
+                message = "The course was added successfully"
+                return render_template("coreCourses.html", allCoreCourses=allCoreCourses, message=message, success=True, failure=False)
+
+            # user confirms course deletion
+            if request.method == 'POST' and "confirmDeleteBtn" in parameters:
+                courseCode = parameters['courseDeleteInput'].upper()
+
+                if checkCoreCourseFlowchart(courseCode) == True or checkCoreCoursePrerequisite(courseCode) == True:
+                    message = "The course code " + courseCode + " cannot be deleted as it has other data associated with it"
+                    return render_template("coreCourses.html", allCoreCourses=allCoreCourses, message=message, success=False,
+                                           failure=True)
+
+                deleteCourse(courseCode)
+                allCoreCourses = readCourses()
+
+                message = "The course was deleted successfully"
+                return render_template("coreCourses.html", allCoreCourses=allCoreCourses, message=message, success=True, failure=False)
+
+            # user confirms course edit
+            if request.method == 'POST' and "confirmEditBtn" in parameters:
+                oldCourseCode = parameters['oldCourseCode']
+                courseCode = parameters['editCourseCodeInput'].upper()
+                courseTitle = parameters['editCourseTitleInput']
+                updateCourse(oldCourseCode, courseCode, courseTitle)
+                allCoreCourses = readCourses()
+                message = "The course information was successfully updated"
+                return render_template("coreCourses.html", allCoreCourses=allCoreCourses, message=message, success=True,
+                                       failure=False)
+
+
+
+
+            return render_template("coreCourses.html", allCoreCourses=allCoreCourses, success=False, failure=False)
+
+        else:
+            return redirect(url_for('home'))
 
     else:
         return redirect(url_for('login'))

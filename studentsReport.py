@@ -10,65 +10,70 @@ studentsReportBlueprint = Blueprint("studentsReport", __name__, static_folder="s
 # http://localhost:5000/administrator/studentsreport
 @studentsReportBlueprint.route("/administrator/studentsreport", methods=['GET','POST'])
 def studentsReport():
-    x = 5
 
     # check if user is logged in
     if 'loggedin' in session:
-    # if x == 5:
-        levels = ["A01", "A02", "A03", "A04"]
-        programPid = "20"
 
-        # re-load page when View Report button is clicked
-        if request.method == 'POST' and 'level' in request.form:
+        # check if user is coordinator or secretary
+        if session['category'] == "coordinator" or session['category'] == "secretary":
 
-            level = request.form['level']
+            levels = ["A01", "A02", "A03", "A04"]
+            programPid = "20"
 
-            showMessage = False
+            # re-load page when View Report button is clicked
+            if request.method == 'POST' and 'level' in request.form:
 
-            failedStudentsRecords = readFailedStudents(level, programPid)
+                level = request.form['level']
 
-            passedStudentsRecords = readPassedStudents(level, programPid)
+                showMessage = False
 
-            if len(failedStudentsRecords) == 0 and len(passedStudentsRecords) == 0 and level != "0":
-                showMessage = True
+                failedStudentsRecords = readFailedStudents(level, programPid)
 
-            return render_template("studentsReport.html", levels=levels,
-                                   failedStudentsRecords=failedStudentsRecords, passedStudentsRecords=passedStudentsRecords,
-                                   values=request.form, showMessage=showMessage)
+                passedStudentsRecords = readPassedStudents(level, programPid)
 
+                if len(failedStudentsRecords) == 0 and len(passedStudentsRecords) == 0 and level != "0":
+                    showMessage = True
 
-        # this is to hand the POST request when "back to student report" button on viewFlowchart page is clicked
-        elif request.method == 'POST' and 'levelReport' in request.form:
-
-            level = request.form['levelReport']
-
-            failedStudentsRecords = readFailedStudents(level, programPid)
-
-            passedStudentsRecords = readPassedStudents(level, programPid)
-
-            showMessage = False
-
-            if len(failedStudentsRecords) == 0 and len(passedStudentsRecords) == 0:
-                showMessage = True
-
-            values = dict()
-            values['level'] = level
+                return render_template("studentsReport.html", levels=levels,
+                                       failedStudentsRecords=failedStudentsRecords, passedStudentsRecords=passedStudentsRecords,
+                                       values=request.form, showMessage=showMessage)
 
 
+            # this is to handle the POST request when "back to student report" button on viewFlowchart page is clicked
+            elif request.method == 'POST' and 'levelReport' in request.form:
 
-            return render_template("studentsReport.html", levels=levels,
-                                   failedStudentsRecords=failedStudentsRecords, passedStudentsRecords=passedStudentsRecords,
-                                   values=values, showMessage=showMessage)
+                level = request.form['levelReport']
 
-        # Load page for the first time
+                failedStudentsRecords = readFailedStudents(level, programPid)
+
+                passedStudentsRecords = readPassedStudents(level, programPid)
+
+                showMessage = False
+
+                if len(failedStudentsRecords) == 0 and len(passedStudentsRecords) == 0:
+                    showMessage = True
+
+                values = dict()
+                values['level'] = level
+
+
+
+                return render_template("studentsReport.html", levels=levels,
+                                       failedStudentsRecords=failedStudentsRecords, passedStudentsRecords=passedStudentsRecords,
+                                       values=values, showMessage=showMessage)
+
+            # Load page for the first time
+            else:
+
+                values = dict()
+                values['level'] = "0"
+
+
+
+                return render_template("studentsReport.html", levels=levels, values=values, showMessage=False)
+
         else:
-
-            values = dict()
-            values['level'] = "0"
-
-
-
-            return render_template("studentsReport.html", levels=levels, values=values, showMessage=False)
+            return redirect(url_for('home'))
 
     else:
         return redirect(url_for('login'))

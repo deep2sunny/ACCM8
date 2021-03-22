@@ -8,286 +8,237 @@ import os
 courseProgressionBlueprint = Blueprint("courseProgression", __name__, static_folder="static", template_folder="template")
 
 
+# http://localhost:5000/administrator/courseprogression
 @courseProgressionBlueprint.route("/administrator/courseprogression", methods=['GET','POST'])
 def courseProgression():
 
-    x=5
 
     # check if user is logged in
     if 'loggedin' in session:
-    #if x == 5:
 
-        parameters = request.form.to_dict()
-        _list = list(parameters.keys())
+        # check if user is coordinator or secretary
+        if session['category'] == "coordinator" or session['category'] == "secretary":
 
-        buttonType = checkButtonType(parameters)
+            parameters = request.form.to_dict()
+            _list = list(parameters.keys())
 
-        allCoreCourses = createCoreCourseDataDict()
+            buttonType = checkButtonType(parameters)
 
-        largestSize = 0
+            allCoreCourses = createCoreCourseDataDict()
 
-        for course in allCoreCourses:
-            if len(course['prerequisites']) > largestSize:
-                largestSize = len(course['prerequisites'])
+            largestSize = 0
 
-        prerequisite_col = ['prerequisite_1', 'prerequisite_2', 'prerequisite_3', 'prerequisite_4',
-                        'prerequisite_5']
+            for course in allCoreCourses:
+                if len(course['prerequisites']) > largestSize:
+                    largestSize = len(course['prerequisites'])
 
-        if request.method == 'POST' and buttonType == "addBtn":
+            prerequisite_col = ['prerequisite_1', 'prerequisite_2', 'prerequisite_3', 'prerequisite_4',
+                            'prerequisite_5']
 
-            print("clicked add button")
-
-            prerequisite_name = ['prereqCode1', 'prereqCode2', 'prereqCode3', 'prereqCode4', 'prereqCode5']
-
-            sequence = parameters['sequence'].upper().strip()
-
-            courseCode = parameters['courseCode'].upper().strip()
-
-            prerequisites = []
-
-            if not RepresentsInt(sequence):
-                message = "The sequence number " + sequence + " must be a valid integer"
-                return render_template("courseProgression.html", allCoreCourses=allCoreCourses, largestSize=largestSize,
-                                       message=message, success=False, failure=True, values=request.form)
-
-            for col in prerequisite_name:
-                if parameters[col].upper().strip():
-                    prerequisites.append(parameters[col].upper().strip())
-
-            print(parameters)
-            print(prerequisites)
-
-            if checkIfSequenceExists(sequence):
-                message = "The sequence number " + sequence + " is already taken, please use a different number"
-                return render_template("courseProgression.html", allCoreCourses=allCoreCourses, largestSize=largestSize,
-                                       message=message, success=False, failure=True, values=request.form)
-
-            highestSequence = findHighestSequence()
-            sequence_int = int(sequence)
-
-            if sequence_int <= highestSequence:
-                message = "The sequence number " + sequence + " is greater than the existing course progression sequences"
-                return render_template("courseProgression.html", allCoreCourses=allCoreCourses, largestSize=largestSize,
-                                       message=message, success=False, failure=True, values=request.form)
-
-            if checkCoreCourseExistence(courseCode) == False:
-                message = "The course code " + courseCode + " provided isn't a core course"
-                return render_template("courseProgression.html", allCoreCourses=allCoreCourses, largestSize=largestSize,
-                                       message=message, success=False, failure=True, values=request.form)
-
-            if checkCoreCourseFlowchart(courseCode) == True:
-                message = "The course code " + courseCode + " is already in the sequence"
-                return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
-                                       largestSize=largestSize,
-                                       message=message, success=False, failure=True, values=request.form)
+            # user adds new course progression
+            if request.method == 'POST' and buttonType == "addBtn":
 
 
+                prerequisite_name = ['prereqCode1', 'prereqCode2', 'prereqCode3', 'prereqCode4', 'prereqCode5']
 
-            CoreCourseCheckPass = False
+                sequence = parameters['sequence'].upper().strip()
 
-            # check if the prerequisites are core courses
-            for prereq in prerequisites:
-                if prereq:
+                courseCode = parameters['courseCode'].upper().strip()
 
-                    if checkCoreCourseExistence(prereq) == False:
-                        message = "The prerequisite " + prereq + " course code provided doesn't exist"
-                        return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
-                                               largestSize=largestSize,
-                                               message=message, success=False, failure=True, values=request.form)
-                    else:
-                        CoreCourseCheckPass = True
+                prerequisites = []
 
-            if CoreCourseCheckPass is True:
-                # check if prerequisites are already in the sequence
+                if not RepresentsInt(sequence):
+                    message = "The sequence number " + sequence + " must be a valid integer"
+                    return render_template("courseProgression.html", allCoreCourses=allCoreCourses, largestSize=largestSize,
+                                           message=message, success=False, failure=True, values=request.form)
+
+                for col in prerequisite_name:
+                    if parameters[col].upper().strip():
+                        prerequisites.append(parameters[col].upper().strip())
+
+
+                if checkCoreCourseExistence(courseCode) == False:
+                    message = "The course code " + courseCode + " provided isn't a core course"
+                    return render_template("courseProgression.html", allCoreCourses=allCoreCourses, largestSize=largestSize,
+                                           message=message, success=False, failure=True, values=request.form)
+
+                if checkCoreCourseFlowchart(courseCode) == True:
+                    message = "The course code " + courseCode + " is already in the sequence"
+                    return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
+                                           largestSize=largestSize,
+                                           message=message, success=False, failure=True, values=request.form)
+
+
+                CoreCourseCheckPass = False
+
+                # check if the prerequisites are core courses
                 for prereq in prerequisites:
                     if prereq:
-                        if checkCoreCourseFlowchart(prereq) == False:
-                            message = "The prerequisite code " + prereq + " needs to first be added in the sequence"
+
+                        if checkCoreCourseExistence(prereq) == False:
+                            message = "The prerequisite " + prereq + " course code provided doesn't exist"
                             return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
                                                    largestSize=largestSize,
                                                    message=message, success=False, failure=True, values=request.form)
+                        else:
+                            CoreCourseCheckPass = True
+
+                if CoreCourseCheckPass is True:
+                    # check if prerequisites are already in the sequence
+                    for prereq in prerequisites:
+                        if prereq:
+                            if checkCoreCourseFlowchart(prereq) == False:
+                                message = "The prerequisite code " + prereq + " needs to first be added in the sequence"
+                                return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
+                                                       largestSize=largestSize,
+                                                       message=message, success=False, failure=True, values=request.form)
 
 
-            print("** next sequence" + str(sequence))
 
-            addIntoFlowchart(courseCode, sequence)
-            print("** added course code into flowchart")
-
-            print(prerequisites)
+                addIntoFlowchart(courseCode, sequence)
 
 
-            for prereq in prerequisites:
-                if prereq:
-                    nextOrder = getOrderNumber()
-                    addIntoPrerequisite(nextOrder,courseCode, prereq)
-
-            print("** added course code into prerequisites")
-
-            allCoreCourses = createCoreCourseDataDict()
-
-            largestSize = 0
-
-            for course in allCoreCourses:
-                if len(course['prerequisites']) > largestSize:
-                    largestSize = len(course['prerequisites'])
-
-            message = "The course progression was added successfully"
-            return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
-                                   largestSize=largestSize,
-                                   message=message, success=True, failure=False, values=dict())
-
-
-        if request.method == 'POST' and "confirmEditBtn" in parameters:
-            print("clicked save button")
-            print(parameters)
-
-            courseCode = parameters['courseCode'].upper().strip()
-            oldCourseCode = parameters['oldCourseCode'].upper().strip()
-
-            oldPrerequisites = []
-
-            oldCourse = dict()
-
-            for course in allCoreCourses:
-                if course['core_course_num'] == oldCourseCode:
-                    oldCourse = copy.deepcopy(course)
-
-            for i in range(len(oldCourse['prerequisites'])):
-                oldPrerequisites.append(oldCourse['prerequisites'][i])
-
-            prerequisites = []
-            print(prerequisites)
-
-            highestSequence = findHighestSequence()
-
-            for col in prerequisite_col:
-                if parameters[col].upper().strip():
-                    prerequisites.append(parameters[col].upper().strip())
-
-            if checkCoreCourseExistence(courseCode) == False:
-                message = "The course code " + courseCode + " provided isn't a core course"
-                return render_template("courseProgression.html", allCoreCourses=allCoreCourses, largestSize=largestSize,
-                                       message=message, success=False, failure=True, values=request.form, updatedCourse=courseCode, rowClass="errorRow")
-
-            if checkCoreCourseFlowchart(courseCode) == True and courseCode != oldCourseCode:
-                message = "The course code " + courseCode + " is already in the sequence"
-                return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
-                                       largestSize=largestSize,
-                                       message=message, success=False, failure=True, values=request.form, updatedCourse=courseCode, rowClass="errorRow")
-
-            if findCourseSequenceNumber(courseCode) < highestSequence and courseCode != oldCourseCode:
-                message = "The course code " + courseCode + " cannot be edited as it comes before other progressions and would affect the display of flowcharts"
-                return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
-                                   largestSize=largestSize,
-                                   message=message, success=False, failure=True, values=dict(), updatedCourse=courseCode, rowClass="errorRow")
-
-            if checkIfPrerequisite(courseCode) == True:
-                message = "This course code " + courseCode + " cannot be edited as it's used as a prerequisite for another course"
-                return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
-                                       largestSize=largestSize,
-                                       message=message, success=False, failure=True, values=dict(), updatedCourse=courseCode, rowClass="errorRow")
-
-            # check if the prerequisites are core courses
-            for prereq in prerequisites:
-                if prereq:
-
-                    if checkCoreCourseExistence(prereq) == False:
-                        message = "The prerequisite " + prereq + " isn't a valid core course code. Please re-check the course code."
-                        return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
-                                               largestSize=largestSize,
-                                               message=message, success=False, failure=True, values=request.form, updatedCourse=courseCode, rowClass="errorRow")
-
-
-            # Delete all existing prerequisites for the course
-            if len(oldPrerequisites) > 0:
-                for prereq in oldPrerequisites:
-                    if prereq:
-                        deletePrerequisite(courseCode, prereq)
-
-            # Add new set of prerequisites for the course
-            if len(prerequisites) > 0:
                 for prereq in prerequisites:
                     if prereq:
-                        nextOrder = getOrderNumber()
-                        addIntoPrerequisite(nextOrder, courseCode, prereq)
-
-            allCoreCourses = createCoreCourseDataDict()
-
-            largestSize = 0
-
-            for course in allCoreCourses:
-                if len(course['prerequisites']) > largestSize:
-                    largestSize = len(course['prerequisites'])
-
-            print("largest size " + str(largestSize))
-
-            message = "The course progression was successfully updated"
-            return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
-                                   largestSize=largestSize,
-                                   message=message, success=True, failure=False, values=dict(), updatedCourse=courseCode, rowClass="updatedRow")
+                        addIntoPrerequisite(courseCode, prereq)
 
 
-        if request.method == 'POST' and "confirmDeleteBtn" in parameters:
+                allCoreCourses = createCoreCourseDataDict()
 
-            print(parameters)
-            print("clicked delete button")
+                largestSize = 0
 
-            courseCode = parameters['courseDeleteInput'].upper().strip()
+                for course in allCoreCourses:
+                    if len(course['prerequisites']) > largestSize:
+                        largestSize = len(course['prerequisites'])
 
-            prerequisites = []
-
-            for col in prerequisite_col:
-                if parameters[col].upper().strip():
-                    prerequisites.append(parameters[col].upper().strip())
-
-
-            print(prerequisites)
-
-            _sequenceNumber = findCourseSequenceNumber(courseCode)
-
-            highestSequence = findHighestSequence()
-
-            if _sequenceNumber < highestSequence:
-                message = "This course progression cannot be deleted as it comes before other progressions and would affect the display of flowcharts"
-                return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
-                                   largestSize=largestSize,
-                                   message=message, success=False, failure=True, values=dict(), updatedCourse=courseCode, rowClass="errorRow")
-
-            if checkIfPrerequisite(courseCode) == True:
-                message = "This course progression cannot be deleted as it's used as a prerequisite for another course"
+                message = "The course progression was added successfully"
                 return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
                                        largestSize=largestSize,
-                                       message=message, success=False, failure=True, values=dict(), updatedCourse=courseCode, rowClass="errorRow")
+                                       message=message, success=True, failure=False, values=dict())
 
-            print(len(prerequisites))
+            # user confirms edit to course progression
+            if request.method == 'POST' and "confirmEditBtn" in parameters:
 
-            if len(prerequisites) > 0:
+                courseCode = parameters['courseCode'].upper().strip()
+                oldCourseCode = parameters['oldCourseCode'].upper().strip()
+
+                oldPrerequisites = []
+
+                oldCourse = dict()
+
+                for course in allCoreCourses:
+                    if course['core_course_num'] == oldCourseCode:
+                        oldCourse = copy.deepcopy(course)
+
+                for i in range(len(oldCourse['prerequisites'])):
+                    oldPrerequisites.append(oldCourse['prerequisites'][i])
+
+                prerequisites = []
+
+                for col in prerequisite_col:
+                    if parameters[col].upper().strip():
+                        prerequisites.append(parameters[col].upper().strip())
+
+                if checkCoreCourseExistence(courseCode) == False:
+                    message = "The course code " + courseCode + " provided isn't a core course"
+                    return render_template("courseProgression.html", allCoreCourses=allCoreCourses, largestSize=largestSize,
+                                           message=message, success=False, failure=True, values=request.form, updatedCourse=courseCode, rowClass="errorRow")
+
+                if checkCoreCourseFlowchart(courseCode) == True and courseCode != oldCourseCode:
+                    message = "The course code " + courseCode + " is already in the sequence"
+                    return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
+                                           largestSize=largestSize,
+                                           message=message, success=False, failure=True, values=request.form, updatedCourse=courseCode, rowClass="errorRow")
+
+
+                if checkIfPrerequisite(courseCode) == True:
+                    message = "This course code " + courseCode + " cannot be edited as it's used as a prerequisite for another course"
+                    return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
+                                           largestSize=largestSize,
+                                           message=message, success=False, failure=True, values=dict(), updatedCourse=courseCode, rowClass="errorRow")
+
+                # check if the prerequisites are core courses
                 for prereq in prerequisites:
                     if prereq:
-                        deleteFlowchart(courseCode)
-                        deletePrerequisite(courseCode, prereq)
-            else:
-                deleteFlowchart(courseCode)
+
+                        if checkCoreCourseExistence(prereq) == False:
+                            message = "The prerequisite " + prereq + " isn't a valid core course code. Please re-check the course code."
+                            return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
+                                                   largestSize=largestSize,
+                                                   message=message, success=False, failure=True, values=request.form, updatedCourse=courseCode, rowClass="errorRow")
 
 
-            allCoreCourses = createCoreCourseDataDict()
+                # Delete all existing prerequisites for the course
+                if len(oldPrerequisites) > 0:
+                    for prereq in oldPrerequisites:
+                        if prereq:
+                            deletePrerequisite(courseCode, prereq)
 
-            largestSize = 0
+                # Add new set of prerequisites for the course
+                if len(prerequisites) > 0:
+                    for prereq in prerequisites:
+                        if prereq:
+                            addIntoPrerequisite(courseCode, prereq)
 
-            for course in allCoreCourses:
-                if len(course['prerequisites']) > largestSize:
-                    largestSize = len(course['prerequisites'])
+                allCoreCourses = createCoreCourseDataDict()
 
-            print("largest size " + str(largestSize))
+                largestSize = 0
 
-            message = "The course progression was successfully deleted"
-            return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
-                                   largestSize=largestSize,
-                                   message=message, success=True, failure=False, values=dict())
+                for course in allCoreCourses:
+                    if len(course['prerequisites']) > largestSize:
+                        largestSize = len(course['prerequisites'])
 
 
+                message = "The course progression was successfully updated"
+                return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
+                                       largestSize=largestSize,
+                                       message=message, success=True, failure=False, values=dict(), updatedCourse=courseCode, rowClass="updatedRow")
 
-        return render_template("courseProgression.html", allCoreCourses=allCoreCourses, largestSize=largestSize, message="", success=False, failure=False, values=dict())
+            # user confirms deletion of course progression
+            if request.method == 'POST' and "confirmDeleteBtn" in parameters:
+
+
+                courseCode = parameters['courseDeleteInput'].upper().strip()
+
+                prerequisites = []
+
+                for col in prerequisite_col:
+                    if parameters[col].upper().strip():
+                        prerequisites.append(parameters[col].upper().strip())
+
+
+                _sequenceNumber = findCourseSequenceNumber(courseCode)
+
+
+                if len(prerequisites) > 0:
+                    for prereq in prerequisites:
+                        if prereq:
+                            deleteFlowchart(courseCode)
+                            deletePrerequisite(courseCode, prereq)
+                else:
+                    deleteFlowchart(courseCode)
+
+
+                allCoreCourses = createCoreCourseDataDict()
+
+                largestSize = 0
+
+                for course in allCoreCourses:
+                    if len(course['prerequisites']) > largestSize:
+                        largestSize = len(course['prerequisites'])
+
+
+                message = "The course progression was successfully deleted"
+                return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
+                                       largestSize=largestSize,
+                                       message=message, success=True, failure=False, values=dict())
+
+
+
+            return render_template("courseProgression.html", allCoreCourses=allCoreCourses, largestSize=largestSize, message="", success=False, failure=False, values=dict())
+
+        else:
+            return redirect(url_for('home'))
 
     else:
         return redirect(url_for('login'))
@@ -462,14 +413,14 @@ def addIntoFlowchart(courseCode, sequence):
 
 
 
-def addIntoPrerequisite(order, courseCode, prereqCode):
+def addIntoPrerequisite(courseCode, prereqCode):
     # >>> Setup MySQL Connection
     con = createConnection()
 
     query = f"""
 
-            insert into core_course_prerequisites(`order`, core_course_num, prerequisite_num)
-            values ({order}, '{courseCode}','{prereqCode}')
+            insert into core_course_prerequisites(core_course_num, prerequisite_num)
+            values ('{courseCode}','{prereqCode}')
             ;
 
             """
@@ -480,38 +431,6 @@ def addIntoPrerequisite(order, courseCode, prereqCode):
     cursor.close()
     con.close()
 
-
-def getSequenceNumber():
-    con = createConnection()
-    query = f"""
-                SELECT count(*) FROM core_course_flowchart;
-            """
-
-    cursor = con.cursor()
-    cursor.execute(query)
-    rowCount = cursor.fetchone()
-    count = rowCount[0]
-    cursor.close()
-    con.close()
-
-    return count + 1
-
-
-def getOrderNumber():
-    con = createConnection()
-    query = f"""
-                SELECT count(*) FROM core_course_prerequisites;
-            """
-
-    cursor = con.cursor()
-    cursor.execute(query)
-    rowCount = cursor.fetchone()
-    count = rowCount[0]
-    cursor.close()
-    con.close()
-
-
-    return count + 1
 
 
 def checkIfPrerequisite(courseCode):
@@ -596,25 +515,6 @@ def checkIfSequenceExists(sequence):
 
     return False
 
-def findHighestSequence():
-    con = createConnection()
-    query = f"""
-                    SELECT sequence FROM core_course_flowchart
-                    order by sequence desc
-                    limit 1
-                    ;
-                """
-
-    cursor = con.cursor()
-    cursor.execute(query)
-    row = cursor.fetchone()
-    cursor.close()
-    con.close()
-
-    if row is None:
-        return 0
-
-    return row[0]
 
 
 def updatePrerequisite(courseCode, prerequisite):

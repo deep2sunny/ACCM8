@@ -9,18 +9,14 @@ from passlib.hash import sha256_crypt
 import inputCSV
 import configparser
 
-# Add the pages admin, courses, course progression
-from administrator import adminBlueprint
+# Add the pages core courses, course progression , students report
 from coreCourses import coreCoursesBlueprint
 from studentsReport import studentsReportBlueprint
 from courseProgression import courseProgressionBlueprint
 
-
-
 app = Flask(__name__)
 Bootstrap(app)
 
-app.register_blueprint(adminBlueprint)
 app.register_blueprint(coreCoursesBlueprint)
 app.register_blueprint(studentsReportBlueprint)
 app.register_blueprint(courseProgressionBlueprint)
@@ -116,7 +112,7 @@ def login():
                     session['sid'] = account['sid']
                 
                 # Redirect to home page
-                return render_template('home.html', bUpload=bUpload)
+                return render_template('home.html', bUpload=bUpload, category=session['category'])
             else:
                 # Account doesnt exist or username/password incorrect
                 msg = 'Incorrect username/password'
@@ -202,7 +198,7 @@ def home():
     # Check if user is loggedin
     if 'loggedin' in session:
         # User is loggedin show them the home page
-        return render_template('home.html', bUpload=session['bUpload'])
+        return render_template('home.html', bUpload=session['bUpload'], category=session['category'])
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
 

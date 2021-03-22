@@ -70,7 +70,7 @@
 
         {% if failedStudentsRecords|length > 0 %}
 
-        <p class="tableCaption">The following is a list of students who cannot proceed to the next Level</p>
+        <p class="tableCaption" style="width: 95%;">The following is a list of students who cannot proceed to the next Level</p>
 
 
 
@@ -109,7 +109,7 @@
 
         {% if passedStudentsRecords|length > 0 %}
 
-        <p>The following is a list of students successfully passed all courses</p>
+        <p class="tableCaption" style="width: 95%;">The following is a list of students successfully passed all courses</p>
 
 
 
@@ -213,6 +213,11 @@
 
     .tableCaption{
         width: 75%;
+    }
+
+    .alert-danger{
+        border: none;
+        box-shadow: none;
     }
 
 </style>
