@@ -1,114 +1,80 @@
-
 {% extends "bootstrap/base.html" %}
 {% include 'layout.html' %}
 
 {% block head %}
-    <script  src="https://code.jquery.com/jquery-3.4.1.slim.min.js"  integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="  crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"
+        xmlns="http://www.w3.org/1999/html"></script>
 
-    {{ super() }}
-    <script type=text/javascript>
-    $( document ).ready(function() {
-        if({{ show }})
-        {
-            alert("{{ fileName }} is uploaded.")
-        }
-
-        function loadingfadeOut() {
-            console.log("loadingfadeOut!");
-            $('#loading').fadeOut();
-        }
-
-        function handleLoading() {
-            console.log("loadingfadeIn!");
-            $('#loading').fadeIn();
-            {#$.post("{{ url_for('uploadGrade2DB') }}");#}
-        }
-
-        function afterLoading()
-        {
-            console.log("afterLoading!");
-        }
-
-    });
-    </script>
+{{ super() }}
 
 {% endblock %}
 
 {% block content %}
 
-    <div class="container" >
+<div class="container">
 
-      <div class="py-5 text-center">
-        <h2 >Upload Students' Grade Report</h2>
-        <p class="my-3 text-muted">Please upload the grade review report for students. The .csv file should contain the information such as term, program code, program name, course level, student number, student first name and last name,
-        professor first and last name, course number, course title, letter grade, percent, faculty and review comments. </p>
-          <hr class="mb-4">
+    <div class="py-5 text-center">
+        <h1>Upload Students' Grade Report</h1>
 
-        <form id="uploadForm" action="{{ url_for('uploadGrade2DB') }}" method="post" class="needs-validation"  enctype="multipart/form-data">
-        <div class="form-row">
-              <div class="col-md-6 mb-3">
-                <label for="pVersion">Program Version</label>
-                <select class="custom-select d-block w-100" id="pVersion" name="pVersion" required="">
-                    <option value="">Choose...</option>
-                    <option>2018-2019</option>
-                    <option>2019-2020</option>
-                </select>
+        <form id="uploadForm" action="{{ url_for('uploadGrade2DB') }}" method="post" class="needs-validation"
+              enctype="multipart/form-data">
+
+            <div class="input-group mt-5 mb-3 w-50 mx-auto border border-dark rounded">
                 <div class="invalid-feedback">
-                  Please select a valid program version.
+                    Please choose a valid file.
                 </div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="cTerm">Course Term</label>
-                <select class="custom-select d-block w-100" id="cTerm" name="cTerm" required="">
-                    <option value="">Choose...</option>
-                    <option>2017W</option>
-                    <option>2017F</option>
-                    <option>2018W</option>
-                    <option>2018F</option>
-                    <option>2019W</option>
-                    <option>2019F</option>
-                    <option>2020W</option>
-                </select>
-                <div class="invalid-feedback">
-                  Please provide a valid course term.
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" accept=".csv" id="inputFile" name="inputFile" required>
+                    <label class="custom-file-label text-dark" for="inputFile">Choose a comma-separated values file
+                        (.csv)</label>
                 </div>
-              </div>
-
             </div>
-
-
-        <hr class="mb-4">
-        <div class="input-group">
-            <div class="invalid-feedback">
-              Please choose a valid file.
-            </div>
-            <div class="custom-file">
-                <input type="file" class="custom-file-input" accept=".csv" id="inputFile" name="inputFile" required>
-                <label class="custom-file-label" for="inputFile">Choose .csv file</label>
-            </div>
-
-
-            <div class="input-group-append">
+            <div class="mx-auto mb-3">
                 <input type="submit" class="btn btn-success" value="Upload Grade" id="uploadGrade">
             </div>
 
-        </div>
+            {% if show %}
+            <div id="uploadStatus">
+                {% if success_records_count %}
+                <div class="py-3 text-left text-primary">
+                    <h4 class="ml-5"><span style="font-size:20pt" class="text-dark">{{ fileName }}</span>
+                        was successfully uploaded to the database </h4>
+                    <h4 class="ml-5">Total number of Grade Records uploaded :
+                        <span class="text-dark" style="font-size:20pt">{{ success_records_count }} record/s </span>
+                    </h4>
+                    <h4 class="ml-5">Total number of Students on file :
+                        <span class="text-dark" style="font-size:20pt">{{ students_count }} student/s </span>
+                    </h4>
+                </div>
+                {% endif %}
+
+                {% if error_records_count %}
+                <div class="text-left py-3 text-danger">
+                    <h4 class="ml-5">Errors were detected in the CSV file</h4>
+                    <h4 class="ml-5">Total number of Error Records found :
+                        <span class="text-dark" style="font-size:20pt">{{ error_records_count }} record/s </span></h4>
+                    <h4 class="ml-5">Error file saved at:
+                        <span class="text-dark" style="font-size:15pt">{{ destination_path }}</span></h4>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
         </form>
-      </div>
     </div>
+</div>
 
 <script>
     document.querySelector('.custom-file-input').addEventListener('change',function(e){
       var fileName = document.getElementById("inputFile").files[0].name;
       var nextSibling = e.target.nextElementSibling
       nextSibling.innerText = fileName
+
+      document.getElementById("uploadStatus").style.visibility = "hidden";
+
     });
+
 </script>
-
-<footer class="container ">
-  <p class="float-right">© Algonquin College 2019-2020</p>
-</footer>
-
 
 {% endblock %}
 
