@@ -54,8 +54,8 @@ def inputCSV2DB(fileName):
                         + row['Course Title'].strip().replace("'", "") + "\", '"
                         + row['Letter Grade'].strip() + "', '"
                         + row['%'].replace(" ", "") + "', '"
-                        + row['Faculty Comment'].strip() + "', '"
-                        + row['Reviewer Comment'].strip() + "')")
+                        + row['Faculty Comment'].strip().replace("'", "") + "', '"
+                        + row['Reviewer Comment'].strip().replace("'", "") + "')")
 
 
                     if cursor.rowcount:
