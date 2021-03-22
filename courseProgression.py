@@ -200,6 +200,12 @@ def courseProgression():
 
                 courseCode = parameters['courseDeleteInput'].upper().strip()
 
+                if checkIfPrerequisite(courseCode) == True:
+                    message = "This course code " + courseCode + " cannot be edited as it's used as a prerequisite for another course"
+                    return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
+                                           largestSize=largestSize,
+                                           message=message, success=False, failure=True, values=dict(), updatedCourse=courseCode, rowClass="errorRow")
+
                 prerequisites = []
 
                 for col in prerequisite_col:
