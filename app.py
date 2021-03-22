@@ -13,8 +13,7 @@ app = Flask(__name__)
 Bootstrap(app)
 
 # indicate the folder when loading the input files
-CurrentWorkingDirectory = os.getcwd()
-UPLOAD_FOLDER = CurrentWorkingDirectory + '/Upload/'
+UPLOAD_FOLDER = os.path.abspath(os.path.dirname(__file__)) + '\\Upload\\'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Change this to your secret key (can be anything, it's for extra protection)
