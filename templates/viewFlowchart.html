@@ -129,13 +129,28 @@
 
      {% if bBackKey %}
 
-         <form id="backForm" action="{{ url_for('viewGrade') }}" method="post" style="display: inline-block;">
-            <input type="text" class="form-control-plaintext" name = "version" id="version" value="{{ v['version'] }}" hidden>
-            <input type="text" class="form-control-plaintext" name = "program" id="program" value="{{ v['program'] }}" hidden>
-            <input type="text" class="form-control-plaintext" name = "level" id="level" value="{{ v['level'] }}" hidden>
-            <input type="text" class="form-control-plaintext" name = "course" id="course" value="{{ v['course'] }}" hidden>
-                <button type="submit" class="btn btn-secondary" type="button" ><i class="fas fa-chevron-circle-up"></i></button>
-          </form>
+         <table>
+            <tr>
+                <td>
+                     <form id="backForm" action="{{ url_for('viewGrade') }}" method="post">
+                        <input type="text" class="form-control-plaintext" name = "version" id="version" value="{{ v['version'] }}" hidden>
+                        <input type="text" class="form-control-plaintext" name = "program" id="program" value="{{ v['program'] }}" hidden>
+                        <input type="text" class="form-control-plaintext" name = "level" id="level" value="{{ v['level'] }}" hidden>
+                        <input type="text" class="form-control-plaintext" name = "course" id="course" value="{{ v['course'] }}" hidden>
+                            <button type="submit" class="btn btn-secondary" type="button" ><i class="fas fa-chevron-circle-up" title="Back to Student Grade"></i></button>
+                     </form>
+                </td>
+                <td>
+                    <form id="backStudentReport" action="{{ url_for('studentsReport.studentsReport') }}" method="post">
+                         <input type="text" class="form-control-plaintext" name = "versionReport" id="versionReport" value="{{ v['version'] }}" hidden>
+                         <input type="text" class="form-control-plaintext" name = "programReport" id="programReport" value="{{ v['program'] }}" hidden>
+                         <input type="text" class="form-control-plaintext" name = "levelReport" id="levelReport" value="{{ v['level'] }}" hidden>
+                         <input type="text" class="form-control-plaintext" name = "courseReport" id="courseReport" value="{{ v['course'] }}" hidden>
+                         <button type="submit" class="btn btn-secondary" type="button" ><i class="fas fa-chevron-circle-down" title="Back to Student Report"></i></button>
+                    </form>
+                </td>
+            </tr>
+        </table>
      {% endif %}
 
           <div style="display: inline-block; float: right;">
