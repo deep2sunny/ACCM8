@@ -23,7 +23,8 @@ app.register_blueprint(studentsReportBlueprint)
 app.register_blueprint(courseProgressionBlueprint)
 
 # indicate the folder when loading the input files
-UPLOAD_FOLDER = os.path.abspath(os.path.dirname(__file__)) + '\\Upload\\'
+currentWorkingDirectory = os.getcwd()
+UPLOAD_FOLDER = currentWorkingDirectory + '/Upload/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Change this to your secret key (can be anything, it's for extra protection)
