@@ -1,3 +1,8 @@
+window.onload = function() {
+    viewFlowchart();
+};
+
+function viewFlowchart() {
 
 const program_map = {
     // 'nodes':[
@@ -239,7 +244,7 @@ const program_map = {
         },
         {
             'id': 12,
-            'courseid': 'GED3002',
+            'courseid': 'GENED',
             'xcoord': 990,
             'ycoord': 220,
             'port': []
@@ -276,7 +281,7 @@ const program_map = {
         },
         {
             'id': 17,
-            'courseid': 'GED3002',
+            'courseid': 'GENED',
             'xcoord': 990,
             'ycoord': 430,
             'port': []
@@ -323,6 +328,8 @@ const program_map = {
                 'id': prerequisite_links[4].target_id,
                 'port': 'left'
             }
+
+
         },
         {
             'source': {
@@ -401,8 +408,11 @@ const program_map = {
             },
             'target': {
                 'id': prerequisite_links[8].target_id,
-                'port': 'top'
+                'port': 'top',
+                'xcoord': 810,
+                'ycoord': 430
             }
+
         },
         {
             'source': {
@@ -474,11 +484,11 @@ for (var g = 0; g < student_results.length; g++) {
                 electives.push(student_results[g]);
             }
         }
-    }
+}
 
 var elective_options = [];
 for (var i = 0; i < program_map.nodes.length; i++) {
-    if (program_map.nodes[i].courseid === 'GED3002') {
+    if (program_map.nodes[i].courseid === 'GENED') {
         elective_options.push(program_map.nodes[i]);
     }
 }
@@ -516,6 +526,12 @@ else if (electives.length == 2) {
     elective_options[1].fcomment = electives[1].fcomment;
     elective_options[1].rcomment = electives[1].rcomment;
 }
+
+// window.onload = function() {
+//     viewFlowchart();
+// };
+
+// function viewFlowchart() {
 
 // graph: contains a reference to all components of your diagram
 // graph is a model holding all cells (elements/links) which are stored in property 'cells'
@@ -623,6 +639,12 @@ joint.shapes.basic.CourseBox = joint.shapes.basic.Generic.extend({
 });
 
 
+
+
+//checkboxs
+var viewChecked = document.getElementById("view").checked;
+var genEdChecked = document.getElementById("genEd").checked;
+
 var courseList = program_map.nodes;
 var prereqlinks = program_map.links;
 var i;
@@ -630,15 +652,51 @@ var createdCourses = [];
 var portsides = ['top', 'right', 'bottom', 'left'];
 
 // loop through course list to create shape for each
+var second = false;
+var course;
 for (i=0; i < courseList.length; i++) {
-    var course = new joint.shapes.basic.CourseBox({
+    var code = null;
+    if (second == false && courseList[i].courseid === 'GENED') {
+        if(elective_options[0].gedcode == undefined){
+            code = courseList[i].courseid;
+        }
+        else{
+            code = elective_options[0].gedcode;
+        }
+        second = true;
+    }
+    else if (second == true && courseList[i].courseid === 'GENED') {
+        if(elective_options[1].gedcode == undefined){
+            code = courseList[i].courseid;
+        }
+        else{
+            code = elective_options[1].gedcode;
+        }
+    }
+    else{
+        code = courseList[i].courseid;
+    }
+    course = new joint.shapes.basic.CourseBox({
     position: { x: courseList[i].xcoord, y: courseList[i].ycoord },
     size: { width: 120, height: 110 },
     id: courseList[i].id,
     attrs: {
-        courseCode: { text: courseList[i].courseid},
+        // courseCode: { text: courseList[i].courseid},
+        courseCode: { text: code},
     }
-});
+
+    });
+
+
+
+    // if genEdChecked checkbox not checked, no GenEds
+    if ((courseList[i].id == 12 || courseList[i].id == 17) && genEdChecked == false){
+        course.attr('box/display', 'none');
+        course.attr('courseCode/display', 'none');
+        course.attr('grade/display', 'none');
+        course.attr('infoIcon/display', 'none');
+        course.attr('editIcon/display', 'none');
+    }
 
     // if no grade, don't display
     if (courseList[i].grade === "" || courseList[i].grade == undefined) {
@@ -649,12 +707,16 @@ for (i=0; i < courseList.length; i++) {
         course.attr('grade/text', 'Grade: '+ courseList[i].grade);
 
         if (courseList[i].grade == "F " || courseList[i].grade == "F") {
-            course.attr('box/fill', '#176629');
-            course.attr('box/stroke', '#176629');
+            // course.attr('box/fill', '#176629');
+            // course.attr('box/stroke', '#176629');
+            course.attr('box/fill', '#ff4d4d');
+            course.attr('box/stroke', '#ff4d4d');
         }
         else {
             course.attr('box/fill', '#28A745');
             course.attr('box/stroke', '#28A745');
+            // course.attr('box/fill', '#47539b');
+            // course.attr('box/stroke', '#47539b');
         }
 
         course.attr('infoIcon/xlink:href', '/static/info-icon.png');
@@ -681,33 +743,89 @@ for (i=0; i < courseList.length; i++) {
     course.addTo(graph);
 }
 
+
+// if viewChecked checkbox not checked, no Lines(links)
+if(viewChecked == true) {
+var line = false
 // add links
 for (var l=0; l < prereqlinks.length; l++) {
-    var link = new joint.shapes.standard.Link({
-        source: prereqlinks[l].source,
-        target: prereqlinks[l].target,
-        connector: {name: 'rounded'},
-        router: {
-            name: 'manhattan',
-            args: {
-                step: 15,
-                startDirections: [prereqlinks[l].source.port],
-                endDirections: [prereqlinks[l].target.port],
-                maximumLoops: 300
-            }
-        },
-        attrs: {
-            line: {
-                strokeWidth: 4,
-                stroke: '#000000',
-                cursor: 'default'
-            }
+    
+    if(line == false){
+        if(prereqlinks[l].target.id == 20){
+            line = true;
         }
-    });
-
-    link.addTo(graph);
+        var link = new joint.shapes.standard.Link({
+            source: prereqlinks[l].source,
+            target: prereqlinks[l].target,
+            connector: {name: 'rounded'},
+            router: {
+                name: 'manhattan',
+                args: {
+                    step: 15,
+                    startDirections: [prereqlinks[l].source.port],
+                    endDirections: [prereqlinks[l].target.port],
+                    maximumLoops: 300
+                }
+            },
+            attrs: {
+                line: {
+                    strokeWidth: 4,
+                    stroke: '#000000',
+                    cursor: 'default'
+                }
+            }
+        });
+        link.addTo(graph);
+    }
+    
+    }
 }
-
+else {
+    var link;
+    paper.on("cell:mouseover", function(cellView) {
+        var line = false
+          for (var l=0; l < prereqlinks.length; l++) {
+            if(cellView.model.id === prereqlinks[l].source.id)
+            {
+                if(line == false){
+                    if(prereqlinks[l].target.id == 20){
+                        line = true;
+                    }
+                    link = new joint.shapes.standard.Link({
+                        source: prereqlinks[l].source,
+                        target: prereqlinks[l].target,
+                        connector: {name: 'rounded'},
+                        router: {
+                            name: 'manhattan',
+                            args: {
+                            step: 15,
+                            startDirections: [prereqlinks[l].source.port],
+                            endDirections: [prereqlinks[l].target.port],
+                            maximumLoops: 300
+                            }
+                        },
+                        attrs: {
+                            line: {
+                            strokeWidth: 4,
+                            stroke: '#000000',
+                            cursor: 'default',
+                            }
+                         }
+                    });
+                    link.addTo(graph);
+                }
+               
+            }
+          }
+    });
+    
+    paper.on("cell:mouseout", function(cellView) {
+    for (var l=0; l < prereqlinks.length; l++) {
+            _.each(cellView.paper.model.getLinks(), function(link) {
+            link.remove();
+         })
+     }});
+}
 
 // prevent moving shapes
 paper.setInteractivity({elementMove: false});
@@ -758,26 +876,21 @@ paper.on('element:edit', function(elementView, evt, x, y) {
 
 
                 if (elementView.model.id === 12) {
-                    console.log(getTitle);
                     for (j=0; j < elective_options.length; j++) {
                         if (courseList[k].mapid === elective_options[j].mapid) {
                             getCourseId = elective_options[j].gedcode;
-                            console.log(getCourseId);
                         }
                     }
                 }
                 else if (elementView.model.id === 17) {
-                    console.log(getTitle);
                     for (j=0; j < elective_options.length; j++) {
                         if (courseList[k].mapid === elective_options[j].mapid) {
                             getCourseId = elective_options[j].gedcode;
-                            console.log(getCourseId);
                         }
                     }
                 }
                 else {
                     getCourseId = courseList[k].courseid;
-                    console.log(getCourseId);
                 }
             }
         }
@@ -854,26 +967,21 @@ paper.on('element:info', function(elementView, evt, x, y) {
 
 
                 if (elementView.model.id === 12) {
-                    console.log(getTitle);
                     for (j=0; j < elective_options.length; j++) {
                         if (courseList[k].mapid === elective_options[j].mapid) {
                             getCourseId = elective_options[j].gedcode;
-                            console.log(getCourseId);
                         }
                     }
                 }
                 else if (elementView.model.id === 17) {
-                    console.log(getTitle);
                     for (j=0; j < elective_options.length; j++) {
                         if (courseList[k].mapid === elective_options[j].mapid) {
                             getCourseId = elective_options[j].gedcode;
-                            console.log(getCourseId);
                         }
                     }
                 }
                 else {
                     getCourseId = courseList[k].courseid;
-                    console.log(getCourseId);
                 }
             }
         }
@@ -890,10 +998,8 @@ paper.on('element:info', function(elementView, evt, x, y) {
         $('input#infocourseGrade').val(getGrade);
         $('input#infoGradeID').val(getGid);
 
-
-
     }
+
+  
 );
-
-
-
+}
