@@ -7,13 +7,22 @@ from flask_mysqldb import MySQL
 from flask_mail import Mail, Message
 from passlib.hash import sha256_crypt
 import inputCSV
+import configparser
+
+# Add the pages core courses, course progression , students report
+from coreCourses import coreCoursesBlueprint
+from studentsReport import studentsReportBlueprint
+from courseProgression import courseProgressionBlueprint
 
 app = Flask(__name__)
 Bootstrap(app)
 
+app.register_blueprint(coreCoursesBlueprint)
+app.register_blueprint(studentsReportBlueprint)
+app.register_blueprint(courseProgressionBlueprint)
+
 # indicate the folder when loading the input files
-currentWorkingDirectory = os.getcwd()
-UPLOAD_FOLDER = currentWorkingDirectory + '/Upload/'
+UPLOAD_FOLDER = os.path.abspath(os.path.dirname(__file__)) + '\\Upload\\'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Change this to your secret key (can be anything, it's for extra protection)
@@ -24,6 +33,7 @@ app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_DB'] = 'accm'
 
+
 # configuration file for db password, mailing setting
 app.config.from_pyfile('./static/config.cfg')
 
@@ -33,14 +43,29 @@ app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = 1
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 # gmail account to notify a new user's registration (sender, receipient)
-emailAccount = '';
+emailAccount = ''
 
 # Intialize MySQL
 mysql = MySQL(app)
 
+# Writing mysql credentials into a separate file for blueprints
+mysql_config = os.path.dirname(os.path.abspath(__file__)) + '/static/mysql-config.ini'
+config = configparser.ConfigParser()
+config.read(mysql_config)
+config['DEFAULT']['MYSQL_HOST'] = mysql.app.config['MYSQL_HOST']
+config['DEFAULT']['MYSQL_USER'] = mysql.app.config['MYSQL_USER']
+config['DEFAULT']['MYSQL_PASSWORD'] = mysql.app.config['MYSQL_PASSWORD']
+config['DEFAULT']['MYSQL_DB'] = mysql.app.config['MYSQL_DB']
+config['DEFAULT']['MYSQL_PORT'] = str(mysql.app.config['MYSQL_PORT'])
+
+with open(mysql_config, 'w') as configfile:    # save
+    config.write(configfile)
+
+
 # http://localhost:5000/ - this will be the login page, we need to use both GET and POST requests
 @app.route('/', methods=['GET','POST'])
 def login():
+
     # Output message if something goes wrong...
     msg = ''
     # Check if "username" and "password" POST requests exist (user submitted form)
@@ -84,7 +109,7 @@ def login():
                     session['sid'] = account['sid']
                 
                 # Redirect to home page
-                return render_template('home.html', bUpload=bUpload)
+                return render_template('home.html', bUpload=bUpload, category=session['category'])
             else:
                 # Account doesnt exist or username/password incorrect
                 msg = 'Incorrect username/password'
@@ -170,9 +195,11 @@ def home():
     # Check if user is loggedin
     if 'loggedin' in session:
         # User is loggedin show them the home page
-        return render_template('home.html', bUpload=session['bUpload'])
+        return render_template('home.html', bUpload=session['bUpload'], category=session['category'])
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
+
+
 
 # http://localhost:5000/profile - this will be the profile page, only accessible for loggedin users
 @app.route('/profile', methods=['POST','GET'])
@@ -251,23 +278,18 @@ def uploadGrade():
 @app.route('/uploadGrade2DB', methods=['POST'])
 def uploadGrade2DB():
     # print("call uploadGrade2DB")
-    if request.method == 'POST':
+    if request.method == 'POST' and 'pVersion' in request.form and 'cTerm' in request.form:
         # print("call inputCSV2DB")
         file = request.files['inputFile']
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
 
-        # call inputCSV2DB with file name
-        information_received = inputCSV.inputCSV2DB(file.filename)
+        #call inputCSV2DB with file name
+        inputCSV.inputCSV2DB(request.form['pVersion'], request.form['cTerm'], "", file.filename)
 
     if 'loggedin' in session:
         # User is loggedin show them the uploadGrade page
         # print("call uploadGrade below")
-        return render_template('uploadGrade.html', show=1,
-                               fileName=file.filename,
-                               success_records_count=information_received[0],
-                               students_count=information_received[1],
-                               error_records_count=information_received[2],
-                               destination_path=information_received[3])
+        return render_template('uploadGrade.html', show=1, fileName=file.filename)
 
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
@@ -443,7 +465,7 @@ def viewFlowchart(sid, sVersion, sProgram, sLevel, sCourse):
     flowchart_courses = []
 
     mainc = []
-    prev = 0;
+    prev = 0
     for c in flowchart:
         if(prev != c['sequence']):
             flowchart_courses.append(
@@ -595,3 +617,5 @@ def viewFlowchart(sid, sVersion, sProgram, sLevel, sCourse):
     return render_template('viewFlowchart.html', flowchart_courses=iawd_course_map, prerequisite_links=prereq_links, sid = sid,
                            student_results = student_grades, studentName = student_name, studentNum = student_num, values=request.form,
                            bBackKey=bBackKey, random=r, admin_session = admin_session, v=v, bEditGrade=bEditGrade)
+
+

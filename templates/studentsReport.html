@@ -1,0 +1,230 @@
+{% extends "bootstrap/base.html" %}
+{% include 'layout.html' %}
+
+{% block content %}
+{% include 'adminNavigation.html' %}
+<div class="container">
+
+    </br>
+
+    <div class="py-5 text-center font-weight-bold">
+        <h2>Students Report</h2>
+        </br>
+        <p class="my-3 text-muted text-center">
+            This page is can be used to generate Student Reports
+        </p>
+
+        <hr class="mb-4">
+    </div>
+
+    <form id="reportForm" action="{{ url_for('studentsReport.studentsReport') }}" method="post"
+          class="needs-validation">
+
+
+
+        <div class="input-group">
+
+
+
+            <div class="col-md-2 mb-6">
+                <select id="level" name="level" class="form-select dropdown-toggle">
+                    <option value="0">Choose Level...</option>
+                    {% for level in levels %}
+                    {% if level == values['level'] %}
+                    <option value="{{level}}" selected>{{level}}</option>
+                    {% else %}
+                    <option value="{{level}}">{{level}}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+
+                <div class="invalid-feedback">
+                    Program Level
+                </div>
+            </div>
+            <div class="col-md-2 mb-6 viewReportButtonDiv">
+                <button type="submit" class="btn btn-success my-1" id="submitBtn">View Report</button>
+            </div>
+
+        </div>
+    </form>
+
+    <div class="form-group row col-md-12" id="messageBox" style="height: 50px;">
+
+        <div class="col-md-10"><label id="errorConfirmation" class="form-control alert-danger"
+                                      style="display: none; text-align: center;"></label></div>
+    </div>
+
+
+
+
+    {% if showMessage %}
+    <div class="alert alert-danger">
+        No Student Data is available
+    </div>
+    {% endif %}
+
+    {% if failedStudentsRecords|length > 0 or passedStudentsRecords|length > 0%}
+
+    <h4 class="text-center">Student Report for Level {{currentLevel}}</h4>
+
+    <div id="reportTables" >
+
+        {% if failedStudentsRecords|length > 0 %}
+
+
+         </br>
+
+        <p class="tableCaption" style="width: 95%;">The following is a list of students who cannot proceed to the next Level</p>
+
+
+
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th scope="col">Student Number</th>
+                <th scope="col">Student Name</th>
+                <th scope="col">Progression Map</th>
+            </tr>
+            </thead>
+            <tbody >
+            {% for student in failedStudentsRecords %}
+            <tr>
+                <td>
+                    {{ student['student_num'] }}
+                </td>
+                <td>
+                    {{ student['fname'] + " " + student['lname']}}
+                </td>
+                <td>
+                    <a href="{{ url_for('viewFlowchart', sid= student['sid'], sVersion=student['program_version'], sProgram=student['pid'], sLevel=student['level'], sCourse='null') }}"
+                       class="badge badge-flowchart" title="Course flowchart" value="{{ student['sid'] }}"><i
+                            class="fas fa-project-diagram"></i></a>
+                </td>
+
+
+            </tr>
+            {% endfor %}
+            </tbody>
+
+        </table>
+
+        {% endif %}
+
+
+        {% if passedStudentsRecords|length > 0 %}
+
+        <p class="tableCaption" style="width: 95%;">The following is a list of students successfully passed all courses</p>
+
+
+
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th scope="col">Student Number</th>
+                <th scope="col">Student Name</th>
+                <th scope="col">Progression Map</th>
+            </tr>
+            </thead>
+            <tbody >
+            {% for student in passedStudentsRecords %}
+            <tr>
+                <td>
+                    {{ student['student_num'] }}
+                </td>
+                <td>
+                    {{ student['fname'] + " " + student['lname']}}
+                </td>
+                <td>
+                    <a href="{{ url_for('viewFlowchart', sid= student['sid'], sVersion=student['program_version'], sProgram=student['pid'], sLevel=student['level'], sCourse='null') }}"
+                       class="badge badge-flowchart" title="Course flowchart" value="{{ student['sid'] }}"><i
+                            class="fas fa-project-diagram"></i></a>
+                </td>
+
+
+            </tr>
+            {% endfor %}
+            </tbody>
+
+        </table>
+
+        {% endif %}
+
+    </div>
+
+
+
+
+    {% endif %}
+
+</div>
+
+
+
+
+<footer class="container">
+    <p class="float-right">© Algonquin College 2019-2020</p>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="/static/studentsReport.js"></script>
+
+<style>
+
+    .viewReportButtonDiv{
+        margin-left: 100px;
+    }
+
+    .invalid-feedback{
+        width: 200px;
+    }
+
+    / style for the progress map icon
+    .fa-project-diagram:before {
+        content: "\f542";
+    }
+    .badge-flowchart {
+        color: #20C997;
+        border: 1px solid #20C997;
+        background-color: #A2E6D2;
+    }
+    .badge {
+        display: inline-block;
+        padding: .25em .4em;
+        font-size: 75%;
+        font-weight: 700;
+        line-height: 1;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: .25rem;
+    }
+
+    .table td, .table th {
+        padding: .75rem;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+        text-align: center;
+    }
+
+    h3 {
+      margin-top: 2rem;
+        border: 0;
+        border-top: 1px solid rgba(0,0,0,.1);
+        padding-top: 50px;
+    }
+
+    .tableCaption{
+        width: 75%;
+    }
+
+    .alert-danger{
+        border: none;
+        box-shadow: none;
+    }
+
+</style>
+
+{% endblock %}
