@@ -312,7 +312,7 @@ def viewGrade():
     cursor.execute('select distinct program_version  from program;')
     versionDict = cursor.fetchall()
     # get the program list
-    cursor.execute('SELECT program_version, pid, name FROM program;')
+    cursor.execute('SELECT program_version, pid, name FROM program ')
     programDict = cursor.fetchall()
     # get the levels
     cursor.execute('select distinct level, pid from coursemap order by level')
@@ -357,10 +357,10 @@ def viewGrade():
         clist = cursor.fetchall()
 
         '''
-        mandatoryCourses = ['CST8260', 'CST8209', 'CST8279', 'MAD9013', 'MAT8001C', 'CST8300', 'CST8250', 'CST8253',
-                            'CST8254', 'MAD9010', 'ENL1813T', 'CST8256', 'CST8257', 'CST8258', 'ENL8720', 'CST8259',
-                            'CST8265', 'CST8325', 'CST8268']
-        '''
+                mandatoryCourses = ['CST8260', 'CST8209', 'CST8279', 'MAD9013', 'MAT8001C', 'CST8300', 'CST8250', 'CST8253',
+                                    'CST8254', 'MAD9010', 'ENL1813T', 'CST8256', 'CST8257', 'CST8258', 'ENL8720', 'CST8259',
+                                    'CST8265', 'CST8325', 'CST8268']
+                '''
 
         mandatoryCourses = []
 
@@ -370,6 +370,7 @@ def viewGrade():
 
         for row in rows:
             mandatoryCourses.append(row['core_course_num'])
+
 
         for c1 in clist:
             if(c1['course_num'] in mandatoryCourses):
@@ -436,23 +437,24 @@ def viewGrade():
 
 # http://localhost:5000/viewFlowchart
 
-@app.route('/viewFlowchart/<string:sid>/<string:sVersion>/<string:sProgram>/<string:sLevel>/<string:sCourse>', methods=['GET','POST'])
+@app.route('/viewFlowchart/<string:sid>/<string:sVersion>/<string:sProgram>/<string:sLevel>/<string:sCourse>',
+           methods=['GET', 'POST'])
 def viewFlowchart(sid, sVersion, sProgram, sLevel, sCourse):
     print("call viewFlowchart", sid, sVersion, sProgram, sLevel, sCourse)
     # print("call viewFlowchart", session['category'])
 
-    #this is to refresh flowchart.js
+    # this is to refresh flowchart.js
     revision = session['revision']
 
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
     # retrieve grade input and update student's grade for that course
     if request.method == 'POST':
-        #get grade input
+        # get grade input
         new_grade = request.form['inputGradeFlowchart']
-        #get updated faculty comment
+        # get updated faculty comment
         new_fcomment = request.form['editcourseFcomment']
-        #get updated review comment
+        # get updated review comment
         new_rcomment = request.form['editcourseRcomment']
         # get hidden grade id
         grade_id = request.values.get('gradeID')
@@ -469,7 +471,6 @@ def viewFlowchart(sid, sVersion, sProgram, sLevel, sCourse):
                        "where gid=" + grade_id)
         mysql.connection.commit()
 
-
     # get flowchart basic layout
     cursor.execute("SELECT flowchart.sequence, coursemap.mapid, course.course_num, course.title " +
                    "FROM flowchart " +
@@ -485,12 +486,11 @@ def viewFlowchart(sid, sVersion, sProgram, sLevel, sCourse):
     mainc = []
     prev = 0
     for c in flowchart:
-        if(prev != c['sequence']):
+        if (prev != c['sequence']):
             flowchart_courses.append(
                 {'id': c['sequence'], 'mapid': c['mapid'], 'ccode': c['course_num'], 'title': c['title']})
             mainc.append(c['course_num'])
             prev = c['sequence']
-
 
     # mainc = []
     # i = 1
@@ -498,7 +498,6 @@ def viewFlowchart(sid, sVersion, sProgram, sLevel, sCourse):
     #     flowchart_courses.append(
     #             {'id': c['sequence'], 'mapid': c['mapid'], 'ccode': c['course_num'], 'title': c['title']})
     #     mainc.append(c['course_num'])
-
 
     # get courses that have a prerequisite
     pre_courses = []
@@ -520,7 +519,6 @@ def viewFlowchart(sid, sVersion, sProgram, sLevel, sCourse):
             pre_courses.append(
                 {'sequence': c['sequence'], 'ccode': c['course_num'], 'title': c['title'], 'c_mapid': c['mapid'],
                  'c_prereq': c['prerequisite']})
-
 
     # get courses that are prerequisites
     items_c = []
@@ -546,7 +544,7 @@ def viewFlowchart(sid, sVersion, sProgram, sLevel, sCourse):
     # remove duplicates
     seen = set()
 
-    #final prereq list
+    # final prereq list
     prereq_links = []
     for duplicates in links:
         t = tuple(duplicates.items())
@@ -556,16 +554,16 @@ def viewFlowchart(sid, sVersion, sProgram, sLevel, sCourse):
 
     # get student courses
     cursor.execute(
-            "select distinct flowchart.sequence, concat(professor.fname, ' ' , professor.lname) as 'Professor Name', course.course_num, course.title, " +
-            "term, concat(student.fname, ' ', student.lname) as 'Student Name', student.student_num, letter_grade, coursemap.mapid, gid, " +
-            "fcomment, rcomment " +
-            "from grade " +
-            "inner join coursemap using(mapid) inner join course using (cid) inner join teach using(mapid) " +
-            "inner join professor using(profid) inner join student using (sid) " +
-            "left join flowchart on flowchart.mapid = coursemap.mapid "
-            "where sid=" + sid + " " +
-            "GROUP BY course.course_num " +
-            "order by flowchart.sequence ASC")
+        "select distinct flowchart.sequence, concat(professor.fname, ' ' , professor.lname) as 'Professor Name', course.course_num, course.title, " +
+        "term, concat(student.fname, ' ', student.lname) as 'Student Name', student.student_num, letter_grade, coursemap.mapid, gid, " +
+        "fcomment, rcomment " +
+        "from grade " +
+        "inner join coursemap using(mapid) inner join course using (cid) inner join teach using(mapid) " +
+        "inner join professor using(profid) inner join student using (sid) " +
+        "left join flowchart on flowchart.mapid = coursemap.mapid "
+        "where sid=" + sid + " " +
+        "GROUP BY course.course_num " +
+        "order by flowchart.sequence ASC")
     results = cursor.fetchall()
 
     student_name = ''
@@ -577,17 +575,10 @@ def viewFlowchart(sid, sVersion, sProgram, sLevel, sCourse):
         student_name = r['Student Name']
         student_num = r['student_num']
         student_grades.append({'id': r['sequence'], 'student_name': r['Student Name'], 'student_num': r['student_num'],
-                              'ccode': r['course_num'], 'coursename': r['title'], 'term': r['term'], 'prof': r['Professor Name'],
-                               'grade': r['letter_grade'], 'mapid': r['mapid'], 'gid': r['gid'], 'fcomment': r['fcomment'], 'rcomment': r['rcomment']})
-
-    # courses taken by the student
-    allCoursesTaken = []
-    for grade in student_grades:
-        allCoursesTaken.append(grade['ccode'])
-
-    # remove duplicates
-    allCoursesTaken = list(dict.fromkeys(allCoursesTaken))
-
+                               'ccode': r['course_num'], 'coursename': r['title'], 'term': r['term'],
+                               'prof': r['Professor Name'],
+                               'grade': r['letter_grade'], 'mapid': r['mapid'], 'gid': r['gid'],
+                               'fcomment': r['fcomment'], 'rcomment': r['rcomment']})
 
     revision += 1
     # session['revision'] = revision
@@ -597,8 +588,6 @@ def viewFlowchart(sid, sVersion, sProgram, sLevel, sCourse):
     bEditGrade = (session['category'] == 'coordinator' or session['category'] == 'secretary')
     admin_session = bEditGrade
 
-
-
     query = "select distinct sid from grade as g inner join student as s using(sid) inner join coursemap using(mapid) inner join program as p using(pid) inner join course as c using(cid) where p.pid = " + \
             sProgram + " and p.program_version='" + sVersion + "' and coursemap.level='" + sLevel + "' order by s.lname, s.fname, s.student_num"
     cursor.execute(query)
@@ -607,21 +596,35 @@ def viewFlowchart(sid, sVersion, sProgram, sLevel, sCourse):
 
     found = 0
     idx = resultSIDList.index({'sid': int(sid)})
-    prevSID = resultSIDList[idx-1]
+    prevSID = resultSIDList[idx - 1]
 
     length = len(resultSIDList)
-    if(idx == len(resultSIDList)-1):
+    if (idx == len(resultSIDList) - 1):
         nextSID = resultSIDList[0]
     else:
-        idx = idx +1
+        idx = idx + 1
         nextSID = resultSIDList[idx]
 
-    v = {'version': sVersion, 'program': sProgram, 'level':sLevel, 'course': sCourse, 'nextSID': str(nextSID['sid']), 'prevSID':str(prevSID['sid'])}
+    v = {'version': sVersion, 'program': sProgram, 'level': sLevel, 'course': sCourse, 'nextSID': str(nextSID['sid']),
+         'prevSID': str(prevSID['sid'])}
 
+    # courses taken by the student
+    allCoursesTaken = []
+    for grade in student_grades:
+        allCoursesTaken.append(grade['ccode'])
 
+    # remove duplicates
+    allCoursesTaken = list(dict.fromkeys(allCoursesTaken))
 
+    # id: sequence, ccode: course number
 
-    #id: sequence, ccode: course number
+    # iawd_course_map = [{'id': 1, 'ccode': 'CST8260'},{'id': 2, 'ccode': 'CST8209'},{'id': 3, 'ccode': 'CST8279'},
+    #                    {'id': 4, 'ccode': 'MAD9013'},{'id': 5, 'ccode': 'MAT8001C'},{'id': 6, 'ccode': 'CST8300'},
+    #                    {'id': 7, 'ccode': 'CST8250'},{'id': 8, 'ccode': 'CST8253'},{'id': 9, 'ccode': 'CST8254'},
+    #                    {'id': 10, 'ccode': 'MAD9010'},{'id': 11, 'ccode': 'ENL1813T'},{'id': 13, 'ccode': 'CST8256'},
+    #                    {'id': 14, 'ccode': 'CST8257'},{'id': 15, 'ccode': 'CST8258'},{'id': 16, 'ccode': 'ENL8720'},
+    #                    {'id': 18, 'ccode': 'CST8259'},{'id': 19, 'ccode': 'CST8265'},{'id': 20, 'ccode': 'CST8267'},
+    #                    {'id': 21, 'ccode': 'CST8268'}]
 
     cursor.execute("SELECT sequence, core_course_num as courseCode " +
                    "FROM accm.core_course_flowchart " +
@@ -632,22 +635,35 @@ def viewFlowchart(sid, sVersion, sProgram, sLevel, sCourse):
     ccode = ''
     iawd_course_map = []
 
+
     for r in courses:
         id = r['sequence']
         ccode = r['courseCode']
-        if ccode in allCoursesTaken:
-            iawd_course_map.append({'id': r['sequence'], 'ccode': r['courseCode']})
+        iawd_course_map.append({'id': r['sequence'], 'ccode': r['courseCode']})
 
 
-    '''
-    iawd_course_map = [{'id': 1, 'ccode': 'CST8260'}, {'id': 2, 'ccode': 'CST8209'}, {'id': 3, 'ccode': 'CST8279'},
-                       {'id': 4, 'ccode': 'MAD9013'}, {'id': 5, 'ccode': 'MAT8001C'}, {'id': 6, 'ccode': 'CST8300'},
-                       {'id': 7, 'ccode': 'CST8250'}, {'id': 8, 'ccode': 'CST8253'}, {'id': 9, 'ccode': 'CST8254'},
-                       {'id': 10, 'ccode': 'MAD9010'}, {'id': 11, 'ccode': 'ENL1813T'}, {'id': 13, 'ccode': 'CST8256'},
-                       {'id': 14, 'ccode': 'CST8257'}, {'id': 15, 'ccode': 'CST8258'}, {'id': 16, 'ccode': 'ENL8720'},
-                       {'id': 18, 'ccode': 'CST8259'}, {'id': 19, 'ccode': 'CST8265'}, {'id': 20, 'ccode': 'CST8267'},
-                       {'id': 21, 'ccode': 'CST8268'}]
-    '''
+
+    # ********************************************************************
+    # find and remove course codes if there are courses with duplicate sequence numbers
+
+    indexesToDelete = []
+
+    # find positions of list elements to delete
+    for i in range(0, len(iawd_course_map)):
+
+        x = iawd_course_map[i]['ccode']
+        if i >= 0:
+            if iawd_course_map[i]['id'] == iawd_course_map[i - 1]['id']:
+                if iawd_course_map[i]['ccode'] not in allCoursesTaken:
+                    indexesToDelete.append(i)
+                elif iawd_course_map[i - 1]['ccode'] not in allCoursesTaken:
+                    indexesToDelete.append(i - 1)
+
+    # delete elements at the positions found
+    iawd_course_map = [i for j, i in enumerate(iawd_course_map) if j not in indexesToDelete]
+
+    # ********************************************************************
+
 
     prelinkQuery = "select T2.source_id as source_id, T2.source as source, T1.target_id as target_id, T1.target as target from (select core_course_flowchart.core_course_num as 'target', core_course_flowchart.sequence as 'target_id', core_course_prerequisites.prerequisite_num as 'source' from core_course_flowchart left join core_course_prerequisites on core_course_flowchart.core_course_num = core_course_prerequisites.core_course_num)T1 left join (select core_course_flowchart.core_course_num as 'source', core_course_flowchart.sequence as 'source_id' from core_course_flowchart)T2 on (T1.source = T2.source) where T2.source is not null order by target_id asc, case when target_id = '13' then source_id end desc, case when target_id = '14' then source_id end asc"
     cursor.execute(prelinkQuery)
@@ -659,33 +675,36 @@ def viewFlowchart(sid, sVersion, sProgram, sLevel, sCourse):
     target = ''
     prereq_links = []
 
+
+
     for r in preLinks:
         source_id = 'source_id'
         source = 'source'
         target_id = 'target_id'
         target = 'target'
-        prereq_links.append({'source_id': r['source_id'], 'source': r['source'], 'target_id': r['target_id'], 'target': r['target']})
+        prereq_links.append(
+            {'source_id': r['source_id'], 'source': r['source'], 'target_id': r['target_id'], 'target': r['target']})
 
     cursor.close()
 
-    '''
-    prereq_links = [{'source_id': 1, 'source': 'CST8260', 'target_id': 7, 'target': 'CST8250'},
-                        {'source_id': 2, 'source': 'CST8209', 'target_id': 8, 'target': 'CST8253'},
-                       {'source_id': 3, 'source': 'CST8279', 'target_id': 8, 'target': 'CST8253'},
-                      {'source_id': 8, 'source': 'CST8253', 'target_id': 13, 'target': 'CST8256'},
-                         {'source_id': 1, 'source': 'CST8260', 'target_id': 13, 'target': 'CST8256'},
-                         {'source_id': 1, 'source': 'CST8260', 'target_id': 14, 'target': 'CST8257'},
-                         {'source_id': 2, 'source': 'CST8209', 'target_id': 14, 'target': 'CST8257'},
-                         {'source_id': 8, 'source': 'CST8253', 'target_id': 15, 'target': 'CST8258'},
-                         {'source_id': 11, 'source': 'ENL1813T', 'target_id': 16, 'target': 'ENL8720'},
-                         {'source_id': 14, 'source': 'CST8257', 'target_id': 18, 'target': 'CST8259'},
-                         {'source_id': 14, 'source': 'CST8257', 'target_id': 19, 'target': 'CST8265'},
-                         {'source_id': 14, 'source': 'CST8257', 'target_id': 20, 'target': 'CST8267'},
-                         {'source_id': 15, 'source': 'CST8258', 'target_id': 21, 'target': 'CST8268'}]
-    '''
+    # prereq_links = [{'source_id': 1, 'source': 'CST8260', 'target_id': 7, 'target': 'CST8250'},
+    #                     {'source_id': 2, 'source': 'CST8209', 'target_id': 8, 'target': 'CST8253'},
+    #                     {'source_id': 3, 'source': 'CST8279', 'target_id': 8, 'target': 'CST8253'},
+    #                     {'source_id': 8, 'source': 'CST8253', 'target_id': 13, 'target': 'CST8256'},
+    #                     {'source_id': 1, 'source': 'CST8260', 'target_id': 13, 'target': 'CST8256'},
+    #                     {'source_id': 1, 'source': 'CST8260', 'target_id': 14, 'target': 'CST8257'},
+    #                     {'source_id': 2, 'source': 'CST8209', 'target_id': 14, 'target': 'CST8257'},
+    #                     {'source_id': 8, 'source': 'CST8253', 'target_id': 15, 'target': 'CST8258'},
+    #                     {'source_id': 11, 'source': 'ENL1813T', 'target_id': 16, 'target': 'ENL8720'},
+    #                     {'source_id': 14, 'source': 'CST8257', 'target_id': 18, 'target': 'CST8259'},
+    #                     {'source_id': 14, 'source': 'CST8257', 'target_id': 19, 'target': 'CST8265'},
+    #                     {'source_id': 14, 'source': 'CST8257', 'target_id': 20, 'target': 'CST8267'},
+    #                     {'source_id': 15, 'source': 'CST8258', 'target_id': 21, 'target': 'CST8268'}]
 
-    return render_template('viewFlowchart.html', flowchart_courses=iawd_course_map, prerequisite_links=prereq_links, sid = sid,
-                           student_results = student_grades, studentName = student_name, studentNum = student_num, values=request.form,
-                           bBackKey=bBackKey, random=r, admin_session = admin_session, v=v, bEditGrade=bEditGrade)
+    return render_template('viewFlowchart.html', flowchart_courses=iawd_course_map, prerequisite_links=prereq_links,
+                           sid=sid,
+                           student_results=student_grades, studentName=student_name, studentNum=student_num,
+                           values=request.form,
+                           bBackKey=bBackKey, random=r, admin_session=admin_session, v=v, bEditGrade=bEditGrade)
 
 

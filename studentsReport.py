@@ -18,7 +18,6 @@ def studentsReport():
         if session['category'] == "coordinator" or session['category'] == "secretary":
 
             levels = ["A01", "A02", "A03", "A04"]
-            programPid = "20"
 
             # re-load page when View Report button is clicked
             if request.method == 'POST' and 'level' in request.form:
@@ -27,9 +26,9 @@ def studentsReport():
 
                 showMessage = False
 
-                failedStudentsRecords = readFailedStudents(level, programPid)
+                failedStudentsRecords = readFailedStudents(level)
 
-                passedStudentsRecords = readPassedStudents(level, programPid)
+                passedStudentsRecords = readPassedStudents(level)
 
                 if len(failedStudentsRecords) == 0 and len(passedStudentsRecords) == 0 and level != "0":
                     showMessage = True
@@ -44,9 +43,9 @@ def studentsReport():
 
                 level = request.form['levelReport']
 
-                failedStudentsRecords = readFailedStudents(level, programPid)
+                failedStudentsRecords = readFailedStudents(level)
 
-                passedStudentsRecords = readPassedStudents(level, programPid)
+                passedStudentsRecords = readPassedStudents(level)
 
                 showMessage = False
 
@@ -103,7 +102,7 @@ def createConnection():
 
 
 
-def readFailedStudents(level, programPid):
+def readFailedStudents(level):
     con = createConnection()
     cursor = con.cursor()
     query = f"""
@@ -117,7 +116,7 @@ def readFailedStudents(level, programPid):
                 INNER JOIN course ON coursemap.cid = course.cid
                 INNER JOIN program ON coursemap.pid = program.pid
                 
-                WHERE coursemap.level = "{level}" AND grade.letter_grade = "F" AND program.pid="{programPid}"
+                WHERE coursemap.level = "{level}" AND grade.letter_grade = "F" 
                 
                 ;    
                 
@@ -134,7 +133,7 @@ def readFailedStudents(level, programPid):
     return failedStudentsRecords
 
 
-def readPassedStudents(level, programPid):
+def readPassedStudents(level):
     con = createConnection()
     cursor = con.cursor()
 
@@ -149,7 +148,7 @@ def readPassedStudents(level, programPid):
                 INNER JOIN course ON coursemap.cid = course.cid
                 INNER JOIN program ON coursemap.pid = program.pid
 
-                WHERE coursemap.level = "{level}" AND grade.letter_grade != "F" AND program.pid="{programPid}"
+                WHERE coursemap.level = "{level}" AND grade.letter_grade != "F" 
                 
 
                 ;    
@@ -166,30 +165,3 @@ def readPassedStudents(level, programPid):
     return passedStudentsRecords
 
 
-def getProgramCode(programVersionId):
-    con = createConnection()
-    cursor = con.cursor()
-    query = f"""
-
-                    SELECT program.code, program.name, program.program_version
-                    
-                    FROM accm.program
-
-                    where program.pid="{programVersionId}"
-                    
-                    ;
-
-                    ;    
-
-                """
-
-
-    cursor.execute(query)
-    rows = cursor.fetchall()
-    programCode = rows[0][0]
-    programName = rows[0][1]
-    programVersionYear = rows[0][2]
-
-    con.close()
-
-    return programCode, programName, programVersionYear
