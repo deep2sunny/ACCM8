@@ -597,14 +597,6 @@ def viewFlowchart(sid, sVersion, sProgram, sLevel, sCourse):
 
     #id: sequence, ccode: course number
 
-    # iawd_course_map = [{'id': 1, 'ccode': 'CST8260'},{'id': 2, 'ccode': 'CST8209'},{'id': 3, 'ccode': 'CST8279'},
-    #                    {'id': 4, 'ccode': 'MAD9013'},{'id': 5, 'ccode': 'MAT8001C'},{'id': 6, 'ccode': 'CST8300'},
-    #                    {'id': 7, 'ccode': 'CST8250'},{'id': 8, 'ccode': 'CST8253'},{'id': 9, 'ccode': 'CST8254'},
-    #                    {'id': 10, 'ccode': 'MAD9010'},{'id': 11, 'ccode': 'ENL1813T'},{'id': 13, 'ccode': 'CST8256'},
-    #                    {'id': 14, 'ccode': 'CST8257'},{'id': 15, 'ccode': 'CST8258'},{'id': 16, 'ccode': 'ENL8720'},
-    #                    {'id': 18, 'ccode': 'CST8259'},{'id': 19, 'ccode': 'CST8265'},{'id': 20, 'ccode': 'CST8267'},
-    #                    {'id': 21, 'ccode': 'CST8268'}]
-
     cursor.execute("SELECT sequence, core_course_num as courseCode " +
                    "FROM accm.core_course_flowchart " +
                    "order by core_course_flowchart.sequence")
@@ -618,7 +610,17 @@ def viewFlowchart(sid, sVersion, sProgram, sLevel, sCourse):
         id = r['sequence']
         ccode = r['courseCode']
         iawd_course_map.append({'id': r['sequence'], 'ccode': r['courseCode']})
-    
+
+    '''
+    iawd_course_map = [{'id': 1, 'ccode': 'CST8260'}, {'id': 2, 'ccode': 'CST8209'}, {'id': 3, 'ccode': 'CST8279'},
+                       {'id': 4, 'ccode': 'MAD9013'}, {'id': 5, 'ccode': 'MAT8001C'}, {'id': 6, 'ccode': 'CST8300'},
+                       {'id': 7, 'ccode': 'CST8250'}, {'id': 8, 'ccode': 'CST8253'}, {'id': 9, 'ccode': 'CST8254'},
+                       {'id': 10, 'ccode': 'MAD9010'}, {'id': 11, 'ccode': 'ENL1813T'}, {'id': 13, 'ccode': 'CST8256'},
+                       {'id': 14, 'ccode': 'CST8257'}, {'id': 15, 'ccode': 'CST8258'}, {'id': 16, 'ccode': 'ENL8720'},
+                       {'id': 18, 'ccode': 'CST8259'}, {'id': 19, 'ccode': 'CST8265'}, {'id': 20, 'ccode': 'CST8267'},
+                       {'id': 21, 'ccode': 'CST8268'}]
+    '''
+
     prelinkQuery = "select T2.source_id as source_id, T2.source as source, T1.target_id as target_id, T1.target as target from (select core_course_flowchart.core_course_num as 'target', core_course_flowchart.sequence as 'target_id', core_course_prerequisites.prerequisite_num as 'source' from core_course_flowchart left join core_course_prerequisites on core_course_flowchart.core_course_num = core_course_prerequisites.core_course_num)T1 left join (select core_course_flowchart.core_course_num as 'source', core_course_flowchart.sequence as 'source_id' from core_course_flowchart)T2 on (T1.source = T2.source) where T2.source is not null order by target_id asc, case when target_id = '13' then source_id end desc, case when target_id = '14' then source_id end asc"
     cursor.execute(prelinkQuery)
     preLinks = cursor.fetchall()
@@ -642,7 +644,7 @@ def viewFlowchart(sid, sVersion, sProgram, sLevel, sCourse):
     #                     {'source_id': 2, 'source': 'CST8209', 'target_id': 8, 'target': 'CST8253'},
     #                     {'source_id': 3, 'source': 'CST8279', 'target_id': 8, 'target': 'CST8253'},
     #                     {'source_id': 8, 'source': 'CST8253', 'target_id': 13, 'target': 'CST8256'},
-    #                     {'source_id': 1, 'source': 'CST8260', 'target_id': 13, 'target': 'CST8256'},                     
+    #                     {'source_id': 1, 'source': 'CST8260', 'target_id': 13, 'target': 'CST8256'},
     #                     {'source_id': 1, 'source': 'CST8260', 'target_id': 14, 'target': 'CST8257'},
     #                     {'source_id': 2, 'source': 'CST8209', 'target_id': 14, 'target': 'CST8257'},
     #                     {'source_id': 8, 'source': 'CST8253', 'target_id': 15, 'target': 'CST8258'},
