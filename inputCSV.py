@@ -9,12 +9,15 @@ import datetime
 def inputCSV2DB(fileName):
     mydb = mysql.connector.connect(host='localhost', user='root', password='root', database='accm')
     cursor = mydb.cursor()
+    success_records_count = 0
+    error_records_count = 0
+    destination_path = ''
 
     with open('./Upload/' + fileName, encoding='UTF-8-sig') as csv_file:
         csv_data = csv.DictReader(csv_file)
 
         with open('./Upload/csvErrors.csv', 'w') as error_file:
-            records_count = 0
+
             error_file_created = False
             field_names = csv_data.fieldnames
             csv_writer = csv.DictWriter(error_file, fieldnames=field_names)
@@ -45,8 +48,8 @@ def inputCSV2DB(fileName):
                         + row['Student First Name'].strip().replace("'", "") + "', '"
                         + row['Student Last Name'].strip().replace("'", "") + "', '"
                         + "', '"
-                        + row['Faculty First Name'].strip().replace("'", "") + "', '"
-                        + row['Faculty Last Name'].strip().replace("'", "") + "', '"
+                        + row['Faculty First Name'].strip() + "', '"
+                        + row['Faculty Last Name'].strip() + "', '"
                         + row['Course Number'].strip() + "', \""
                         + row['Course Title'].strip().replace("'", "") + "\", '"
                         + row['Letter Grade'].strip() + "', '"
@@ -56,18 +59,24 @@ def inputCSV2DB(fileName):
 
 
                     if cursor.rowcount:
-                        records_count += cursor.rowcount
+                        success_records_count += cursor.rowcount
 
                 except Exception as e:
                     csv_writer.writerow(row)
                     error_file_created = True
-        print("CSV Records Count = {}".format(records_count))
+                    error_records_count += 1
+
+        print("CSV Records Count = {}".format(success_records_count))
+
         if error_file_created:
             date_time = datetime.datetime.now().strftime("%d-%b-%Y %I_%M_%S %p")
             destination_path = os.path.join(str(Path.home()), "Desktop\\CSV Errors " + date_time + " .csv")
             shutil.move('./Upload/csvErrors.csv', destination_path)
+            print("CSV Error Records Count = {}".format(error_records_count))
         else:
             print('No errors were found in the csv file upload')
+            print("Deleting error file from application")
+            os.remove('./Upload/csvErrors.csv')
 
         # insert program
         print("Inserting data into program table")
@@ -83,7 +92,6 @@ def inputCSV2DB(fileName):
                        'WHERE NOT EXISTS (SELECT * FROM course WHERE course_num = a.course_num )')
         new_courses = cursor.fetchall()
         print("New Courses Record Count = {}".format(cursor.rowcount))
-
 
         cursor.execute('SELECT * FROM core_course')
         core_courses = cursor.fetchall()
@@ -125,6 +133,11 @@ def inputCSV2DB(fileName):
                        'SELECT DISTINCT(student_num), student_fname, student_lname, student_level, student_email '
                        'from ac_grade_input as a '
                        'WHERE NOT EXISTS (SELECT * from student WHERE student_num = a.student_num)')
+        cursor.execute('SELECT count(DISTINCT student_num) from ac_grade_input')
+        new_students = cursor.fetchone()
+        result = new_students[0]
+        students_count = int(result)
+        print("Students Count: {}".format(students_count))
 
         # insert enrollment
         print("Inserting data into enrollment table")
@@ -259,8 +272,9 @@ def inputCSV2DB(fileName):
         mydb.commit()
         cursor.close()
 
-    print("Deleting uploaded CSV and Error file from application")
+    print("Deleting uploaded CSV file from application")
     os.remove('./Upload/' + fileName)
-    os.remove('./Upload/csvErrors.csv')
 
     print("DONE")
+
+    return success_records_count, students_count, error_records_count, destination_path

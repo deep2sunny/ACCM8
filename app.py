@@ -284,13 +284,18 @@ def uploadGrade2DB():
         file = request.files['inputFile']
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
 
-        #call inputCSV2DB with file name
-        inputCSV.inputCSV2DB(file.filename)
+        # call inputCSV2DB with file name
+        information_received = inputCSV.inputCSV2DB(file.filename)
 
     if 'loggedin' in session:
         # User is loggedin show them the uploadGrade page
         # print("call uploadGrade below")
-        return render_template('uploadGrade.html', show=1, fileName=file.filename)
+        return render_template('uploadGrade.html', show=1,
+                               fileName=file.filename,
+                               success_records_count=information_received[0],
+                               students_count=information_received[1],
+                               error_records_count=information_received[2],
+                               destination_path=information_received[3])
 
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
