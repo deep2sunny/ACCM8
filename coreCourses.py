@@ -55,6 +55,7 @@ def coreCourses():
                 oldCourseCode = parameters['oldCourseCode']
                 courseCode = parameters['editCourseCodeInput'].upper()
                 courseTitle = parameters['editCourseTitleInput']
+                updateCoreCourse(oldCourseCode, courseCode, courseTitle)
                 updateCourse(oldCourseCode, courseCode, courseTitle)
                 allCoreCourses = readCourses()
                 message = "The course information was successfully updated"
@@ -134,8 +135,8 @@ def deleteCourse(courseCode):
     cursor.execute(query)
     con.commit()
 
-
-def updateCourse(oldCourseCode, courseCode, courseTitle):
+# update course description in the core_course table
+def updateCoreCourse(oldCourseCode, courseCode, courseTitle):
     con = createConnection()
 
     cursor = con.cursor()
@@ -147,6 +148,18 @@ def updateCourse(oldCourseCode, courseCode, courseTitle):
     cursor.execute(query)
     con.commit()
 
+# update course description in the course table
+def updateCourse(oldCourseCode, courseCode, courseTitle):
+    con = createConnection()
+
+    cursor = con.cursor()
+
+    query = f"""UPDATE course
+            SET course_num = '{courseCode}', title = '{courseTitle}'
+            WHERE course_num = '{oldCourseCode}';"""
+
+    cursor.execute(query)
+    con.commit()
 
 def checkCoreCourseExistence(courseCode):
     con = createConnection()

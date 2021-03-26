@@ -13,13 +13,13 @@
         width: 48px;
         height: 24px;
       }
-      
-      .switch input { 
+
+      .switch input {
         opacity: 0;
         width: 0;
         height: 0;
       }
-      
+
       .slider {
         position: absolute;
         cursor: pointer;
@@ -31,7 +31,7 @@
         -webkit-transition: .4s;
         transition: .4s;
       }
-      
+
       .slider:before {
         position: absolute;
         content: "";
@@ -43,26 +43,26 @@
         -webkit-transition: .4s;
         transition: .4s;
       }
-      
+
       input:checked + .slider {
         background-color: #2196F3;
       }
-      
+
       input:focus + .slider {
         box-shadow: 0 0 1px #2196F3;
       }
-      
+
       input:checked + .slider:before {
         -webkit-transform: translateX(20px);
         -ms-transform: translateX(20px);
         transform: translateX(20px);
       }
-      
+
       /* Rounded sliders */
       .slider.round {
         border-radius: 34px;
       }
-      
+
       .slider.round:before {
         border-radius: 50%;
       }
@@ -137,7 +137,7 @@
                         <input type="text" class="form-control-plaintext" name = "program" id="program" value="{{ v['program'] }}" hidden>
                         <input type="text" class="form-control-plaintext" name = "level" id="level" value="{{ v['level'] }}" hidden>
                         <input type="text" class="form-control-plaintext" name = "course" id="course" value="{{ v['course'] }}" hidden>
-                            <button type="submit" class="btn btn-secondary" type="button" ><i class="fas fa-chevron-circle-up" title="Back to Student Grade"></i></button>
+                            <button type="submit" class="btn btn-secondary" type="button" ><i class="fas fa-chevron-circle-up" title="Back to Student Grade">Grade Book</i></button>
                      </form>
                 </td>
                 <td>
@@ -146,7 +146,7 @@
                          <input type="text" class="form-control-plaintext" name = "programReport" id="programReport" value="{{ v['program'] }}" hidden>
                          <input type="text" class="form-control-plaintext" name = "levelReport" id="levelReport" value="{{ v['level'] }}" hidden>
                          <input type="text" class="form-control-plaintext" name = "courseReport" id="courseReport" value="{{ v['course'] }}" hidden>
-                         <button type="submit" class="btn btn-secondary" type="button" ><i class="fas fa-chevron-circle-down" title="Back to Student Report"></i></button>
+                         <button type="submit" class="btn btn-secondary" type="button" ><i class="fas fa-chevron-circle-down" title="Back to Student Report">Students Report</i></button>
                     </form>
                 </td>
             </tr>
