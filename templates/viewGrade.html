@@ -271,7 +271,7 @@
                         {% if version['program_version'] == values['version'] %}
                             <option data-ref="{{ version['program_version'] }}" value="{{ version['program_version'] }}" selected>{{ version['program_version'] }}</option>
                         {% else %}
-                            <option data-ref="{{ version['program_version'] }}" value="{{ version['program_version'] }}" {% if version['program_version'] == "IAWD" %} selected {% endif %}>{{ version['program_version'] }}</option>
+                            <option data-ref="{{ version['program_version'] }}" value="{{ version['program_version'] }}" {% if version['program_version'] == "2017-2019" %} selected {% endif %}>{{ version['program_version'] }}</option>
                         {% endif %}
                     {% endfor %}
 
