@@ -750,7 +750,7 @@ var line = false
 // add links
 for (var l=0; l < prereqlinks.length; l++) {
     
-    if(line == false){
+    if(line == false || prereqlinks[l].target.id == 21){
         if(prereqlinks[l].target.id == 20){
             line = true;
         }
