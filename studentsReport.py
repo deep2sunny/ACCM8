@@ -65,7 +65,7 @@ def studentsReport():
             else:
 
                 values = dict()
-                values['level'] = "0"
+                values['level'] = ""
 
 
 

@@ -20,15 +20,11 @@
     <form id="reportForm" action="{{ url_for('studentsReport.studentsReport') }}" method="post"
           class="needs-validation">
 
-
-
         <div class="input-group">
 
-
-
             <div class="col-md-2 mb-6">
-                <select id="level" name="level" class="form-select dropdown-toggle">
-                    <option value="0">Choose Level...</option>
+                <select id="level" name="level" class="custom-select d-block selectFilter" required>
+                    <option value="">Choose Program Level...</option>
                     {% for level in levels %}
                     {% if level == values['level'] %}
                     <option value="{{level}}" selected>{{level}}</option>
@@ -37,10 +33,6 @@
                     {% endif %}
                     {% endfor %}
                 </select>
-
-                <div class="invalid-feedback">
-                    Program Level
-                </div>
             </div>
             <div class="col-md-2 mb-6 viewReportButtonDiv">
                 <button type="submit" class="btn btn-success my-1" id="submitBtn">View Report</button>
@@ -116,8 +108,6 @@
 
         <p class="tableCaption" style="width: 95%;">The following is a list of students successfully passed all courses</p>
 
-
-
         <table class="table table-striped table-bordered">
             <thead>
             <tr>
@@ -168,14 +158,16 @@
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
-
-<script type="text/javascript" src="/static/studentsReport.js"></script>
-
 <style>
 
-    .viewReportButtonDiv{
-        margin-left: 100px;
+    #level{
+        font-size: 14px;
+        height: 40px;
+        border-radius: 4px;
+        margin-right: 20px;
+        width: 150%;
     }
+
 
     .invalid-feedback{
         width: 200px;

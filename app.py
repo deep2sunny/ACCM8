@@ -321,6 +321,10 @@ def viewGrade():
     cursor.execute('select pid, coursemap.cid, title, level from coursemap inner join course using(cid) order by title;')
     courseDict = cursor.fetchall()
 
+    print("*****>>>>>>>")
+    #print(courseDict)
+
+
     if request.method == 'POST' and 'program' in request.form and 'level' in request.form and 'version' in request.form:
         # update the grade or comments for a student
         if 'gid' in request.form and request.form['gid']:
@@ -418,6 +422,13 @@ def viewGrade():
                 d[r['course_num'] + "_c"] = comment
         if (d):
             rDict += (d,)
+
+        print("***/////")
+        #print(rDict)
+
+        allCoursesTaken = []
+
+
 
         if (session['category'] != 'coordinator' and session['category'] != 'secretary' ):
             edit='disabled'

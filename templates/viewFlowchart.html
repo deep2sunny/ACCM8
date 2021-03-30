@@ -66,6 +66,23 @@
       .slider.round:before {
         border-radius: 50%;
       }
+
+      #backToStudentReport{
+
+      }
+
+      #backToGradeBook{
+        margin-left: 10px;
+      }
+
+      #leftButton{
+
+      }
+
+      #rightButton{
+        margin-left: 15px;
+      }
+
       </style>
 {% endblock %}
 
@@ -137,7 +154,7 @@
                         <input type="text" class="form-control-plaintext" name = "program" id="program" value="{{ v['program'] }}" hidden>
                         <input type="text" class="form-control-plaintext" name = "level" id="level" value="{{ v['level'] }}" hidden>
                         <input type="text" class="form-control-plaintext" name = "course" id="course" value="{{ v['course'] }}" hidden>
-                            <button type="submit" class="btn btn-secondary" type="button" ><i class="fas fa-chevron-circle-up" title="Back to Student Grade">Grade Book</i></button>
+                            <button type="submit" class="btn btn-secondary" type="button" id="backToStudentReport"><i class="fas fa-chevron-circle-up" title="Back to Student Grade"><span style="font-family: Calibri;">  Grade Book</span></i></button>
                      </form>
                 </td>
                 <td>
@@ -146,14 +163,14 @@
                          <input type="text" class="form-control-plaintext" name = "programReport" id="programReport" value="{{ v['program'] }}" hidden>
                          <input type="text" class="form-control-plaintext" name = "levelReport" id="levelReport" value="{{ v['level'] }}" hidden>
                          <input type="text" class="form-control-plaintext" name = "courseReport" id="courseReport" value="{{ v['course'] }}" hidden>
-                         <button type="submit" class="btn btn-secondary" type="button" ><i class="fas fa-chevron-circle-down" title="Back to Student Report">Students Report</i></button>
+                         <button type="submit" class="btn btn-secondary" type="button" id="backToGradeBook"><i class="fas fa-chevron-circle-down" title="Back to Student Report"><span style="font-family: Calibri;">  Students Report</span></i></button>
                     </form>
                 </td>
             </tr>
         </table>
      {% endif %}
 
-          <div style="display: inline-block; float: right;">
+          <div style="display: inline-block; float: right; margin-top: -25px;">
             <label>View</label>
             <label class="switch">
               <input type="checkbox" id="view" onclick="viewFlowchart()">
@@ -173,12 +190,12 @@
          <tr>
              <td>
                  <form id="navigatePrevForm" action="{{ url_for('viewFlowchart', sid= v['prevSID'], sVersion=v['version'], sProgram=v['program'], sLevel=v['level'], sCourse=v['course'] ) }}" >
-                    <button type="submit" class="btn btn-secondary" type="button" ><i class="fas fa-chevron-left"></i></button>
+                    <button type="submit" class="btn btn-secondary" type="button" id="leftButton"><i class="fas fa-chevron-left"></i></button>
                  </form>
              </td>
              <td>
                  <form id="navigateNextForm" action="{{ url_for('viewFlowchart', sid= v['nextSID'], sVersion=v['version'], sProgram=v['program'], sLevel=v['level'], sCourse=v['course'] ) }}" >
-                    <button type="submit" class="btn btn-secondary" type="button" ><i class="fas fa-chevron-right"></i></button>
+                    <button type="submit" class="btn btn-secondary" type="button" id="rightButton"><i class="fas fa-chevron-right"></i></button>
                  </form>
              </td>
          </tr>

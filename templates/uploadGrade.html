@@ -5,6 +5,10 @@
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"
         xmlns="http://www.w3.org/1999/html"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 {{ super() }}
 
@@ -20,14 +24,13 @@
         <form id="uploadForm" action="{{ url_for('uploadGrade2DB') }}" method="post" class="needs-validation"
               enctype="multipart/form-data">
 
-            <div class="input-group mt-5 mb-3 w-50 mx-auto border border-dark rounded">
+            <div class="customDiv1">
                 <div class="invalid-feedback">
                     Please choose a valid file.
                 </div>
                 <div class="custom-file">
                     <input type="file" class="custom-file-input" accept=".csv" id="inputFile" name="inputFile" required>
-                    <label class="custom-file-label text-dark" for="inputFile">Choose a comma-separated values file
-                        (.csv)</label>
+                    <label class="custom-file-label text-dark" for="inputFile">Choose a comma-separated values file(.csv)</label>
                 </div>
             </div>
             <div class="mx-auto mb-3">
@@ -63,6 +66,30 @@
         </form>
     </div>
 </div>
+
+
+<style>
+    .customDiv1{
+        margin-left: auto!important;
+        margin-right: auto!important;
+        margin-top: 3rem!important;
+        margin-bottom: 1rem!important;
+        width: 50%!important;
+        border-radius:.25rem ;
+
+        border: 1px solid #dee2e6;
+        position: relative;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        -ms-flex-align: stretch;
+        align-items: stretch;
+        width: 100%;
+        box-sizing: border-box;
+        border-color: #343a40;
+    }
+</style>
 
 <script>
     document.querySelector('.custom-file-input').addEventListener('change',function(e){

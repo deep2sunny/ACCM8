@@ -248,6 +248,21 @@
             border-left: 0.5em solid transparent;
             border-top: 0.5em solid red;
         }
+
+        .versionList,
+        .programList,
+        .lvlList,
+        .courseList{
+            font-size: 14px;
+            height: 40px;
+            border-radius: 4px;
+        }
+
+        #viewGrade{
+        height: 40px;
+        }
+
+
     </style>
 
 {% endblock %}
@@ -271,7 +286,7 @@
                         {% if version['program_version'] == values['version'] %}
                             <option data-ref="{{ version['program_version'] }}" value="{{ version['program_version'] }}" selected>{{ version['program_version'] }}</option>
                         {% else %}
-                            <option data-ref="{{ version['program_version'] }}" value="{{ version['program_version'] }}" {% if version['program_version'] == "2017-2019" %} selected {% endif %}>{{ version['program_version'] }}</option>
+                            <option data-ref="{{ version['program_version'] }}" value="{{ version['program_version'] }}" {% if version['program_version'] == "IAWD" %} selected {% endif %}>{{ version['program_version'] }}</option>
                         {% endif %}
                     {% endfor %}
 
@@ -288,7 +303,7 @@
                     {% if program['pid']|string == values['program'] %}
                         <option data-belong="{{ program['program_version'] }}"  data-ref="{{ program['pid'] }}" value="{{ program['pid'] }}" selected>{{ program['name'] }}</option>
                     {% else %}
-                        <option data-belong="{{ program['program_version'] }}"  data-ref="{{ program['pid'] }}" value="{{ program['pid'] }}" {% if program['pid'] == 20 %} selected {% endif %}>{{ program['name'] }}</option>
+                        <option data-belong="{{ program['program_version'] }}"  data-ref="{{ program['pid'] }}" value="{{ program['pid'] }}" {% if program['name'] == "3002X Internet Applications & Web Development" %} selected {% endif %}>{{ program['name'] }}</option>
                     {% endif %}
                 {% endfor %}
 
@@ -316,7 +331,7 @@
                         {% if l['level'] == values['level'] %}
                             <option data-belong="{{ l['pid'] }}"  data-ref="{{l['pid']|string+l['level'] }}" value="{{ l['level'] }}" selected>{{ l['level']  }}</option>
                         {% else %}
-                            <option data-belong="{{ l['pid'] }}"  data-ref="{{ l['pid']|string+l['level'] }}" value="{{ l['level'] }}" >{{ l['level'] }}</option>
+                            <option data-belong="{{ l['pid'] }}"  data-ref="{{ l['pid']|string+l['level'] }}" value="{{ l['level'] }}" {% if l['level'] == "A01" %} selected {% endif %}>{{ l['level'] }}</option>
                         {% endif %}
                     {% endfor %}
                 </select>
@@ -359,8 +374,8 @@
 {#          <table class="table table-sm table-bordered table-hover">#}
           <thead >
             <tr>
-              <th scope="col" rowspan="2">Student #</th>
-              <th scope="col" rowspan="2">Name</th>
+              <th scope="col" rowspan="2" class="text-center">Student #</th>
+              <th scope="col" rowspan="2" class="text-center">Name</th>
 {#              <th scope="col" rowspan="2">Level</th>#}
                 {% for c in clist %}
                     {% if c['mandatory'] %}
@@ -448,7 +463,7 @@
 
           <div class="form-group">
             <label for="recipient-name" class="col-form-label" >Grade</label>
-            <input type="text" class="form-control" id="m_grade" name="m_grade" data-maxlength="2" data-error="maxlength" frequired>
+            <input type="text" class="form-control" id="m_grade" name="m_grade" data-maxlength="2" data-error="maxlength" required>
               <p class="error" id="gradeError"></p>
           </div>
           <div class="form-group">
