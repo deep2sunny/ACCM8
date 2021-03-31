@@ -632,7 +632,7 @@ def viewFlowchart(sid, sVersion, sProgram, sLevel, sCourse):
     '''
 
     cursor.execute("SELECT sequence, core_course_num as courseCode " +
-                   "FROM accm.core_course_flowchart " +
+                   "FROM core_course_flowchart " +
                    "order by core_course_flowchart.sequence")
     courses = cursor.fetchall()
 
