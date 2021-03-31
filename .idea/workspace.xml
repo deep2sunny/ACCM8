@@ -2,20 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9e7bb154-68c7-40c8-94be-6a112e8f498a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/ACCM8.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ACCM8.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2021-03-05_12_36_p_m___Default_Changelist_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2021-03-05_12_36_p_m___Default_Changelist_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/studentsReport.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/studentsReport.py" beforeDir="false" afterPath="$PROJECT_DIR$/studentsReport.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/courseProgression.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/courseProgression.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/layout.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/layout.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/studentsReport.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/studentsReport.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/uploadGrade.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/uploadGrade.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/viewFlowchart.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/viewFlowchart.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/viewGrade.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/viewGrade.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/venv/Lib/site-packages/flask_bootstrap/templates/bootstrap/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Lib/site-packages/flask_bootstrap/templates/bootstrap/base.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

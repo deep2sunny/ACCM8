@@ -10,6 +10,13 @@
 
     <script type=text/javascript>
     $( document ).ready(function() {
+
+
+        $("#searchIcon").on("click", function(){
+          console.log("The icon was clicked.");
+          $('#viewGrade').click();
+        });
+
         //cascading dropdwon for program and course
         $(".selectFilter").on("change",function(){
             var e=$(this).data("target"),i=$(this).find(":selected").data("ref");
@@ -138,6 +145,8 @@
       return valid;
     }
 
+
+
     </script>
 
     <style>
@@ -262,6 +271,10 @@
         height: 40px;
         }
 
+        #searchIcon{
+            cursor: pointer;
+        }
+
 
     </style>
 
@@ -355,15 +368,17 @@
                   Please provide a valid course.
                 </div>
               </div>
+
             <div class="col-md-2 mb-3">
                  <div class="input-icons">
-                <i class="fa fa-search icon">
+                <i class="fa fa-search icon" id="searchIcon">
               </i>
                 <input type="submit" class="btn btn-success input-field" value="View Grade" id="viewGrade">
             </div>
 
 
             </div>
+
             </div>
             </div>
         </form>
