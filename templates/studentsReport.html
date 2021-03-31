@@ -23,7 +23,7 @@
         <div class="input-group">
 
             <div class="col-md-2 mb-6">
-                <select id="level" name="level" class="custom-select d-block selectFilter" required>
+                <select id="level" name="level" class="custom-select w-120 d-block selectFilter" required>
                     <option value="">Choose Program Level...</option>
                     {% for level in levels %}
                     {% if level == values['level'] %}
@@ -51,7 +51,7 @@
 
 
     {% if showMessage %}
-    <div class="alert alert-danger">
+    <div class="alert alert-danger  text-center ">
         No Student Data is available
     </div>
     {% endif %}
@@ -162,7 +162,7 @@
         height: 40px;
         border-radius: 4px;
         margin-right: 20px;
-        width: 150%;
+        width: 120%;
     }
 
     #submitBtn{
@@ -220,7 +220,10 @@
     .alert-danger{
         border: none;
         box-shadow: none;
+        margin-top: 40px;
     }
+
+
 
 </style>
 

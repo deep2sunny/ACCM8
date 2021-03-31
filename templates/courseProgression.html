@@ -36,20 +36,20 @@
             <tr>
               <td><label for="sequence" class="col-form-label courseInputField text-center">Sequence</label></td>
               <td><label for="sequence" class="col-form-label courseInputField text-center">Course</label></td>
-              <td><label for="sequence" class="col-form-label courseInputField text-center">Prerequisite 1</label></td>
-              <td><label for="sequence" class="col-form-label courseInputField text-center">Prerequisite 2</label></td>
-              <td><label for="sequence" class="col-form-label courseInputField text-center">Prerequisite 3</label></td>
-              <td><label for="sequence" class="col-form-label courseInputField text-center">Prerequisite 4</label></td>
-              <td><label for="sequence" class="col-form-label courseInputField text-center">Prerequisite 5</label></td>
+              <td><label for="sequence" class="col-form-label courseInputField text-center" id="prereqLabel1" >Prerequisite 1</label></td>
+              <td><label for="sequence" class="col-form-label courseInputField text-center" id="prereqLabel2" style="display: none;">Prerequisite 2</label></td>
+              <td><label for="sequence" class="col-form-label courseInputField text-center" id="prereqLabel3" style="display: none;">Prerequisite 3</label></td>
+              <td><label for="sequence" class="col-form-label courseInputField text-center" id="prereqLabel4" style="display: none;">Prerequisite 4</label></td>
+              <td><label for="sequence" class="col-form-label courseInputField text-center" id="prereqLabel5" style="display: none;">Prerequisite 5</label></td>
             </tr>
             <tr>
               <td><input type="text" class="form-control" id="sequence" name="sequence" required></td>
               <td><input type="text" class="form-control courseInputStyle" id="courseCode" name="courseCode" required></td>
               <td><input type="text" class="form-control courseInputStyle" id="prereqCode1" name="prereqCode1"  placeholder="None"></td>
-              <td><input type="text" class="form-control courseInputStyle" id="prereqCode2" name="prereqCode2"  placeholder="None" ></td>
-              <td><input type="text" class="form-control courseInputStyle" id="prereqCode3" name="prereqCode3"  placeholder="None" ></td>
-              <td><input type="text" class="form-control courseInputStyle" id="prereqCode4" name="prereqCode4"  placeholder="None" ></td>
-              <td><input type="text" class="form-control courseInputStyle" id="prereqCode5" name="prereqCode5"  placeholder="None" ></td>
+              <td><input type="text" class="form-control courseInputStyle" id="prereqCode2" name="prereqCode2"  placeholder="None"  style="display: none;"></td>
+              <td><input type="text" class="form-control courseInputStyle" id="prereqCode3" name="prereqCode3"  placeholder="None"  style="display: none;"></td>
+              <td><input type="text" class="form-control courseInputStyle" id="prereqCode4" name="prereqCode4"  placeholder="None"  style="display: none;"></td>
+              <td><input type="text" class="form-control courseInputStyle" id="prereqCode5" name="prereqCode5"  placeholder="None"  style="display: none;"></td>
 
             </tr>
         </tbody>
