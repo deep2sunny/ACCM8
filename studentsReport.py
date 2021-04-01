@@ -82,7 +82,7 @@ def studentsReport():
 def createConnection():
 
     config = configparser.ConfigParser()
-    config.read(os.path.dirname(os.path.abspath(__file__)) + '/static/mysql-config.ini')
+    config.read(os.path.dirname(os.path.abspath(__file__)) + '/static/config.ini')
 
 
     try:

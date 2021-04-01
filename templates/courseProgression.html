@@ -35,11 +35,11 @@
             <tr>
               <td><label for="sequence" class="col-form-label courseInputField text-center">Sequence</label></td>
               <td><label for="sequence" class="col-form-label courseInputField text-center">Course</label></td>
-              <td><label for="sequence" class="col-form-label courseInputField text-center" id="prereqLabel1" >Prerequisite 1</label></td>
-              <td><label for="sequence" class="col-form-label courseInputField text-center" id="prereqLabel2" style="display: none;">Prerequisite 2</label></td>
-              <td><label for="sequence" class="col-form-label courseInputField text-center" id="prereqLabel3" style="display: none;">Prerequisite 3</label></td>
-              <td><label for="sequence" class="col-form-label courseInputField text-center" id="prereqLabel4" style="display: none;">Prerequisite 4</label></td>
-              <td><label for="sequence" class="col-form-label courseInputField text-center" id="prereqLabel5" style="display: none;">Prerequisite 5</label></td>
+              <td><label for="sequence" class="col-form-label courseInputField text-center" id="prereqLabel1" >Pre-req 1</label></td>
+              <td><label for="sequence" class="col-form-label courseInputField text-center" id="prereqLabel2" style="display: none;">Pre-req 2</label></td>
+              <td><label for="sequence" class="col-form-label courseInputField text-center" id="prereqLabel3" style="display: none;">Pre-req 3</label></td>
+              <td><label for="sequence" class="col-form-label courseInputField text-center" id="prereqLabel4" style="display: none;">Pre-req 4</label></td>
+              <td><label for="sequence" class="col-form-label courseInputField text-center" id="prereqLabel5" style="display: none;">Pre-req 5</label></td>
             </tr>
             <tr>
               <td><input type="text" class="form-control" id="sequence" name="sequence" required></td>
@@ -77,7 +77,7 @@
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header detele-header">
-                            <h5 class="modal-title">Delete Course</h5>
+                            <h5 class="modal-title">Delete Course Progression</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <i class="far fa-times-circle"></i>
                             </button>
@@ -132,41 +132,41 @@
                                 <div class="form-group row">
                                     <label class="col-sm-3 col-form-label">Course Code</label>
                                     <div class="col-sm-9">
-                                        <input type="text" id="courseEditInput" name="courseCode" value="test"/>
+                                        <input type="text" id="courseEditInput" name="courseCode" value="test" readonly />
                                         <input type="hidden" id="oldCourseEditInput" name="oldCourseCode" value="test"/>
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
-                                    <label class="col-sm-3 col-form-label">Prerequisite 1</label>
+                                    <label class="col-sm-3 col-form-label">Pre-req 1</label>
                                     <div class="col-sm-9">
                                         <input type="text" id="prereq1EditInput" name="prerequisite_1" value="test"/>
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
-                                    <label class="col-sm-3 col-form-label">Prerequisite 2</label>
+                                    <label class="col-sm-3 col-form-label">Pre-req 2</label>
                                     <div class="col-sm-9">
                                         <input type="text" id="prereq2EditInput" name="prerequisite_2" value="test"/>
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
-                                    <label class="col-sm-3 col-form-label">Prerequisite 3</label>
+                                    <label class="col-sm-3 col-form-label">Pre-req 3</label>
                                     <div class="col-sm-9">
                                         <input type="text" id="prereq3EditInput" name="prerequisite_3" value="test"/>
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
-                                    <label class="col-sm-3 col-form-label">Prerequisite 4</label>
+                                    <label class="col-sm-3 col-form-label">Pre-req 4</label>
                                     <div class="col-sm-9">
                                         <input type="text" id="prereq4EditInput" name="prerequisite_4" value="test"/>
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
-                                    <label class="col-sm-3 col-form-label">Prerequisite 5</label>
+                                    <label class="col-sm-3 col-form-label">Pre-req 5</label>
                                     <div class="col-sm-9">
                                         <input type="text" id="prereq5EditInput" name="prerequisite_5" value="test"/>
                                     </div>
@@ -191,7 +191,7 @@
                 <thead class="thead-light">
                 <tr>
 
-                    <th scope="col" class="text-center sequenceCell">Seq</th>
+                    <th scope="col" class="text-center col-sm-2">Seq</th>
 
                     <th scope="col" class="text-center col-sm-2">Course</th>
 

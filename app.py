@@ -22,45 +22,41 @@ app.register_blueprint(coreCoursesBlueprint)
 app.register_blueprint(studentsReportBlueprint)
 app.register_blueprint(courseProgressionBlueprint)
 
-# indicate the folder when loading the input files
-UPLOAD_FOLDER = os.path.abspath(os.path.dirname(__file__)) + '\\Upload\\'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
 # Change this to your secret key (can be anything, it's for extra protection)
 app.secret_key = 'your secret key'
 
-# Enter your database connection details below
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_DB'] = 'accm'
+# Reading all configuration settings
+config = configparser.ConfigParser()
+config.read(os.path.dirname(os.path.abspath(__file__)) + '/static/config.ini')
 
-
-# configuration file for db password, mailing setting
-app.config.from_pyfile('./static/config.cfg')
+# Fetching MySQL credentials
+app.config['MYSQL_HOST'] = config['DEFAULT']['MYSQL_HOST']
+app.config['MYSQL_USER'] = config['DEFAULT']['MYSQL_USER']
+app.config['MYSQL_PASSWORD'] = config['DEFAULT']['MYSQL_PASSWORD']
+app.config['MYSQL_DB'] = config['DEFAULT']['MYSQL_DB']
+app.config['MYSQL_PORT'] = int(config['DEFAULT']['MYSQL_PORT'])
 
 # gmail setting to send notification for registration
-app.config['MAIL_SERVER'] = "smtp.googlemail.com"
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = 1
-app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
-# gmail account to notify a new user's registration (sender, receipient)
+app.config['MAIL_SERVER'] = config['DEFAULT']['MAIL_SERVER']
+app.config['MAIL_PORT'] = int(config['DEFAULT']['MAIL_PORT'])
+app.config['MAIL_USE_TLS'] = int(config['DEFAULT']['MAIL_USE_TLS'])
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = int(config['DEFAULT']['SEND_FILE_MAX_AGE_DEFAULT'])
+
+# indicate the folder when uploading the csv files
+UPLOAD_FOLDER = os.path.abspath(os.path.dirname(__file__)) + '\\Upload\\'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+# gmail account to notify a new user's registration (sender, recipient)
 emailAccount = ''
 
 # Intialize MySQL
 mysql = MySQL(app)
 
-# Writing mysql credentials into a separate file for blueprints
-mysql_config = os.path.dirname(os.path.abspath(__file__)) + '/static/mysql-config.ini'
-config = configparser.ConfigParser()
-config.read(mysql_config)
-config['DEFAULT']['MYSQL_HOST'] = mysql.app.config['MYSQL_HOST']
-config['DEFAULT']['MYSQL_USER'] = mysql.app.config['MYSQL_USER']
-config['DEFAULT']['MYSQL_PASSWORD'] = mysql.app.config['MYSQL_PASSWORD']
-config['DEFAULT']['MYSQL_DB'] = mysql.app.config['MYSQL_DB']
-config['DEFAULT']['MYSQL_PORT'] = str(mysql.app.config['MYSQL_PORT'])
-
-with open(mysql_config, 'w') as configfile:    # save
-    config.write(configfile)
+mysql.app.config['MYSQL_HOST'] = app.config['MYSQL_HOST']
+mysql.app.config['MYSQL_USER'] = app.config['MYSQL_USER']
+mysql.app.config['MYSQL_PASSWORD'] = app.config['MYSQL_PASSWORD']
+mysql.app.config['MYSQL_DB'] = app.config['MYSQL_DB']
+mysql.app.config['MYSQL_PORT'] = app.config['MYSQL_PORT']
 
 
 # http://localhost:5000/ - this will be the login page, we need to use both GET and POST requests
@@ -175,7 +171,7 @@ def register():
             msg = 'Please fill out the form!'
         else:
             # If the account is appropiate, then send email to account manager to register a new user
-            # Enable below to send notification email after setting the emailAccount and gmail account/password in config.cfg
+            # Enable below to send notification email after setting the emailAccount and gmail account/password in config.ini
             # mail = Mail(app)
             # msg = Message('New request for the registration of ACCM', sender=emailAccount, recipients=[emailAccount])
             # msg.html="<h3>The new resistration is requested as below.</h3>username: "+username+"<br>password: "+password+"<br>email: "+email+"<br>Category: "+category

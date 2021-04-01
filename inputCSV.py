@@ -4,10 +4,19 @@ import os
 from pathlib import Path
 import shutil
 import datetime
+import configparser
 
 
 def inputCSV2DB(fileName):
-    mydb = mysql.connector.connect(host='localhost', user='root', password='root', database='accm')
+
+    config = configparser.ConfigParser()
+    config.read(os.path.dirname(os.path.abspath(__file__)) + '/static/config.ini')
+
+    mydb = mysql.connector.connect(host=config['DEFAULT']['MYSQL_HOST'],
+                            user=config['DEFAULT']['MYSQL_USER'],
+                            password=config['DEFAULT']['MYSQL_PASSWORD'],
+                            database=config['DEFAULT']['MYSQL_DB'],
+                            port=int(config['DEFAULT']['MYSQL_PORT']))
     cursor = mydb.cursor()
     success_records_count = 0
     error_records_count = 0

@@ -7,7 +7,6 @@ import os
 
 courseProgressionBlueprint = Blueprint("courseProgression", __name__, static_folder="static", template_folder="template")
 
-
 # http://localhost:5000/administrator/courseprogression
 @courseProgressionBlueprint.route("/administrator/courseprogression", methods=['GET','POST'])
 def courseProgression():
@@ -144,18 +143,6 @@ def courseProgression():
                     return render_template("courseProgression.html", allCoreCourses=allCoreCourses, largestSize=largestSize,
                                            message=message, success=False, failure=True, values=request.form, updatedCourse=courseCode, rowClass="errorRow")
 
-                if checkCoreCourseFlowchart(courseCode) == True and courseCode != oldCourseCode:
-                    message = "The course code " + courseCode + " is already in the sequence"
-                    return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
-                                           largestSize=largestSize,
-                                           message=message, success=False, failure=True, values=request.form, updatedCourse=courseCode, rowClass="errorRow")
-
-
-                if checkIfPrerequisite(courseCode) == True:
-                    message = "This course code " + courseCode + " cannot be edited as it's used as a prerequisite for another course"
-                    return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
-                                           largestSize=largestSize,
-                                           message=message, success=False, failure=True, values=dict(), updatedCourse=courseCode, rowClass="errorRow")
 
                 # check if the prerequisites are core courses
                 for prereq in prerequisites:
@@ -275,7 +262,7 @@ def RepresentsInt(s):
 def createConnection():
 
     config = configparser.ConfigParser()
-    config.read(os.path.dirname(os.path.abspath(__file__)) + '/static/mysql-config.ini')
+    config.read(os.path.dirname(os.path.abspath(__file__)) + '/static/config.ini')
 
 
     try:
