@@ -349,8 +349,6 @@ def viewGrade():
         else:
             query = "select c.course_num, c.title, coursemap.level, coursemap.mapid from grade as g inner join student as s using(sid) inner join coursemap using(mapid) inner join program as p using(pid) inner join course as c using(cid) where p.pid = "+request.form['program'] +" and p.program_version='"+request.form['version'] +"' and coursemap.level='"+request.form['level'] + "' and c.core_course = 1" + " group by c.course_num order by course_num"
 
-        print(query)
-
         cursor.execute(query)
         #get the course list as program, version and level
         clist = cursor.fetchall()
@@ -370,16 +368,12 @@ def viewGrade():
         for row in rows:
             mandatoryCourses.append(row['core_course_num'])
 
-        print(mandatoryCourses)
-
         for c1 in clist:
             if(c1['course_num'] in mandatoryCourses):
 
                 c1['mandatory']= 1
             else:
                 c1['mandatory']= 0
-
-        print(clist)
 
         #get all the grade for every students with program, version and level
         #query ="select p.name, p.program_version, gid, student_num, sid, concat(s.fname, ' ' , s.lname) as fullname, s.level, fcomment,rcomment,  c.course_num, c.title, letter_grade, coursemap.level, p.pid, c.cid from grade as g inner join student as s using(sid) inner join coursemap using(mapid) inner join program as p using(pid) inner join course as c using(cid) where p.pid = "+request.form['program'] +" and p.program_version='"+request.form['version'] +"' and coursemap.level='"+request.form['level'] +"' order by s.student_num, title"
