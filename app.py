@@ -314,7 +314,7 @@ def viewGrade():
     cursor.execute('select distinct level, pid from coursemap order by level')
     lvlDict = cursor.fetchall()
     # get the course list
-    cursor.execute('select pid, coursemap.cid, title, level from coursemap inner join course using(cid) order by title;')
+    cursor.execute('select pid, coursemap.cid, title, level from coursemap inner join course using(cid) where course.core_course = 1 order by title;')
     courseDict = cursor.fetchall()
 
 
@@ -345,9 +345,11 @@ def viewGrade():
 
         #show the grade book for the specific program version, program, level or course
         if 'course' in request.form and request.form['course'] and request.form['course'] != 'null':
-            query = "select c.course_num, c.title, coursemap.level, coursemap.mapid from grade as g inner join student as s using(sid) inner join coursemap using(mapid) inner join program as p using(pid) inner join course as c using(cid) where p.pid = "+request.form['program'] +" and p.program_version='"+request.form['version'] +"' and coursemap.level='"+request.form['level'] +"' and c.cid='"+request.form['course'] +"' group by c.course_num order by course_num"
+            query = "select c.course_num, c.title, coursemap.level, coursemap.mapid from grade as g inner join student as s using(sid) inner join coursemap using(mapid) inner join program as p using(pid) inner join course as c using(cid) where p.pid = "+request.form['program'] +" and p.program_version='"+request.form['version'] +"' and coursemap.level='"+request.form['level'] +"' and c.cid='"+request.form['course'] + "' and c.core_course = 1" + " group by c.course_num order by course_num"
         else:
-            query = "select c.course_num, c.title, coursemap.level, coursemap.mapid from grade as g inner join student as s using(sid) inner join coursemap using(mapid) inner join program as p using(pid) inner join course as c using(cid) where p.pid = "+request.form['program'] +" and p.program_version='"+request.form['version'] +"' and coursemap.level='"+request.form['level'] +"' group by c.course_num order by course_num"
+            query = "select c.course_num, c.title, coursemap.level, coursemap.mapid from grade as g inner join student as s using(sid) inner join coursemap using(mapid) inner join program as p using(pid) inner join course as c using(cid) where p.pid = "+request.form['program'] +" and p.program_version='"+request.form['version'] +"' and coursemap.level='"+request.form['level'] + "' and c.core_course = 1" + " group by c.course_num order by course_num"
+
+        print(query)
 
         cursor.execute(query)
         #get the course list as program, version and level
@@ -368,14 +370,16 @@ def viewGrade():
         for row in rows:
             mandatoryCourses.append(row['core_course_num'])
 
+        print(mandatoryCourses)
 
         for c1 in clist:
             if(c1['course_num'] in mandatoryCourses):
-                print(c1)
+
                 c1['mandatory']= 1
             else:
                 c1['mandatory']= 0
 
+        print(clist)
 
         #get all the grade for every students with program, version and level
         #query ="select p.name, p.program_version, gid, student_num, sid, concat(s.fname, ' ' , s.lname) as fullname, s.level, fcomment,rcomment,  c.course_num, c.title, letter_grade, coursemap.level, p.pid, c.cid from grade as g inner join student as s using(sid) inner join coursemap using(mapid) inner join program as p using(pid) inner join course as c using(cid) where p.pid = "+request.form['program'] +" and p.program_version='"+request.form['version'] +"' and coursemap.level='"+request.form['level'] +"' order by s.student_num, title"
