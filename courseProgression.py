@@ -55,7 +55,6 @@ def courseProgression():
                     if parameters[col].upper().strip():
                         prerequisites.append(parameters[col].upper().strip())
 
-
                 if checkCoreCourseExistence(courseCode) == False:
                     message = "The course code " + courseCode + " provided isn't a core course"
                     return render_template("courseProgression.html", allCoreCourses=allCoreCourses, largestSize=largestSize,
@@ -138,6 +137,13 @@ def courseProgression():
                     if parameters[col].upper().strip():
                         prerequisites.append(parameters[col].upper().strip())
 
+                if checkIfDataExists(courseCode):
+                    message = "There is already data associated with " + courseCode + ", this progression cannot be edited."
+                    return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
+                                           largestSize=largestSize,
+                                           message=message, success=False, failure=True, values=request.form,
+                                           updatedCourse=courseCode, rowClass="errorRow")
+
                 if checkCoreCourseExistence(courseCode) == False:
                     message = "The course code " + courseCode + " provided isn't a core course"
                     return render_template("courseProgression.html", allCoreCourses=allCoreCourses, largestSize=largestSize,
@@ -186,6 +192,14 @@ def courseProgression():
 
 
                 courseCode = parameters['courseDeleteInput'].upper().strip()
+
+
+                if checkIfDataExists(courseCode):
+                    message = "There is already data associated with " + courseCode + ", this progression cannot be deleted."
+                    return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
+                                           largestSize=largestSize,
+                                           message=message, success=False, failure=True, values=dict(),
+                                           updatedCourse=courseCode, rowClass="errorRow")
 
                 if checkIfPrerequisite(courseCode) == True:
                     message = "This course code " + courseCode + " cannot be edited as it's used as a prerequisite for another course"
@@ -539,4 +553,42 @@ def deletePrerequisites(courseCode):
     con.commit()
     cursor.close()
     con.close()
+
+
+def checkIfDataExists(courseCode):
+    con = createConnection()
+
+    query = f"""
+                    SELECT  count(*)
+
+                    FROM
+                    (SELECT distinct flowchart.sequence, course.course_num as 'course_code', course.title as 'course_name', coursemap.mapid as 'prereq_id', coursemap.level as "course_level", course.cid as "course_id", coursemap.term as "course_term"
+                                FROM course 
+                                INNER JOIN coursemap USING (cid) 
+                                INNER JOIN flowchart USING (mapid) ) T1
+                    
+                    LEFT JOIN (SELECT prerequisite.prerequisite AS 'prereq_name', prerequisite.mapid AS 'map_id' FROM prerequisite)T2 ON (T1.prereq_id = T2.prereq_name) 
+                    
+                    LEFT JOIN (SELECT coursemap.mapid AS 'coursemap_map_id' , coursemap.cid AS 'coursemap_course_id', coursemap.level AS 'course_level', coursemap.term AS 'prereq_course_term'  FROM coursemap)T3 ON (T2.map_id = T3.coursemap_map_id) 
+                    
+                    LEFT JOIN (SELECT course.cid AS 'course_id', course.course_num as 'successor_course_code', course.title as 'successor_course_name' FROM course)T4 ON (T3.coursemap_course_id = T4.course_id) 
+                    
+                    WHERE T2.map_id is not null
+                    and T1.course_code = '{courseCode}' or T4.successor_course_code = '{courseCode}'
+                    ORDER by T1.course_level, T4.successor_course_code
+                    
+                    ;
+                """
+
+    cursor = con.cursor()
+    cursor.execute(query)
+    rowCount = cursor.fetchone()
+    count = rowCount[0]
+    cursor.close()
+    con.close()
+
+    if count > 0:
+        return True
+
+    return False
 
