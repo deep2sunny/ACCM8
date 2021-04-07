@@ -236,11 +236,11 @@
 
                         {% endfor %}
                         <td>
-                            <button id="editBtn_{{loop.index - 1}}" name="editBtn_{{loop.index}}" class="btn otherBtn2 editBtn"  data-toggle="modal" data-target="#myEditModal">Update</button>
-                            <button type="submit" id="saveBtn_{{loop.index - 1}}" name="saveBtn_{{loop.index}}" class="btn otherBtn2 saveBtn" style="display: none;">Save</button>
+                            <button id="editBtn_{{loop.index - 1}}" name="editBtn_{{loop.index}}" class="btn btn-success editBtn"  data-toggle="modal" data-target="#myEditModal">Update</button>
+                            <button type="submit" id="saveBtn_{{loop.index - 1}}" name="saveBtn_{{loop.index}}" class="btn btn-success saveBtn" style="display: none;">Save</button>
                         </td>
                         <td>
-                            <button type="submit" id="deleteBtn_{{loop.index - 1}}" name="deleteBtn_{{loop.index}}" class="btn deleteBtn"  data-toggle="modal" data-target="#myModalDelete">Delete</button>
+                            <button type="submit" id="deleteBtn_{{loop.index - 1}}" name="deleteBtn_{{loop.index}}" class="btn btn-danger deleteBtn"  data-toggle="modal" data-target="#myModalDelete">Delete</button>
                             <button type="submit" id="cancelBtn_{{loop.index - 1}}" name="cancelBtn_{{loop.index}}" class="btn cancelBtn" style="display: none;">Cancel</button>
                         </td>
                     </tr>
@@ -353,15 +353,11 @@
     }
 
     .deleteBtn{
-    background: #f1f1f1;
-    border-color: #dc3545;
-    color:#dc3545;
+        background: #ba6161;
     }
 
     .deleteBtn:hover{
-        background: #c6c6c6;
-        border-color: #dc3545;
-        color:black;
+        background: #993636;
     }
 
     .otherBtn1{
@@ -375,16 +371,12 @@
     }
 
     .editBtn{
+        background: #478d57;
 
-        background: #f1f1f1;
-        border-color: #4d905d;
-        color: #4d905d;
     }
 
     .editBtn:hover{
-        background: #c6c6c6;
-        border-color: #4d905d;
-        color: #4d905d;
+        background: #3c6b47;
     }
 
     .fa-times-circle{

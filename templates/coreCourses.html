@@ -56,11 +56,11 @@
                 <td class="courseCodeTd">{{course['core_course_num']}}</td>
                 <td class="courseTitleTd">{{course['title']}}</td>
                 <td>
-                    <button type="button" class="btn otherBtn2 editBtn" data-toggle="modal" data-target="#myModal">Update
+                    <button type="button" class="btn otherBtn2 btn-success editBtn" data-toggle="modal" data-target="#myModal">Update
                     </button>
                 </td>
                 <td>
-                    <button type="button" class="btn deleteBtn" data-toggle="modal" data-target="#myModalDelete">
+                    <button type="button" class="btn deleteBtn btn-danger" data-toggle="modal" data-target="#myModalDelete">
                         Delete
                     </button>
                 </td>
@@ -228,16 +228,12 @@ color: white;
 }
 
 .deleteBtn{
-    background: #f1f1f1;
-    border-color: #dc3545;
-    color:#dc3545;
-}
+        background: #ba6161;
+    }
 
-.deleteBtn:hover{
-    background: #c6c6c6;
-    border-color: #dc3545;
-    color:black;
-}
+    .deleteBtn:hover{
+        background: #993636;
+    }
 
     .otherBtn1{
         background: #f1f1f1;
@@ -250,16 +246,12 @@ color: white;
     }
 
     .editBtn{
+        background: #478d57;
 
-        background: #f1f1f1;
-        border-color: #4d905d;
-        color: #4d905d;
     }
 
     .editBtn:hover{
-        background: #c6c6c6;
-        border-color: #4d905d;
-        color: #4d905d;
+        background: #3c6b47;
     }
 
     .fa-times-circle{
