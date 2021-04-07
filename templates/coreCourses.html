@@ -56,11 +56,11 @@
                 <td class="courseCodeTd">{{course['core_course_num']}}</td>
                 <td class="courseTitleTd">{{course['title']}}</td>
                 <td>
-                    <button type="button" class="btn otherBtn2 btn-success editBtn" data-toggle="modal" data-target="#myModal">Update
+                    <button type="button" class="btn otherBtn2 editBtn" data-toggle="modal" data-target="#myModal">Update
                     </button>
                 </td>
                 <td>
-                    <button type="button" class="btn deleteBtn btn-danger" data-toggle="modal" data-target="#myModalDelete">
+                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModalDelete">
                         Delete
                     </button>
                 </td>
@@ -227,8 +227,10 @@ color: white;
     box-shadow: none;
 }
 
-.deleteBtn{
+    .deleteBtn{
         background: #ba6161;
+        border-color: #dc3545;
+        color: white;
     }
 
     .deleteBtn:hover{
@@ -247,6 +249,8 @@ color: white;
 
     .editBtn{
         background: #478d57;
+        border-color: #28a745;
+        color: white;
 
     }
 
