@@ -47,7 +47,7 @@ def coreCourses():
                 deleteCourse(courseCode)
                 allCoreCourses = readCourses()
 
-                message = "The course was deleted successfully"
+                message = f"The course {courseCode} was deleted successfully"
                 return render_template("coreCourses.html", allCoreCourses=allCoreCourses, message=message, success=True, failure=False)
 
             # user confirms course edit

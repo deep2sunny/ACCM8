@@ -13,11 +13,11 @@
 
     </br>
 
-    <div class="py-5 text-center font-weight-bold">
+    <div class="text-center font-weight-bold">
         <h2>Student Reports</h2>
         </br>
-        <p class="my-3 text-muted text-center">
-            This page is used to generate Student Reports
+        <p class="my-3 text-muted text-left">
+            Please select a level and generate a report to show students who have passed or failed pre-requisite courses required for the following level.
         </p>
 
         <hr class="mb-4">
@@ -47,7 +47,7 @@
         </div>
     </form>
 
-    <div class="form-group row col-md-12" id="messageBox" style="height: 50px;">
+    <div class="form-group row col-md-12" id="messageBox">
 
         <div class="col-md-10"><label id="errorConfirmation" class="form-control alert-danger"
                                       style="display: none; text-align: center;"></label></div>
@@ -57,7 +57,7 @@
 
 
     {% if showMessage %}
-    <div class="alert alert-danger  text-center ">
+    <div class="alert alert-danger  text-left ">
         No Student Data is available
     </div>
     {% endif %}
@@ -190,6 +190,12 @@
         border: 1px solid #20C997;
         background-color: #A2E6D2;
     }
+    .badge-flowchart:hover {
+            color: #fff;
+            {##FAFAD2#}
+            border: 1px solid #25993F;
+            background-color: #28A745;
+        }
     .badge {
         display: inline-block;
         padding: .25em .4em;

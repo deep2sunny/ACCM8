@@ -709,8 +709,8 @@ for (i=0; i < courseList.length; i++) {
         if (courseList[i].grade == "F " || courseList[i].grade == "F") {
             // course.attr('box/fill', '#176629');
             // course.attr('box/stroke', '#176629');
-            course.attr('box/fill', '#ff4d4d');
-            course.attr('box/stroke', '#ff4d4d');
+            course.attr('box/fill', '#8a3f3f');
+            course.attr('box/stroke', '#8a3f3f');
         }
         else {
             course.attr('box/fill', '#28A745');

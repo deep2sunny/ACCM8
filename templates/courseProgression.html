@@ -14,11 +14,11 @@
 {% include 'adminNavigation.html' %}
 <div class="container">
     </br>
-    <div class="py-5 text-center font-weight-bold">
+    <div class="text-center font-weight-bold">
         <h2>Course Progression</h2>
         </br>
-        <p class="my-3 text-muted text-center">
-            This page is used to edit the course sequence for different program versions
+        <p class="my-3 text-muted text-left">
+            This page can be used to add, update or delete core course sequence and their prerequisites for the Internet Applications and Web Development Program
         </p>
 
         <hr class="mb-4">
@@ -26,8 +26,6 @@
 
     <div>
 
-        </br>
-        </br>
         <div>
 
             <form action="{{ url_for('courseProgression.courseProgression') }}" method="post" id="createProgramForm" name="createProgramForm">
@@ -58,18 +56,18 @@
                 <div class="form-group row">
             <div class="col-sm-10 addFormButtonsDiv">
                 <button type="submit" class="btn btn-success my-1" id="addBtn" name="addBtn">Add Progression</button>
-                <button type="reset" class="btn btn-primary my-1" value="Reset" id="clearBtn">Clear Form</button>
-                <button type="button" class="btn btn-primary my-1" id="prereqBtn">Add Another Prerequisite</button>
+                <button type="reset" class="btn otherBtn1 my-1" value="Reset" id="clearBtn">Clear Form</button>
+                <button type="button" class="btn otherBtn1 my-1" id="prereqBtn">Add Another Prerequisite</button>
             </div>
         </div>
             </form>
 
 
-            <div class="row" id="messageBox" style="height: 50px;">
+            <div class="row" id="messageBox">
                 {% if success %}
-                <div class="col-md-12"><label id="sucessConfirmation" class="form-control alert-success d-flex justify-content-center text-center" >{{message}}</label></div>
+                <div class="col-md-12"><label id="sucessConfirmation" class="form-control alert-success d-flex justify-content-center text-left" >{{message}}</label></div>
                 {% elif failure %}
-                <div class="col-md-12"><label id="errorConfirmation" class="form-control alert-danger d-flex justify-content-center text-center" >{{message}}</label></div>
+                <div class="col-md-12"><label id="errorConfirmation" class="form-control alert-danger d-flex justify-content-center text-left" >{{message}}</label></div>
                 {% endif %}
             </div>
 
@@ -106,7 +104,7 @@
                                 <input  type="hidden" class="prerequisite_4"  name="prerequisite_4" value=""  >
                                 <input  type="hidden" class="prerequisite_5"  name="prerequisite_5" value=""  >
 
-                                <p class="text-center font-weight-bold">Are you sure you want to delete the course progression?</p>
+                                <p class="text-left font-weight-bold">Are you sure you want to delete the course progression?</p>
                             </div>
                             <div class="modal-footer">
                                 </br>
@@ -123,7 +121,7 @@
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Edit Course Name</h5>
+                            <h5 class="modal-title">Update Course Progression</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <i class="far fa-times-circle"></i>
                             </button>
@@ -173,7 +171,7 @@
                                     </div>
                                 </div>
 
-                                <p class="text-danger text-center" id="editCourseError" style="display: none;"></p>
+                                <p class="text-danger text-left" id="editCourseError" style="display: none;"></p>
                             </div>
                             <div class="modal-footer">
                                 </br>
@@ -238,12 +236,12 @@
 
                         {% endfor %}
                         <td>
-                            <button id="editBtn_{{loop.index - 1}}" name="editBtn_{{loop.index}}" class="btn btn-success editBtn"  data-toggle="modal" data-target="#myEditModal">Update</button>
-                            <button type="submit" id="saveBtn_{{loop.index - 1}}" name="saveBtn_{{loop.index}}" class="btn btn-success saveBtn" style="display: none;">Save</button>
+                            <button id="editBtn_{{loop.index - 1}}" name="editBtn_{{loop.index}}" class="btn otherBtn2 editBtn"  data-toggle="modal" data-target="#myEditModal">Update</button>
+                            <button type="submit" id="saveBtn_{{loop.index - 1}}" name="saveBtn_{{loop.index}}" class="btn otherBtn2 saveBtn" style="display: none;">Save</button>
                         </td>
                         <td>
-                            <button type="submit" id="deleteBtn_{{loop.index - 1}}" name="deleteBtn_{{loop.index}}" class="btn btn-danger deleteBtn"  data-toggle="modal" data-target="#myModalDelete">Delete</button>
-                            <button type="submit" id="cancelBtn_{{loop.index - 1}}" name="cancelBtn_{{loop.index}}" class="btn btn-primary cancelBtn" style="display: none;">Cancel</button>
+                            <button type="submit" id="deleteBtn_{{loop.index - 1}}" name="deleteBtn_{{loop.index}}" class="btn deleteBtn"  data-toggle="modal" data-target="#myModalDelete">Delete</button>
+                            <button type="submit" id="cancelBtn_{{loop.index - 1}}" name="cancelBtn_{{loop.index}}" class="btn cancelBtn" style="display: none;">Cancel</button>
                         </td>
                     </tr>
 
@@ -344,10 +342,51 @@
     }
 
     .modal-header {
-    background-color: #66b45f;
+    background-color: #24651f;
     }
     .detele-header {
-    background-color: #d66464;
+    background-color: #965057;
+    }
+
+    .modal-title{
+    color: white;
+    }
+
+    .deleteBtn{
+    background: #dedede;
+    border-color: #6d6d6d;
+    color:black;
+    }
+
+    .deleteBtn:hover{
+        background: #c6c6c6;
+        border-color: #6d6d6d;
+        color:black;
+    }
+
+    .otherBtn1{
+        background: #44658f;
+        color: white;
+    }
+
+    .otherBtn1:hover{
+        background: #445a76;
+        color: white;
+    }
+
+    .otherBtn2{
+
+        background: #4d905d;
+        color: white;
+    }
+
+    .otherBtn2:hover{
+        background: #407e4f;
+        color: white;
+    }
+
+    .fa-times-circle{
+     color: white;
     }
 
     </style>

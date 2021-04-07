@@ -109,7 +109,7 @@ def courseProgression():
                     if len(course['prerequisites']) > largestSize:
                         largestSize = len(course['prerequisites'])
 
-                message = "The course progression was added successfully"
+                message = f"The course progression for {courseCode} was added successfully"
                 return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
                                        largestSize=largestSize,
                                        message=message, success=True, failure=False, values=dict())
@@ -138,7 +138,7 @@ def courseProgression():
                         prerequisites.append(parameters[col].upper().strip())
 
                 if checkIfDataExists(courseCode):
-                    message = "There is already data associated with " + courseCode + ", this progression cannot be edited."
+                    message = f"Unfortunately the progression for {courseCode} cannot be edited as there is student data associated with it."
                     return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
                                            largestSize=largestSize,
                                            message=message, success=False, failure=True, values=request.form,
@@ -182,7 +182,7 @@ def courseProgression():
                         largestSize = len(course['prerequisites'])
 
 
-                message = "The course progression was successfully updated"
+                message = f"The course progression was successfully updated"
                 return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
                                        largestSize=largestSize,
                                        message=message, success=True, failure=False, values=dict(), updatedCourse=courseCode, rowClass="updatedRow")
@@ -195,7 +195,7 @@ def courseProgression():
 
 
                 if checkIfDataExists(courseCode):
-                    message = "There is already data associated with " + courseCode + ", this progression cannot be deleted."
+                    message = f"Unfortunately the progression for {courseCode} cannot be deleted as there is student data associated with it."
                     return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
                                            largestSize=largestSize,
                                            message=message, success=False, failure=True, values=dict(),
@@ -235,7 +235,7 @@ def courseProgression():
                         largestSize = len(course['prerequisites'])
 
 
-                message = "The course progression was successfully deleted"
+                message = f"The course progression for {courseCode} was successfully deleted"
                 return render_template("courseProgression.html", allCoreCourses=allCoreCourses,
                                        largestSize=largestSize,
                                        message=message, success=True, failure=False, values=dict())

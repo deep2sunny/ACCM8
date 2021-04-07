@@ -691,8 +691,6 @@ def viewFlowchart(sid, sVersion, sProgram, sLevel, sCourse):
 
     cursor.close()
 
-    print(prereq_links)
-
     '''
     prereq_links = [{'source_id': 1, 'source': 'CST8260', 'target_id': 7, 'target': 'CST8250'},
                         {'source_id': 2, 'source': 'CST8209', 'target_id': 8, 'target': 'CST8253'},

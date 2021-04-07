@@ -109,15 +109,18 @@ def readFailedStudents(level):
     
                 SELECT 
                 distinct student.student_num, student.sid, student.fname, student.lname, program.pid,
-                program.program_version,coursemap.`level`,
+                program.program_version,coursemap.level,
                 coursemap.mapid
                 FROM student
                 INNER JOIN grade ON student.sid = grade.sid
                 INNER JOIN coursemap ON grade.mapid = coursemap.mapid
                 INNER JOIN course ON coursemap.cid = course.cid
                 INNER JOIN program ON coursemap.pid = program.pid
-                INNER JOIN prerequisite ON coursemap.mapid = prerequisite.prerequisite
-                WHERE coursemap.level = "{level}" AND grade.letter_grade = "F"                 
+
+                WHERE coursemap.level = "{level}" AND grade.letter_grade = "F" 
+                GROUP BY student.student_num, student.sid 
+                ORDER BY student.fname     
+                ; 
                 ;    
                 
             """
@@ -141,7 +144,8 @@ def readPassedStudents(level):
 
                 SELECT 
                 distinct student.student_num, student.sid, student.fname, student.lname, program.pid,
-                program.program_version,coursemap.level
+                program.program_version,coursemap.level,
+                coursemap.mapid
                 FROM student
                 INNER JOIN grade ON student.sid = grade.sid
                 INNER JOIN coursemap ON grade.mapid = coursemap.mapid
@@ -149,6 +153,9 @@ def readPassedStudents(level):
                 INNER JOIN program ON coursemap.pid = program.pid
 
                 WHERE coursemap.level = "{level}" AND grade.letter_grade != "F" 
+                GROUP BY student.student_num, student.sid 
+                ORDER BY student.fname     
+                ;
                 
 
                 ;    
