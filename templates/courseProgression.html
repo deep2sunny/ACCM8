@@ -78,7 +78,7 @@
                         <div class="modal-header detele-header">
                             <h5 class="modal-title">Delete Course Progression</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <i class="far fa-times-circle"></i>
+                                <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <form class="needs-validation" action="{{ url_for('courseProgression.courseProgression') }}" method="post" id="deleteCourse" name="deleteCourse">
@@ -123,7 +123,7 @@
                         <div class="modal-header">
                             <h5 class="modal-title">Update Course Progression</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <i class="far fa-times-circle"></i>
+                                <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <form class="needs-validation" action="{{ url_for('courseProgression.courseProgression') }}" method="post" id="editCourse" name="editCourse">
@@ -342,19 +342,15 @@
     }
 
     .modal-header {
-    background-color: #24651f;
-    }
-    .detele-header {
-    background-color: #965057;
+    background-color: white;
     }
 
-    .modal-title{
-    color: white;
+    .detele-header {
+    background-color: white;
     }
 
     .deleteBtn{
         background: #ba6161;
-        border-color: #dc3545;
         color: white;
     }
 
@@ -375,7 +371,6 @@
 
     .editBtn{
         background: #478d57;
-        border-color: #28a745;
         color: white;
 
     }
@@ -385,9 +380,11 @@
         color: white;
     }
 
-    .fa-times-circle{
-     color: white;
+    #messageBox{
+        margin-top: 15px;
     }
+
+
 
     </style>
 

@@ -79,7 +79,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title">Update Course Name</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <i class="far fa-times-circle"></i>
+                        <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <form class="needs-validation" action="{{ url_for('coreCourses.coreCourses') }}" method="post" id="editCourse" name="editCourse">
@@ -118,7 +118,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title">Add Course</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <i class="far fa-times-circle"></i>
+                        <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <form class="needs-validation" action="{{ url_for('coreCourses.coreCourses') }}" method="post" id="addCourse" name="addCourse">
@@ -153,7 +153,7 @@
                 <div class="modal-header detele-header">
                     <h5 class="modal-title">Delete Course</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <i class="far fa-times-circle"></i>
+                        <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <form class="needs-validation" action="{{ url_for('coreCourses.coreCourses') }}" method="post" id="deleteCourse" name="deleteCourse">
@@ -210,17 +210,12 @@ html, body {
 
 
 .modal-header {
-background-color: #24651f;
+background-color: white;
 }
+
 .detele-header {
-background-color: #965057;
+background-color: white;
 }
-
-.modal-title{
-color: white;
-}
-
-
 
 .alert-danger, .alert-success{
     border: none;
@@ -229,7 +224,6 @@ color: white;
 
     .deleteBtn{
         background: #ba6161;
-        border-color: #dc3545;
         color: white;
     }
 
@@ -250,7 +244,6 @@ color: white;
 
     .editBtn{
         background: #478d57;
-        border-color: #28a745;
         color: white;
 
     }
@@ -260,9 +253,11 @@ color: white;
         color: white;
     }
 
-    .fa-times-circle{
-     color: white;
+
+    #messageBox{
+        margin-top: 15px;
     }
+
 
 
 </style>
